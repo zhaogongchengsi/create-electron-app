@@ -1,13 +1,33 @@
 #!/usr/bin/env node
 
+import { join } from 'path';
 import { cac } from 'cac';
 
-function build() {
+async function build(options) {
   console.log("build");
 }
 
+async function findconfigFile(root, confPath) {
+  let fileType = "js";
+  if (confPath.endsWith("ts")) {
+    fileType = "ts";
+  } else if (confPath.endsWith("json")) {
+    fileType = "json";
+  }
+  const configPath = join(root, confPath);
+  return {
+    type: fileType,
+    path: configPath
+  };
+}
+async function resolveConfig(confinfo) {
+  return {};
+}
+
 async function createDevServer(options) {
-  console.log(`dev server ...`);
+  const configPath = await findconfigFile(options.root, options.configFilePath);
+  resolveConfig();
+  console.log(`dev server ...`, configPath);
 }
 
 var name = "@cea/cli";
@@ -28,18 +48,21 @@ var keywords = [
 var author = "";
 var license = "ISC";
 var dependencies = {
+	cac: "^6.7.14",
+	esbuild: "^0.15.5",
+	picocolors: "^1.0.0"
+};
+var devDependencies = {
 	"@rollup/plugin-commonjs": "^22.0.2",
 	"@rollup/plugin-json": "^4.1.0",
 	"@rollup/plugin-node-resolve": "^13.3.0",
 	"@rollup/plugin-typescript": "^8.4.0",
 	"@types/node": "^18.7.13",
-	cac: "^6.7.14",
-	esbuild: "^0.15.5",
-	picocolors: "^1.0.0",
 	rollup: "^2.78.1",
 	"rollup-plugin-esbuild": "^4.10.1",
 	"ts-node": "^10.9.1",
-	typescript: "^4.8.2"
+	typescript: "^4.8.2",
+	vite: "^3.0.9"
 };
 var pack = {
 	name: name,
@@ -53,9 +76,11 @@ var pack = {
 	keywords: keywords,
 	author: author,
 	license: license,
-	dependencies: dependencies
+	dependencies: dependencies,
+	devDependencies: devDependencies
 };
 
+const DEFAULT_CLICONFIG_NAME = "cea.config";
 const createCli = ({ build, createDevServer }) => {
   const cli = cac("cea");
   cli.command("[root]", "start dev server").alias("serve").alias("dev").option("--host [host]", `[string] specify hostname`).option("--port <port>", `[number] specify port`).action(async (root, options) => {
@@ -63,7 +88,7 @@ const createCli = ({ build, createDevServer }) => {
     try {
       createDevServer({
         root: process.cwd(),
-        configFilePath: root,
+        configFilePath: root ?? DEFAULT_CLICONFIG_NAME,
         port,
         host
       });
@@ -72,14 +97,19 @@ const createCli = ({ build, createDevServer }) => {
       process.exit(1);
     }
   });
-  cli.command("build <config>", "Build your app").action((entry, options) => {
-    const currentPath = process.cwd();
-    build();
-    console.log(entry, currentPath);
+  cli.command("build <config>", "Build your app").action((config, options) => {
+    try {
+      build({
+        root: process.cwd(),
+        configFilePath: config
+      });
+    } catch (err) {
+      console.error(err);
+      process.exit(1);
+    }
   });
   cli.command("preview <config>", "Preview your app").action((config, options) => {
     const currentPath = process.cwd();
-    build();
     console.log(config, currentPath);
   });
   cli.help();

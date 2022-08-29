@@ -4,9 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "cea ./cea.config.js",
+    "dev": "cea --port 3000 --host 0.0.0.0",
+    "preview": "cea preview"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "build": {
+    "appId": "123123"
+  }
 }

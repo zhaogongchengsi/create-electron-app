@@ -1,12 +1,13 @@
 import { cac } from "cac";
-// import colors from "picocolors";
 import pack from "../package.json";
-import type { serveOptions } from "../types";
+import type { ServeOptions, buildOptions } from "../types";
 
 export type cliMethod = {
-  build: () => void;
-  createDevServer: (serveOptions: serveOptions) => void;
+  build: (options: buildOptions) => void;
+  createDevServer: (serveOptions: ServeOptions) => void;
 };
+
+export const DEFAULT_CLICONFIG_NAME = "cea.config";
 
 export const createCli = ({ build, createDevServer }: cliMethod) => {
   const cli = cac("cea");
@@ -22,7 +23,7 @@ export const createCli = ({ build, createDevServer }: cliMethod) => {
       try {
         createDevServer({
           root: process.cwd(),
-          configFilePath: root,
+          configFilePath: root ?? DEFAULT_CLICONFIG_NAME,
           port,
           host,
         });
@@ -32,17 +33,22 @@ export const createCli = ({ build, createDevServer }: cliMethod) => {
       }
     });
 
-  cli.command("build <config>", "Build your app").action((entry, options) => {
-    const currentPath = process.cwd();
-    build();
-    console.log(entry, currentPath);
+  cli.command("build <config>", "Build your app").action((config, options) => {
+    try {
+      build({
+        root: process.cwd(),
+        configFilePath: config,
+      });
+    } catch (err) {
+      console.error(err);
+      process.exit(1);
+    }
   });
 
   cli
     .command("preview <config>", "Preview your app")
     .action((config, options) => {
       const currentPath = process.cwd();
-      build();
       console.log(config, currentPath);
     });
 
