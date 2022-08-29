@@ -1,13 +1,14 @@
 import { cac } from "cac";
 // import colors from "picocolors";
 import pack from "../package.json";
+import type { serveOptions } from "../types";
 
 export type cliMethod = {
   build: () => void;
-  createDevServer: () => void;
+  createDevServer: (serveOptions: serveOptions) => void;
 };
 
-export const createCli = ({ build }: cliMethod) => {
+export const createCli = ({ build, createDevServer }: cliMethod) => {
   const cli = cac("cea");
 
   cli
@@ -17,8 +18,18 @@ export const createCli = ({ build }: cliMethod) => {
     .option("--host [host]", `[string] specify hostname`)
     .option("--port <port>", `[number] specify port`)
     .action(async (root: string, options: any) => {
-      console.log(root);
-      console.log(options);
+      const { port, host } = options;
+      try {
+        createDevServer({
+          root: process.cwd(),
+          configFilePath: root,
+          port,
+          host,
+        });
+      } catch (err) {
+        console.error(err);
+        process.exit(1);
+      }
     });
 
   cli.command("build <config>", "Build your app").action((entry, options) => {

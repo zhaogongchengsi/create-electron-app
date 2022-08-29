@@ -14,6 +14,7 @@ export default {
     format: "es",
     intro: "#!/usr/bin/env node",
   },
+  external: ["cac", "electron"],
   plugins: [
     nodeResolve(),
     commonjs(),
