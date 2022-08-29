@@ -1,0 +1,4 @@
+/**
+ * @type { rollup }
+ */
+export default {};
