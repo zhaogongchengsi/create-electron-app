@@ -1,0 +1,20 @@
+# Logs
+logs
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+.drives
+coverage
+.eslintcache
+
+node_modules
+
+.idea
+npm-debug.log.*
+*.css.d.ts
+*.sass.d.ts
+*.scss.d.ts
+dist/**/*
