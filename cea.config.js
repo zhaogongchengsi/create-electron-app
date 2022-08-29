@@ -1,6 +1,4 @@
-
-
-export default {
+const conf = {
   main: ["./packages/main/index"],
   renderer: ["./packages/renderer/index"],
   server: {
@@ -9,3 +7,5 @@ export default {
     open: true,
   },
 };
+
+module.exports = conf;

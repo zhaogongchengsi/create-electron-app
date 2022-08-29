@@ -7,7 +7,7 @@ export type cliMethod = {
   createDevServer: (serveOptions: ServeOptions) => void;
 };
 
-export const DEFAULT_CLICONFIG_NAME = "cea.config";
+export const DEFAULT_CLICONFIG_NAME = "cea.config.js";
 
 export const createCli = ({ build, createDevServer }: cliMethod) => {
   const cli = cac("cea");

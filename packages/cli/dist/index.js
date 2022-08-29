@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
-import { join } from 'path';
+import { createRequire } from 'node:module';
+import { join, resolve } from 'path';
 import { cac } from 'cac';
 
 async function build(options) {
@@ -17,17 +18,22 @@ async function findconfigFile(root, confPath) {
   const configPath = join(root, confPath);
   return {
     type: fileType,
-    path: configPath
+    path: resolve(configPath)
   };
 }
+const _require = createRequire(import.meta.url);
 async function resolveConfig(confinfo) {
-  return {};
+  if (confinfo.type === "js") {
+    const conf = await _require(confinfo.path);
+    return typeof conf === "function" ? conf() : conf;
+  }
+  return void 0;
 }
 
 async function createDevServer(options) {
   const configPath = await findconfigFile(options.root, options.configFilePath);
-  resolveConfig();
-  console.log(`dev server ...`, configPath);
+  const useConfig = await resolveConfig(configPath);
+  console.log(`dev server ...`, useConfig);
 }
 
 var name = "@cea/cli";
@@ -80,7 +86,7 @@ var pack = {
 	devDependencies: devDependencies
 };
 
-const DEFAULT_CLICONFIG_NAME = "cea.config";
+const DEFAULT_CLICONFIG_NAME = "cea.config.js";
 const createCli = ({ build, createDevServer }) => {
   const cli = cac("cea");
   cli.command("[root]", "start dev server").alias("serve").alias("dev").option("--host [host]", `[string] specify hostname`).option("--port <port>", `[number] specify port`).action(async (root, options) => {
