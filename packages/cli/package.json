@@ -17,10 +17,13 @@
   "license": "ISC",
   "dependencies": {
     "@rollup/plugin-commonjs": "^22.0.2",
+    "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.3.0",
     "@rollup/plugin-typescript": "^8.4.0",
     "@types/node": "^18.7.13",
+    "cac": "^6.7.14",
     "esbuild": "^0.15.5",
+    "picocolors": "^1.0.0",
     "rollup": "^2.78.1",
     "rollup-plugin-esbuild": "^4.10.1",
     "ts-node": "^10.9.1",

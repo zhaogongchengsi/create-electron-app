@@ -2,19 +2,22 @@ import { join, resolve } from "path";
 import esbuild from "rollup-plugin-esbuild";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
+import json from "@rollup/plugin-json";
 
 const resolvePath = (path) => resolve(join(process.cwd(), path));
 
 export default {
   input: resolvePath("./src/index.ts"),
   output: {
-    file: "./dist/index.js",
+    dir: resolvePath("dist"),
+    entryFileNames: `[name].js`,
     format: "es",
     intro: "#!/usr/bin/env node",
   },
   plugins: [
     nodeResolve(),
     commonjs(),
+    json(),
     esbuild({
       // All options are optional
       include: /\.[jt]sx?$/, // default, inferred from `loaders` option
