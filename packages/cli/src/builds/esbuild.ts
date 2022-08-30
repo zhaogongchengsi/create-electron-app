@@ -15,7 +15,7 @@ export async function esbuild({
   sourcemap = false,
   electronAssets = {},
 }: esbuildOptions) {
-  build({
+  return build({
     entryPoints: input,
     outdir: outdir,
     minify: minify,
