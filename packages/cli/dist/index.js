@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 import { createRequire } from 'node:module';
 import { join, resolve } from 'path';
 import { cac } from 'cac';
@@ -46,8 +44,8 @@ var scripts = {
 	build: "rollup --config rollup.config.js -w"
 };
 var bin = {
-	"create-electron-app": "dist/index.js",
-	cea: "dist/index.js"
+	"create-electron-app": "bin/cea.js",
+	cea: "bin/cea.js"
 };
 var keywords = [
 ];
@@ -124,9 +122,4 @@ const createCli = ({ build, createDevServer }) => {
   return cli;
 };
 
-createCli({
-  build,
-  createDevServer
-});
-
-export { build, createDevServer };
+export { build, createCli, createDevServer };
