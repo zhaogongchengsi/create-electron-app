@@ -29,8 +29,17 @@ export interface Server {
   open?: boolean;
 }
 
+export interface WindowsMain {
+  input: string;
+  prload?: string;
+}
+
+export interface WindowsRenderer {
+  viteConfigFile: string;
+}
+
 export interface UseConfig {
-  main: string[];
-  renderer: string[];
+  main: (WindowsMain | string)[];
+  renderer: (WindowsRenderer | string)[];
   server?: Server;
 }

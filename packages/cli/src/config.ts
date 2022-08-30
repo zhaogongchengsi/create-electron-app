@@ -33,9 +33,9 @@ const _require = createRequire(import.meta.url);
  *
  * @param confinfo 配置文件路径 和 类型
  */
-export async function resolveConfig(
+export async function resolveConfig<C>(
   confinfo: ConfigFileInfo
-): Promise<UseConfig | undefined> {
+): Promise<C | undefined> {
   if (!(await pathExist(confinfo.path))) {
     // 配置文件不存在 则导出当前默认配置
     throw new Error(`${confinfo.path} path does not exist`);
@@ -53,17 +53,29 @@ export async function resolveConfig(
 export async function readConfigFile(opt: CommonOptions) {
   const { root, configFilePath } = opt;
   const pathinfo = await findconfigFile(root, configFilePath);
-  const conf = await resolveConfig(pathinfo);
+  const conf = await resolveConfig<UseConfig>(pathinfo);
   const jsonConf = await readPackJsonFile(opt);
   // 若配置文件没有 则导出默认配置
-  return mergeConfig(conf, jsonConf);
+  return mergeConfig(
+    {
+      main: [jsonConf.main],
+      renderer: [],
+    },
+    conf
+  );
 }
 
 export async function readPackJsonFile({ root }: CommonOptions) {
   const pathinfo = await findconfigFile(root, "package.json");
-  return (await resolveConfig(pathinfo))!;
+  return (await resolveConfig<any>(pathinfo))!;
 }
 
+/**
+ *
+ * @param configs 配置列表
+ *
+ * 合并所有的配置
+ */
 export function mergeConfig(...configs: (UseConfig | undefined)[]): UseConfig {
   return configs.reduce<UseConfig>(
     (pre, cun) => {

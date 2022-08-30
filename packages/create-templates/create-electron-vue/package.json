@@ -1,0 +1,17 @@
+{
+  "name": "create-electron-vue",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "cea",
+    "build": "cea build ./cea.config.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@cea/cli": "workspace:^0.0.1",
+    "electron": "^20.1.0"
+  }
+}

@@ -4,7 +4,7 @@
   "description": "Create a cli for electron app",
   "main": "index.js",
   "type": "module",
-  "types": "./types",
+  "types": "./types/**.d.ts",
   "scripts": {
     "build": "rollup --config rollup.config.js -w",
     "test": "vitest --ui",
@@ -19,7 +19,6 @@
   "license": "ISC",
   "dependencies": {
     "cac": "^6.7.14",
-    "esbuild": "^0.15.5",
     "picocolors": "^1.0.0",
     "underscore": "^1.13.4"
   },
@@ -31,6 +30,7 @@
     "@types/node": "^18.7.13",
     "@types/underscore": "^1.11.4",
     "@vitest/ui": "^0.22.1",
+    "esbuild": "^0.15.5",
     "rollup": "^2.78.1",
     "rollup-plugin-esbuild": "^4.10.1",
     "ts-node": "^10.9.1",

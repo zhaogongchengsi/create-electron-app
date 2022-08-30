@@ -3,11 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {
-    "build": "cea ./cea.config.js",
-    "dev": "cea ./cea.config.js --port 3000 --host 0.0.0.0",
-    "preview": "cea preview"
-  },
+  "scripts": {},
   "keywords": [],
   "author": "",
   "license": "ISC",
