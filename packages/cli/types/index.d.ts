@@ -37,11 +37,17 @@ export interface WindowsRenderer {
   viteConfigFile: string;
 }
 
-export type Main = (WindowsMain | string)[] | WindowsMain | string;
-export type Renderer = (WindowsRenderer | string)[] | WindowsRenderer | string;
+export type Main = WindowsMain | string;
+export type Renderer = string;
 
 export interface UseConfig {
   main: Main;
   renderer: Renderer;
   outDir?: string;
+}
+
+export interface ElectronAssets {
+  mode: "production" | "development";
+  preload?: string;
+  loadUrl: string | number;
 }

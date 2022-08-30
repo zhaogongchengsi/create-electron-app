@@ -58,8 +58,8 @@ export async function readConfigFile(opt: CommonOptions) {
   // 若配置文件没有 则导出默认配置
   return mergeConfig(
     {
-      main: [jsonConf.main],
-      renderer: [],
+      main: jsonConf.main,
+      renderer: "",
     },
     conf
   );
@@ -86,8 +86,10 @@ export function mergeConfig(...configs: (UseConfig | undefined)[]): UseConfig {
     },
     // 默认配置
     {
-      main: [],
-      renderer: [],
+      main: {
+        input: "",
+      },
+      renderer: "",
     }
   );
 }

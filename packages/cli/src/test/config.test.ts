@@ -5,29 +5,39 @@ describe("use config", () => {
   it("mergeConfig default", () => {
     const conf = mergeConfig();
     expect(conf).toEqual({
-      main: [],
-      renderer: [],
+      renderer: "",
+      main: {
+        input: "",
+      },
     });
   });
 
   it("mergeConfig (renderer, main)", () => {
     const conf = mergeConfig(
       {
-        renderer: ["index"],
-        main: ["main"],
+        renderer: "",
+        main: {
+          input: "",
+        },
       },
       {
-        renderer: ["index2"],
-        main: ["main2"],
+        renderer: "",
+        main: {
+          input: "1",
+        },
       },
       {
-        renderer: ["index3"],
-        main: ["main3"],
+        renderer: "1",
+        main: {
+          input: "2",
+        },
       }
     );
     expect(conf).toEqual({
-      main: ["main3"],
-      renderer: ["index3"],
+      renderer: "1",
+      main: {
+        input: "2",
+      },
     });
   });
 });
