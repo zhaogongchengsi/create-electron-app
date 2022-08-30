@@ -18,3 +18,5 @@ npm-debug.log.*
 *.sass.d.ts
 *.scss.d.ts
 dist/**/*
+packages/cli/bin/**/*
+packages/cli/dist/**/*

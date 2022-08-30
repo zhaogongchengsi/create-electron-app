@@ -6,16 +6,8 @@ import json from "@rollup/plugin-json";
 
 const resolvePath = (path) => resolve(join(process.cwd(), path));
 
-export default {
-  input: resolvePath("./src/index.ts"),
-  output: {
-    dir: resolvePath("dist"),
-    entryFileNames: `[name].js`,
-    format: "es",
-    intro: "#!/usr/bin/env node",
-  },
-  external: ["cac", "electron"],
-  plugins: [
+export default async function () {
+  const plugins = [
     nodeResolve(),
     commonjs(),
     json(),
@@ -33,5 +25,30 @@ export default {
         ".js": "js",
       },
     }),
-  ],
-};
+  ];
+
+  const indexConfig = {
+    input: resolvePath("./src/index.ts"),
+    output: {
+      dir: resolvePath("dist"),
+      entryFileNames: `index.js`,
+      format: "es",
+    },
+    external: ["cac", "electron"],
+    plugins: plugins,
+  };
+
+  const cliConfig = {
+    input: resolvePath("./src/cli.ts"),
+    output: {
+      dir: resolvePath("bin"),
+      entryFileNames: `index.js`,
+      format: "es",
+      intro: "#!/usr/bin/env node",
+    },
+    external: ["cac", "electron"],
+    plugins: plugins,
+  };
+
+  return [indexConfig];
+}

@@ -9,8 +9,8 @@
     "build": "rollup --config rollup.config.js -w"
   },
   "bin": {
-    "create-electron-app": "dist/index.js",
-    "cea": "dist/index.js"
+    "create-electron-app": "bin/cea.js",
+    "cea": "bin/cea.js"
   },
   "keywords": [],
   "author": "",
