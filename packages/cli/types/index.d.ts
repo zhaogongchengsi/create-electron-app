@@ -22,3 +22,15 @@ export interface ServeOptions extends CommonOptions {
 }
 
 export interface buildOptions extends CommonOptions {}
+
+export interface Server {
+  host?: string;
+  port?: string;
+  open?: string;
+}
+
+export interface UseConfig {
+  main: string[];
+  renderer: string[];
+  server?: Server;
+}
