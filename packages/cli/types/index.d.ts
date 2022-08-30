@@ -13,6 +13,11 @@ export interface CommonOptions {
    * 临时执行的目录
    */
   tempDirName?: string;
+
+  /**
+   * app 输出目录
+   */
+  outDir?: string;
 }
 
 export interface ServeOptions extends CommonOptions {
@@ -22,12 +27,6 @@ export interface ServeOptions extends CommonOptions {
 }
 
 export interface buildOptions extends CommonOptions {}
-
-export interface Server {
-  host?: string;
-  port?: string;
-  open?: boolean;
-}
 
 export interface WindowsMain {
   input: string;
@@ -39,7 +38,6 @@ export interface WindowsRenderer {
 }
 
 export interface UseConfig {
-  main: (WindowsMain | string)[];
-  renderer: (WindowsRenderer | string)[];
-  server?: Server;
+  main: (WindowsMain | string)[] | WindowsMain;
+  renderer: (WindowsRenderer | string)[] | WindowsRenderer;
 }

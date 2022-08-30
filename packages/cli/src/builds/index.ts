@@ -1,3 +1,1 @@
-
-
-export const buildMains = () => {};
+export { esbuild } from "./esbuild";

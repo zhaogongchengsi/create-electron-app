@@ -34,19 +34,7 @@ export default async function () {
       entryFileNames: `index.js`,
       format: "es",
     },
-    external: ["cac", "electron"],
-    plugins: plugins,
-  };
-
-  const cliConfig = {
-    input: resolvePath("./src/cli.ts"),
-    output: {
-      dir: resolvePath("bin"),
-      entryFileNames: `index.js`,
-      format: "es",
-      intro: "#!/usr/bin/env node",
-    },
-    external: ["cac", "electron"],
+    external: ["cac", "electron", "esbuild", "vite"],
     plugins: plugins,
   };
 

@@ -1,5 +1,5 @@
 declare interface ElectronAssets {
-  mode: string;
+  mode: "production" | "development";
   preload: string;
   loadUrl: string;
 }

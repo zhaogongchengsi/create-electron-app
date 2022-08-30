@@ -9,3 +9,27 @@ export const pathExist = async (path: string) => {
     return false;
   }
 };
+
+enum toStringRes {
+  object = "[object Object]",
+  array = "[object Array]",
+}
+
+const objectToString = (obj: any) => {
+  return Object.prototype.toString.call(obj);
+};
+
+export const isArray = (object: any): boolean => {
+  return objectToString(object) === toStringRes.array;
+};
+
+export const isString = (object: any): boolean => {
+  return typeof object === "string";
+};
+
+export const isObject = (obj: any): boolean => {
+  if (isArray(obj)) {
+    return false;
+  }
+  return typeof obj === "object";
+};
