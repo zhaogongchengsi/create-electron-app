@@ -2,7 +2,6 @@ import { createRequire } from "node:module";
 import { join, resolve } from "path";
 import { CommonOptions, UseConfig } from "../types";
 import { pathExist } from "./utils";
-import { isArray, isObject } from "underscore";
 
 export type fileType = "ts" | "js" | "json";
 
@@ -51,11 +50,13 @@ export async function resolveConfig(
   return undefined;
 }
 
-export async function readConfigFile({ root, configFilePath }: CommonOptions) {
+export async function readConfigFile(opt: CommonOptions) {
+  const { root, configFilePath } = opt;
   const pathinfo = await findconfigFile(root, configFilePath);
   const conf = await resolveConfig(pathinfo);
+  const jsonConf = await readPackJsonFile(opt);
   // 若配置文件没有 则导出默认配置
-  return conf;
+  return mergeConfig(conf, jsonConf);
 }
 
 export async function readPackJsonFile({ root }: CommonOptions) {
@@ -63,11 +64,15 @@ export async function readPackJsonFile({ root }: CommonOptions) {
   return (await resolveConfig(pathinfo))!;
 }
 
-export function mergeConfig(...configs: UseConfig[]): UseConfig {
-  return configs.reduce(
+export function mergeConfig(...configs: (UseConfig | undefined)[]): UseConfig {
+  return configs.reduce<UseConfig>(
     (pre, cun) => {
-      return Object.assign(pre, cun);
+      if (cun) {
+        return Object.assign(pre, cun);
+      }
+      return pre;
     },
+    // 默认配置
     {
       main: [],
       renderer: [],
