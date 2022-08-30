@@ -2,6 +2,7 @@ import { createRequire } from "node:module";
 import { join, resolve } from "path";
 import { CommonOptions, UseConfig } from "../types";
 import { pathExist } from "./utils";
+import { isArray, isObject } from "underscore";
 
 export type fileType = "ts" | "js" | "json";
 

@@ -26,7 +26,7 @@ export interface buildOptions extends CommonOptions {}
 export interface Server {
   host?: string;
   port?: string;
-  open?: string;
+  open?: boolean;
 }
 
 export interface UseConfig {
