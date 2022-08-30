@@ -30,14 +30,18 @@ export interface buildOptions extends CommonOptions {}
 
 export interface WindowsMain {
   input: string;
-  prload?: string;
+  preload?: string;
 }
 
 export interface WindowsRenderer {
   viteConfigFile: string;
 }
 
+export type Main = (WindowsMain | string)[] | WindowsMain | string;
+export type Renderer = (WindowsRenderer | string)[] | WindowsRenderer | string;
+
 export interface UseConfig {
-  main: (WindowsMain | string)[] | WindowsMain;
-  renderer: (WindowsRenderer | string)[] | WindowsRenderer;
+  main: Main;
+  renderer: Renderer;
+  outDir?: string;
 }

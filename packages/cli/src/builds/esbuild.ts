@@ -2,20 +2,22 @@ import { build } from "esbuild";
 
 export interface esbuildOptions {
   input: string[];
-  outdir: string[];
+  outdir: string;
   minify?: boolean;
   sourcemap?: boolean;
+  electronAssets: any;
 }
 
 export async function esbuild({
   input,
-  outdir,
+  outdir = "dist",
   minify = false,
   sourcemap = false,
+  electronAssets = {},
 }: esbuildOptions) {
   build({
     entryPoints: input,
-    outdir: "",
+    outdir: outdir,
     minify: minify,
     target: "esnext",
     bundle: true,
@@ -27,9 +29,7 @@ export async function esbuild({
       ".png": "file",
     },
     define: {
-      electronAssets: JSON.stringify({
-        preload: "./preload.js",
-      }),
+      electronAssets: JSON.stringify(electronAssets),
     },
     platform: "node",
     external: ["electron"],

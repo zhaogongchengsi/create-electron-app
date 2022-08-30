@@ -1,7 +1,7 @@
 const conf = {
   main: {
     input: "./main/index.ts",
-    prload: "./main/preload.ts",
+    preload: "./main/preload.ts",
   },
   renderer: "./renderer/vite.config.ts",
 };

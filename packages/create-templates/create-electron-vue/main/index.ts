@@ -1,5 +1,4 @@
 import { BrowserWindow, app } from "electron";
-import logo from "./public/logo.png";
 import { resolve } from "path";
 
 let win: BrowserWindow | undefined = undefined;
@@ -12,7 +11,6 @@ const createWindow = () => {
   win = new BrowserWindow({
     width: 1200,
     height: 800,
-    icon: logo,
     webPreferences: {
       nodeIntegration: true,
       preload: getPath(electronAssets.preload ?? ""),
