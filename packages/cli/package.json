@@ -6,7 +6,8 @@
   "type": "module",
   "types": "./types/**.d.ts",
   "scripts": {
-    "build": "rollup --config rollup.config.js -w",
+    "build:w": "rollup --config rollup.config.js -w",
+    "build": "rollup --config rollup.config.js",
     "test": "vitest --ui",
     "coverage": "vitest run --coverage"
   },
