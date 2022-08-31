@@ -4,8 +4,7 @@ import { CommonOptions, UseConfig } from "../types";
 import { pathExist } from "./utils";
 import { build } from "esbuild";
 import { tmpdir } from "os";
-import { mkdtemp, rm, rmdir, symlink, unlink, writeFile } from "fs/promises";
-import { e } from "vitest/dist/index-ea17aa0c";
+import { mkdtemp, rm, symlink, unlink, writeFile } from "fs/promises";
 
 export type fileType = "ts" | "js" | "json";
 
