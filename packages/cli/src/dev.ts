@@ -7,9 +7,12 @@ import { log } from "./utils/log";
 
 export async function createDevServer(options: ServeOptions) {
   const useConfig = await readConfigFile(options);
-  if (!useConfig) return;
 
-  const serve = await startServer(options.root, useConfig);
+  console.log(useConfig);
+
+  // if (!useConfig) return;
+
+  // const serve = await startServer(options.root, useConfig);
 }
 
 export async function startServer(root: string, conf: UseConfig) {

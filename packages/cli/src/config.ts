@@ -10,16 +10,39 @@ export type ConfigFileInfo = {
   path: string;
 };
 
+const configNames = [
+  "create.electron.app.config.ts",
+  "create.electron.app.config.js",
+  "cea.config.ts",
+  "cea.config.js",
+];
+
 export async function findconfigFile(
   root: string,
   confPath: string
 ): Promise<ConfigFileInfo> {
-  const { ext } = parse(confPath);
-  const fileType = ext.replace(".", "");
-  const configPath = join(root, confPath);
+  let confTempPath: undefined | string = undefined;
+  if (confPath) {
+    confTempPath = join(root, confPath);
+  } else {
+    for await (const path of configNames) {
+      const p = join(root, path);
+      if (await pathExist(p)) {
+        confTempPath = p;
+        break;
+      }
+    }
+  }
+
+  if (!confTempPath) {
+    throw new Error(`${confTempPath} path does not exist`);
+  }
+
+  const fileType = parse(confTempPath).ext.replace(".", "");
+
   return {
     type: fileType as fileType,
-    path: resolve(configPath),
+    path: resolve(confTempPath),
   };
 }
 
@@ -32,11 +55,6 @@ const _require = createRequire(import.meta.url);
 export async function resolveConfig<C>(
   confinfo: ConfigFileInfo
 ): Promise<C | undefined> {
-  if (!(await pathExist(confinfo.path))) {
-    // 配置文件不存在 则导出当前默认配置
-    throw new Error(`${confinfo.path} path does not exist`);
-  }
-
   if (confinfo.type === "js" || confinfo.type === "json") {
     //todo: 目前只简单处理下 CommonJS 的导出配置 并且支持导出一个默认函数
     const conf = await _require(confinfo.path);
@@ -49,16 +67,16 @@ export async function resolveConfig<C>(
 export async function readConfigFile(opt: CommonOptions) {
   const { root, configFilePath } = opt;
   const pathinfo = await findconfigFile(root, configFilePath);
-  const conf = await resolveConfig<UseConfig>(pathinfo);
-  const jsonConf = await readPackJsonFile(opt);
+  // const conf = await resolveConfig<UseConfig>(pathinfo);
+  // const jsonConf = await readPackJsonFile(opt);
   // 若配置文件没有 则导出默认配置
-  return mergeConfig(
-    {
-      main: jsonConf.main,
-      renderer: "",
-    },
-    conf
-  );
+  // return mergeConfig(
+  //   {
+  //     main: jsonConf.main,
+  //     renderer: "",
+  //   },
+  //   conf
+  // );
 }
 
 export async function readPackJsonFile({ root }: CommonOptions) {
