@@ -4,7 +4,7 @@ import { CommonOptions, UseConfig } from "../types";
 import { pathExist } from "./utils";
 import { build } from "esbuild";
 import { tmpdir } from "os";
-import { mkdtemp, rmdir, symlink, unlink, writeFile } from "fs/promises";
+import { mkdtemp, rm, rmdir, symlink, unlink, writeFile } from "fs/promises";
 import { e } from "vitest/dist/index-ea17aa0c";
 
 export type fileType = "ts" | "js" | "json";
@@ -60,16 +60,16 @@ const _require = createRequire(import.meta.url);
  * @param confinfo 配置文件路径 和 类型
  */
 export async function resolveConfig<C>(
-  confinfo: ConfigFileInfo,
-  isEMS: boolean = false
+  confinfo: ConfigFileInfo
 ): Promise<C | undefined> {
-  if (confinfo.type === "js" || confinfo.type === "json") {
+  if (!confinfo.isEMS || confinfo.type === "json") {
     //todo: 目前只简单处理下 CommonJS 的导出配置 并且支持导出一个默认函数
     const conf = await _require(confinfo.path);
     return typeof conf === "function" ? conf() : conf;
+  } else {
+    const c = await import("file://" + confinfo.path);
+    return typeof c.default === "function" ? c.default() : c.default;
   }
-
-  return undefined;
 }
 
 /**
@@ -99,11 +99,15 @@ export async function prepareEnvironment(root: string, conf: ConfigFileInfo) {
 
   await bundleConfigFile(conf.path, configOutFile, conf.isEMS);
 
+  process.chdir(root);
+
   return {
     path: configOutFile,
     clear: async () => {
       await unlink(appDistModules);
-      rmdir(tempDirPath as string);
+      rm(tempDirPath as string, {
+        recursive: true,
+      });
     },
   };
 }
@@ -119,17 +123,13 @@ export async function readConfigFile(opt: CommonOptions) {
     pathinfo.isEMS = false;
   }
 
-  const clear = await prepareEnvironment(root, pathinfo);
+  const { clear, path } = await prepareEnvironment(root, pathinfo);
+  pathinfo.path = path;
 
-  // const conf = await resolveConfig<UseConfig>(pathinfo);
-  // 若配置文件没有 则导出默认配置
-  // return mergeConfig(
-  //   {
-  //     main: jsonConf.main,
-  //     renderer: "",
-  //   },
-  //   conf
-  // );
+  const finalConf = resolveConfig(pathinfo);
+
+  await clear();
+  return finalConf;
 }
 
 export async function readPackJsonFile({ root }: CommonOptions) {
