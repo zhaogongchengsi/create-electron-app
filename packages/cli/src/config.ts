@@ -62,14 +62,16 @@ const _require = createRequire(import.meta.url);
 export async function resolveConfig<C>(
   confinfo: ConfigFileInfo
 ): Promise<C | undefined> {
+  let conf: C | undefined = undefined;
   if (!confinfo.isEMS || confinfo.type === "json") {
-    //todo: 目前只简单处理下 CommonJS 的导出配置 并且支持导出一个默认函数
-    const conf = await _require(confinfo.path);
-    return typeof conf === "function" ? conf() : conf;
-  } else {
+    const _conf = await _require(confinfo.path);
+    conf = typeof _conf === "function" ? _conf() : _conf;
+  } else if (confinfo.isEMS) {
     const c = await import("file://" + confinfo.path);
-    return typeof c.default === "function" ? c.default() : c.default;
+    conf = typeof c.default === "function" ? c?.default() : c.default;
   }
+
+  return conf;
 }
 
 /**
@@ -123,10 +125,16 @@ export async function readConfigFile(opt: CommonOptions) {
     pathinfo.isEMS = false;
   }
 
+  if (/\.m[jt]s$/.test(pathinfo.path)) {
+    pathinfo.isEMS = true;
+  } else if (/\.c[jt]s$/.test(pathinfo.path)) {
+    pathinfo.isEMS = false;
+  }
+
   const { clear, path } = await prepareEnvironment(root, pathinfo);
   pathinfo.path = path;
 
-  const finalConf = resolveConfig(pathinfo);
+  const finalConf = await resolveConfig<UseConfig>(pathinfo);
 
   await clear();
   return finalConf;
