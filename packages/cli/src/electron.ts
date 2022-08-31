@@ -1,13 +1,24 @@
 import { spawn } from "node:child_process";
 
-export async function createDevElectronApp(root: string, file: string) {
+export type Callbacks = {
+  close?: (code: number | null) => void;
+  data?: (data: any) => void;
+};
+
+export async function createDevElectronApp(
+  root: string,
+  file: string,
+  callbacks?: Callbacks
+) {
   const ls = spawn(`electron`, [file], {
     cwd: root,
     shell: true,
   });
 
   ls.on("close", (code) => {
-    process.exit(1);
+    if (callbacks) {
+      callbacks.close && callbacks.close(code);
+    }
   });
 
   return ls;

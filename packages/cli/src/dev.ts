@@ -1,8 +1,9 @@
 import { ServeOptions, UseConfig, WindowsMain } from "../types";
 import { readConfigFile } from "./config";
 import { buildMain, createViteServer } from "./builds";
-import { join, parse } from "path";
+import { parse } from "path";
 import { createDevElectronApp } from "./electron";
+import { log } from "./utils/log";
 
 export async function createDevServer(options: ServeOptions) {
   const useConfig = await readConfigFile(options);
@@ -14,6 +15,9 @@ export async function createDevServer(options: ServeOptions) {
 export async function startServer(root: string, conf: UseConfig) {
   let pre: string | undefined;
   const { preload, input } = conf.main as WindowsMain;
+
+  log.success("app starts");
+
   const server = await createViteServer(root, conf);
   await server.listen();
   server.printUrls();
@@ -29,5 +33,10 @@ export async function startServer(root: string, conf: UseConfig) {
     preload: `${pre}`,
   });
 
-  await createDevElectronApp(outDir, parse(input).name);
+  await createDevElectronApp(outDir, parse(input).name, {
+    close() {
+      log.success("app close");
+      process.exit(1);
+    },
+  });
 }
