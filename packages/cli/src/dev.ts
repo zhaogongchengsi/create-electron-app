@@ -2,6 +2,7 @@ import { ServeOptions, UseConfig, WindowsMain } from "../types";
 import { readConfigFile } from "./config";
 import { buildMain, createViteServer } from "./builds";
 import { join, parse } from "path";
+import { createDevElectronApp } from "./electron";
 
 export async function createDevServer(options: ServeOptions) {
   const useConfig = await readConfigFile(options);
@@ -18,7 +19,7 @@ export async function startServer(root: string, conf: UseConfig) {
   server.printUrls();
 
   if (preload) {
-    pre = parse(preload).base;
+    pre = parse(preload).name;
   }
 
   const { port } = server.httpServer?.address() as { port: number };
@@ -28,6 +29,5 @@ export async function startServer(root: string, conf: UseConfig) {
     preload: `${pre}`,
   });
 
-  // 执行器的执行路径
-  console.log(join(outDir, parse(input).base));
+  await createDevElectronApp(outDir, parse(input).name);
 }
