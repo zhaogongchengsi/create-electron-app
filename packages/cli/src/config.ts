@@ -1,5 +1,5 @@
 import { createRequire } from "node:module";
-import { join, resolve } from "path";
+import { join, resolve, parse } from "path";
 import { CommonOptions, UseConfig } from "../types";
 import { pathExist } from "./utils";
 
@@ -14,15 +14,11 @@ export async function findconfigFile(
   root: string,
   confPath: string
 ): Promise<ConfigFileInfo> {
-  let fileType: fileType = "js";
-  if (confPath.endsWith("ts")) {
-    fileType = "ts";
-  } else if (confPath.endsWith("json")) {
-    fileType = "json";
-  }
+  const { ext } = parse(confPath);
+  const fileType = ext.replace(".", "");
   const configPath = join(root, confPath);
   return {
-    type: fileType,
+    type: fileType as fileType,
     path: resolve(configPath),
   };
 }
