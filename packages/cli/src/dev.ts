@@ -1,6 +1,7 @@
 import { ServeOptions, UseConfig, WindowsMain } from "../types";
 import { readConfigFile } from "./config";
 import { buildMain, createViteServer } from "./builds";
+import { join, parse } from "path";
 
 export async function createDevServer(options: ServeOptions) {
   const useConfig = await readConfigFile(options);
@@ -10,14 +11,23 @@ export async function createDevServer(options: ServeOptions) {
 }
 
 export async function startServer(root: string, conf: UseConfig) {
-  const { preload } = conf.main as WindowsMain;
+  let pre: string | undefined;
+  const { preload, input } = conf.main as WindowsMain;
   const server = await createViteServer(root, conf);
   await server.listen();
   server.printUrls();
+
+  if (preload) {
+    pre = parse(preload).base;
+  }
+
   const { port } = server.httpServer?.address() as { port: number };
-  await buildMain(root, conf, {
+  const outDir = await buildMain(root, conf, {
     loadUrl: `http://localhost:${port}`,
     mode: "development",
-    preload: `${preload}`,
+    preload: `${pre}`,
   });
+
+  // 执行器的执行路径
+  console.log(join(outDir, parse(input).base));
 }

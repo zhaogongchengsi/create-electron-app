@@ -9,7 +9,7 @@ export async function buildMain(
   electronAssets?: ElectronAssets
 ) {
   let entryPoints: string[] = [];
-
+  const outDir = join(root, conf.outDir ?? "dist");
   //   if (isArray(conf.main)) {
   //     entryPoints = (conf.main as WindowsMain)
   //       .map((item) => {
@@ -34,9 +34,11 @@ export async function buildMain(
     entryPoints = [conf.main as string];
   }
 
-  return esbuild({
+  await esbuild({
     input: entryPoints,
-    outdir: join(root, conf.outDir ?? "dist"),
+    outdir: outDir,
     electronAssets: electronAssets,
   });
+
+  return outDir;
 }
