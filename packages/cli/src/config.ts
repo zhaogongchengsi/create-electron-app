@@ -4,13 +4,16 @@ import { CommonOptions, UseConfig } from "../types";
 import { pathExist } from "./utils";
 import { build } from "esbuild";
 import { tmpdir } from "os";
-import { mkdtemp, rm, rmdir } from "fs/promises";
+import { mkdtemp, rmdir, symlink, unlink, writeFile } from "fs/promises";
+import { e } from "vitest/dist/index-ea17aa0c";
 
 export type fileType = "ts" | "js" | "json";
 
 export type ConfigFileInfo = {
   type: fileType;
   path: string;
+  name: string;
+  isEMS?: boolean;
 };
 
 const configNames = [
@@ -40,12 +43,13 @@ export async function findConfigFile(
   if (!confTempPath) {
     throw new Error(`${confTempPath} path does not exist`);
   }
-
-  const fileType = parse(confTempPath).ext.replace(".", "");
+  const { ext, name } = parse(confTempPath);
+  const fileType = ext.replace(".", "");
 
   return {
     type: fileType as fileType,
     path: resolve(confTempPath),
+    name: name,
   };
 }
 
@@ -70,14 +74,8 @@ export async function resolveConfig<C>(
 
 /**
  * 准备编译配置读取配置的环境
- * 1. 准备一个临时文件夹
- * 2. 将临时文件夹 建立一个和配置文件路径 node_module 的软连接
- * 3. 编译配置文件并写入磁盘
  */
-export async function prepareEnvironment(
-  root: string,
-  callback?: (path: string) => Promise<void | (() => void)>
-) {
+export async function prepareEnvironment(root: string, conf: ConfigFileInfo) {
   const TEMP_DIR_NAME = "cea-temp-" + Date.now() + "-";
   let tempDirPath: string | undefined;
   try {
@@ -90,10 +88,23 @@ export async function prepareEnvironment(
     throw new Error(`Failed to read configuration file`);
   }
 
-  callback && callback(tempDirPath);
+  const rootModules = join(root, "node_modules");
+  const appDistModules = join(tempDirPath, "node_modules");
+  const configOutFile = join(
+    tempDirPath,
+    conf.isEMS ? conf.name + ".mjs" : conf.name + ".js"
+  );
 
-  return () => {
-    rmdir(tempDirPath as string);
+  await symlink(rootModules, appDistModules, "junction");
+
+  await bundleConfigFile(conf.path, configOutFile, conf.isEMS);
+
+  return {
+    path: configOutFile,
+    clear: async () => {
+      await unlink(appDistModules);
+      rmdir(tempDirPath as string);
+    },
   };
 }
 
@@ -102,16 +113,13 @@ export async function readConfigFile(opt: CommonOptions) {
   const pathinfo = await findConfigFile(root, configFilePath);
   const jsonConf = await readPackJsonFile(opt);
 
-  let isESM = false;
   if (jsonConf.type === "module") {
-    isESM = false;
+    pathinfo.isEMS = true;
+  } else {
+    pathinfo.isEMS = false;
   }
 
-  const clear = await prepareEnvironment(root, async (path: string) => {
-    console.log(path);
-  });
-
-  clear();
+  const clear = await prepareEnvironment(root, pathinfo);
 
   // const conf = await resolveConfig<UseConfig>(pathinfo);
   // 若配置文件没有 则导出默认配置
@@ -134,15 +142,25 @@ export async function bundleConfigFile(
   outFile: string,
   isESM: boolean = false
 ) {
-  await build({
+  const result = await build({
     entryPoints: [input],
-    outfile: outFile,
+    outfile: "out.js",
     target: ["node14.18", "node16"],
     platform: "node",
+    write: false,
     bundle: true,
     format: isESM ? "esm" : "cjs",
     sourcemap: "inline",
+    loader: {
+      ".js": "js",
+      ".ts": "ts",
+    },
   });
+
+  const controller = new AbortController();
+  const { signal } = controller;
+  const data = new Uint8Array(Buffer.from(result.outputFiles[0].text));
+  return writeFile(outFile, data, { signal });
 }
 
 /**
