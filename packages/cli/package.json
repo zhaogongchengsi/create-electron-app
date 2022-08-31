@@ -6,8 +6,8 @@
   "type": "module",
   "types": "./types/**.d.ts",
   "scripts": {
-    "build:w": "rollup --config rollup.config.js -w",
-    "build": "rollup --config rollup.config.js",
+    "dev": "rollup --config rollup.config.js -w",
+    "build": "cross-env NODE_ENV=production rollup --config rollup.config.js",
     "test": "vitest --ui",
     "coverage": "vitest run --coverage"
   },
@@ -31,6 +31,7 @@
     "@types/node": "^18.7.13",
     "@types/underscore": "^1.11.4",
     "@vitest/ui": "^0.22.1",
+    "cross-env": "^7.0.3",
     "esbuild": "^0.15.5",
     "rollup": "^2.78.1",
     "rollup-plugin-esbuild": "^4.10.1",
