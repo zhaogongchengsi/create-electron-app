@@ -29,6 +29,7 @@ importers:
       rollup-plugin-esbuild: ^4.10.1
       terser: ^5.15.0
       ts-node: ^10.9.1
+      tslib: ^2.4.0
       typescript: ^4.8.2
       vite: ^3.0.9
       vitepress: ^1.0.0-alpha.13
@@ -41,7 +42,7 @@ importers:
       '@rollup/plugin-commonjs': registry.npmmirror.com/@rollup/plugin-commonjs/22.0.2_rollup@2.78.1
       '@rollup/plugin-json': registry.npmmirror.com/@rollup/plugin-json/4.1.0_rollup@2.78.1
       '@rollup/plugin-node-resolve': registry.npmmirror.com/@rollup/plugin-node-resolve/13.3.0_rollup@2.78.1
-      '@rollup/plugin-typescript': registry.npmmirror.com/@rollup/plugin-typescript/8.4.0_rollup@2.78.1+typescript@4.8.2
+      '@rollup/plugin-typescript': registry.npmmirror.com/@rollup/plugin-typescript/8.4.0_998a84e6b7f5e32b55c7b416508576a5
       '@types/node': registry.npmmirror.com/@types/node/18.7.13
       '@types/underscore': registry.npmmirror.com/@types/underscore/1.11.4
       '@vitejs/plugin-legacy': registry.npmmirror.com/@vitejs/plugin-legacy/2.0.1_terser@5.15.0+vite@3.0.9
@@ -53,6 +54,7 @@ importers:
       rollup-plugin-esbuild: registry.npmmirror.com/rollup-plugin-esbuild/4.10.1_esbuild@0.15.5+rollup@2.78.1
       terser: registry.npmmirror.com/terser/5.15.0
       ts-node: registry.npmmirror.com/ts-node/10.9.1_3d90d6c4bfc75b8c67067a79d4b2a940
+      tslib: registry.npmmirror.com/tslib/2.4.0
       typescript: registry.npmmirror.com/typescript/4.8.2
       vite: registry.npmmirror.com/vite/3.0.9_terser@5.15.0
       vitepress: registry.npmmirror.com/vitepress/1.0.0-alpha.13_terser@5.15.0
@@ -889,7 +891,7 @@ packages:
       rollup: registry.npmmirror.com/rollup/2.78.1
     dev: true
 
-  registry.npmmirror.com/@rollup/plugin-typescript/8.4.0_rollup@2.78.1+typescript@4.8.2:
+  registry.npmmirror.com/@rollup/plugin-typescript/8.4.0_998a84e6b7f5e32b55c7b416508576a5:
     resolution: {integrity: sha512-QssfoOP6V4/6skX12EfOW5UzJAv/c334F4OJWmQpe2kg3agEa0JwVCckwmfuvEgDixyX+XyxjFenH7M2rDKUyQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@rollup/plugin-typescript/-/plugin-typescript-8.4.0.tgz}
     id: registry.npmmirror.com/@rollup/plugin-typescript/8.4.0
     name: '@rollup/plugin-typescript'
@@ -906,6 +908,7 @@ packages:
       '@rollup/pluginutils': registry.npmmirror.com/@rollup/pluginutils/3.1.0_rollup@2.78.1
       resolve: registry.npmmirror.com/resolve/1.22.1
       rollup: registry.npmmirror.com/rollup/2.78.1
+      tslib: registry.npmmirror.com/tslib/2.4.0
       typescript: registry.npmmirror.com/typescript/4.8.2
     dev: true
 
@@ -4547,6 +4550,12 @@ packages:
       typescript: registry.npmmirror.com/typescript/4.8.2
       v8-compile-cache-lib: registry.npmmirror.com/v8-compile-cache-lib/3.0.1
       yn: registry.npmmirror.com/yn/3.1.1
+    dev: true
+
+  registry.npmmirror.com/tslib/2.4.0:
+    resolution: {integrity: sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/tslib/-/tslib-2.4.0.tgz}
+    name: tslib
+    version: 2.4.0
     dev: true
 
   registry.npmmirror.com/tunnel/0.0.6:
