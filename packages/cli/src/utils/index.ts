@@ -34,7 +34,3 @@ export const isObject = (obj: any): boolean => {
   return typeof obj === "object";
 };
 
-export const defaultConfig = {
-  outDir: "dist",
-  tempDirName: ".app",
-};
