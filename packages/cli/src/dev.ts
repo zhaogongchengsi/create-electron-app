@@ -10,7 +10,7 @@ export async function createDevServer(options: ServeOptions) {
 
   if (!useConfig) return;
 
-  const serve = await startServer(options.root, useConfig);
+  await startServer(options.root, useConfig);
 }
 
 export async function startServer(root: string, conf: UseConfig) {
@@ -31,7 +31,7 @@ export async function startServer(root: string, conf: UseConfig) {
   const outDir = await buildMain(root, conf, {
     loadUrl: `http://localhost:${port}`,
     mode: "development",
-    preload: `${pre}`,
+    preload: pre,
   });
 
   await createDevElectronApp(outDir, parse(input).name, {

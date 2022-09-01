@@ -6,13 +6,18 @@
   "scripts": {
     "dev": "cea",
     "build": "cea build ./cea.config.js",
-    "ele": "electron ."
+    "ele": "electron .",
+    "build:v": "vite build",
+    "dev:v": "vite",
+    "pre:v": "vite preview"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@cea/cli": "workspace:^0.0.1",
+    "@vitejs/plugin-legacy": "^2.0.1",
+    "terser": "^5.15.0",
     "vue": "^3.2.37"
   },
   "devDependencies": {

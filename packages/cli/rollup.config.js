@@ -34,7 +34,7 @@ export default async function () {
       entryFileNames: `index.js`,
       format: "es",
     },
-    external: ["cac", "electron", "esbuild", "vite"],
+    external: ["cac", "electron", "esbuild", "vite", "@vitejs/plugin-legacy"],
     plugins: plugins,
   };
 
