@@ -9,7 +9,7 @@ export async function buildMain(
   electronAssets?: ElectronAssets
 ) {
   let entryPoints: string[] = [];
-  const outDir = join(root, conf.outDir ?? "dist");
+  const outDir = join(root, conf.outDir ?? ".app");
   //   if (isArray(conf.main)) {
   //     entryPoints = (conf.main as WindowsMain)
   //       .map((item) => {
