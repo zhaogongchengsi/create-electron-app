@@ -1,16 +1,11 @@
-import { mkdir, writeFile } from "fs/promises";
 import { join, parse } from "path";
 import { buildOptions, UseConfig, WindowsMain } from "../types";
 import { buildMain } from "./builds";
 import { buildViteBundle } from "./builds/vite";
 import { readConfigFile, readPackJsonFile } from "./config";
 import { buildApp, createTarget } from "./electron";
-import {
-  clearPackJson,
-  createDir,
-  createFile,
-  createNodeModule,
-} from "./utils";
+import { clearPackJson, createFile, createNodeModule } from "./utils";
+import { log } from "./utils/log";
 
 export async function build(options: buildOptions) {
   const useConfig = await readConfigFile(options);
@@ -20,17 +15,22 @@ export async function build(options: buildOptions) {
 
   await buildCode(options.root, useConfig);
 
+  log.success("Prepare the environment");
   await prepareBuildEnvironment(
     envPath,
     { ...options, ...useConfig },
     pack_json
   );
 
+  log.success("ready to build the app...");
+
   // await buildApp({
   //   inputDir: options.root,
   //   targets: createTarget().createTarget(),
   //   config: {},
   // });
+
+  log.success("build complete");
 }
 
 export async function buildCode(root: string, conf: UseConfig) {
