@@ -6,7 +6,7 @@
   "type": "module",
   "types": "./types/**.d.ts",
   "scripts": {
-    "dev": "rollup --config rollup.config.js -w",
+    "dev": "cross-env NODE_ENV=development rollup --config rollup.config.js -w",
     "build": "cross-env NODE_ENV=production rollup --config rollup.config.js",
     "test": "vitest --ui",
     "coverage": "vitest run --coverage"
