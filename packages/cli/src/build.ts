@@ -14,14 +14,17 @@ import {
 
 export async function build(options: buildOptions) {
   const useConfig = await readConfigFile(options);
-
   if (!useConfig) return;
-
   const envPath = join(options.root, useConfig.outDir!);
-
-  await prepareBuildEnvironment(envPath, { ...options, ...useConfig });
+  const pack_json = await readPackJsonFile(options);
 
   await buildCode(options.root, useConfig);
+
+  await prepareBuildEnvironment(
+    envPath,
+    { ...options, ...useConfig },
+    pack_json
+  );
 
   // await buildApp({
   //   inputDir: options.root,
@@ -57,20 +60,18 @@ export async function buildCode(root: string, conf: UseConfig) {
 
 export async function prepareBuildEnvironment(
   envPath: string,
-  opt: buildOptions & UseConfig
+  opt: buildOptions & UseConfig,
+  json: any = {}
 ) {
   const { input } = opt.main as WindowsMain;
   const { name } = parse(input);
   const PACKAGE_JSON = "package.json";
-  const pack_json = await readPackJsonFile(opt);
-  pack_json.main = name + ".js";
-  const packAgeStr = clearPackJson(pack_json);
-  const rmDir = await createDir(envPath);
+  json.main = name + ".js";
+  const packAgeStr = clearPackJson(json);
   const rmFile = await createFile(envPath, PACKAGE_JSON, packAgeStr);
   const unLink = await createNodeModule(envPath, opt.root);
 
   return async () => {
-    rmDir && (await rmDir());
     await rmFile();
     await unLink();
   };
