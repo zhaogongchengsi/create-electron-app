@@ -1,7 +1,7 @@
 import { createRequire } from "node:module";
 import { join, resolve, parse } from "path";
 import { CommonOptions, UseConfig } from "../types";
-import { pathExist } from "./utils";
+import { pathExist, defaultConfig } from "./utils";
 import { build } from "esbuild";
 import { tmpdir } from "os";
 import { mkdtemp, rm, symlink, unlink, writeFile } from "fs/promises";
@@ -177,19 +177,33 @@ export async function bundleConfigFile(
  * 合并所有的配置
  */
 export function mergeConfig(...configs: (UseConfig | undefined)[]): UseConfig {
+  function merge(pre: any, cun: any) {
+    for (const key in cun) {
+      if (Object.prototype.hasOwnProperty.call(cun, key)) {
+        if (typeof cun[key] !== "object") {
+          pre[key] = cun[key];
+          continue;
+        }
+        pre[key] = merge(pre[key], cun[key]);
+      }
+    }
+    return pre;
+  }
+
   return configs.reduce<UseConfig>(
     (pre, cun) => {
       if (cun) {
-        return Object.assign(pre, cun);
+        return merge(pre, cun);
       }
       return pre;
     },
-    // 默认配置
     {
+      renderer: "",
       main: {
         input: "",
       },
-      renderer: "",
+      tempDirName: ".app",
+      outDir: "dist",
     }
   );
 }

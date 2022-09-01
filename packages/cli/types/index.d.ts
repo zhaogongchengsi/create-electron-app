@@ -44,6 +44,7 @@ export interface UseConfig {
   main: Main;
   renderer: Renderer;
   outDir?: string;
+  tempDirName?: string;
 }
 
 export interface ElectronAssets {
