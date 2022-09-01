@@ -1,7 +1,6 @@
 import { parse } from "path";
 import { buildOptions, UseConfig, WindowsMain } from "../types";
 import { buildMain } from "./builds";
-// import { buildMain } from "./builds";
 import { buildViteBundle } from "./builds/vite";
 import { readConfigFile } from "./config";
 
@@ -26,16 +25,14 @@ export async function buildPro(root: string, conf: UseConfig) {
     throw new Error(`vite Build failed please try again`);
   }
 
-  await buildMain(
+  await buildMain({
     root,
-    {
-      ...conf,
-      outDir: "dist",
-    },
-    {
+    config: conf,
+    electronAssets: {
       mode: "production",
       loadUrl: "./index.html",
       preload: pre,
-    }
-  );
+    },
+    idDev: false,
+  });
 }

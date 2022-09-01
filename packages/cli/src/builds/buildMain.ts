@@ -3,13 +3,21 @@ import { isArray, isObject, isString } from "../utils";
 import { ElectronAssets, UseConfig, WindowsMain } from "../../types";
 import { esbuild } from "./esbuild";
 
-export async function buildMain(
-  root: string,
-  conf: UseConfig,
-  electronAssets?: ElectronAssets
-) {
+export type buildMainOption = {
+  root: string;
+  config: UseConfig;
+  electronAssets?: ElectronAssets;
+  idDev?: boolean;
+};
+
+export async function buildMain({
+  root,
+  idDev = true,
+  electronAssets,
+  config,
+}: buildMainOption) {
   let entryPoints: string[] = [];
-  const outDir = join(root, conf.outDir ?? ".app");
+  const outDir = join(root, idDev ? config.tempDirName! : config.outDir!);
   //   if (isArray(conf.main)) {
   //     entryPoints = (conf.main as WindowsMain)
   //       .map((item) => {
@@ -22,16 +30,16 @@ export async function buildMain(
   //       .flat();
   //   }
 
-  if (isObject(conf.main)) {
-    const { input, preload } = conf.main as WindowsMain;
+  if (isObject(config.main)) {
+    const { input, preload } = config.main as WindowsMain;
     entryPoints = [input];
     if (preload) {
       entryPoints.push(preload);
     }
   }
 
-  if (isString(conf.main)) {
-    entryPoints = [conf.main as string];
+  if (isString(config.main)) {
+    entryPoints = [config.main as string];
   }
 
   await esbuild({

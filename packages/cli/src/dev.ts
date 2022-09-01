@@ -28,10 +28,15 @@ export async function startServer(root: string, conf: UseConfig) {
   }
 
   const { port } = server.httpServer?.address() as { port: number };
-  const outDir = await buildMain(root, conf, {
-    loadUrl: `http://localhost:${port}`,
-    mode: "development",
-    preload: pre,
+
+  const outDir = await buildMain({
+    root,
+    config: conf,
+    electronAssets: {
+      loadUrl: `http://localhost:${port}`,
+      mode: "development",
+      preload: pre,
+    },
   });
 
   await createDevElectronApp(outDir, parse(input).name, {

@@ -1,7 +1,7 @@
 import { createRequire } from "node:module";
 import { join, resolve, parse } from "path";
 import { CommonOptions, UseConfig } from "../types";
-import { pathExist, defaultConfig } from "./utils";
+import { pathExist } from "./utils";
 import { build } from "esbuild";
 import { tmpdir } from "os";
 import { mkdtemp, rm, symlink, unlink, writeFile } from "fs/promises";
@@ -136,7 +136,7 @@ export async function readConfigFile(opt: CommonOptions) {
   const finalConf = await resolveConfig<UseConfig>(pathinfo);
 
   await clear();
-  return finalConf;
+  return mergeConfig(finalConf);
 }
 
 export async function readPackJsonFile({ root }: CommonOptions) {
