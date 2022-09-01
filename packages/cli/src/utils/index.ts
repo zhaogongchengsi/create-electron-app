@@ -1,14 +1,10 @@
-import { access } from "fs/promises";
-import { constants } from "fs";
-
-export const pathExist = async (path: string) => {
-  try {
-    await access(path, constants.R_OK | constants.W_OK);
-    return true;
-  } catch (err) {
-    return false;
-  }
-};
+export {
+  createSystemLink,
+  createNodeModule,
+  createFile,
+  pathExist,
+  createDir,
+} from "./fs";
 
 enum toStringRes {
   object = "[object Object]",
@@ -34,3 +30,10 @@ export const isObject = (obj: any): boolean => {
   return typeof obj === "object";
 };
 
+export function clearPackJson(pack: any): string {
+  delete pack.dependencies;
+  delete pack.browserslist;
+  delete pack.devDependencies;
+  delete pack.scripts;
+  return JSON.stringify(pack);
+}
