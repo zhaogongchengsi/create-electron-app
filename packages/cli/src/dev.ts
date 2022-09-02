@@ -1,12 +1,12 @@
 import { ServeOptions, UseConfig, WindowsMain } from "../types";
-import { readConfigFile } from "./config";
+import { readConfigInfo } from "./config";
 import { buildMain, createViteServer } from "./builds";
 import { parse } from "path";
 import { createDevElectronApp } from "./electron";
 import { log } from "./utils/log";
 
 export async function createDevServer(options: ServeOptions) {
-  const useConfig = await readConfigFile(options);
+  const useConfig = await readConfigInfo(options);
 
   if (!useConfig) return;
 

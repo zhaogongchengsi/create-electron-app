@@ -1,9 +1,15 @@
 import { join, resolve, parse } from "path";
 import { CommonOptions, UseConfig } from "../types";
-import { createFile, importConfig, pathExist, requireConfig } from "./utils";
+import {
+  createFile,
+  findFiles,
+  importConfig,
+  pathExist,
+  requireConfig,
+} from "./utils";
 import { build } from "esbuild";
 import { tmpdir } from "os";
-import { mkdtemp, rm, symlink, unlink, writeFile } from "fs/promises";
+import { mkdtemp, rm, symlink, unlink } from "fs/promises";
 
 export type fileType = "ts" | "js" | "json";
 
@@ -21,26 +27,26 @@ const configNames = [
   "cea.config.js",
 ];
 
+const viteFileNamas = ["vite.config.js", "vite.config.ts"];
+
 export async function findConfigFile(
   root: string,
   confPath: string
-): Promise<ConfigFileInfo> {
+): Promise<ConfigFileInfo | undefined> {
   let confTempPath: undefined | string = undefined;
   if (confPath) {
     confTempPath = join(root, confPath);
   } else {
-    for await (const path of configNames) {
-      const p = join(root, path);
-      if (await pathExist(p)) {
-        confTempPath = p;
-        break;
-      }
+    const fileInfo = await findFiles(root, configNames);
+    if (fileInfo.exist) {
+      confTempPath = fileInfo.path;
     }
   }
 
   if (!confTempPath) {
-    throw new Error(`${confTempPath} path does not exist`);
+    return undefined;
   }
+
   const { ext, name } = parse(confTempPath);
   const fileType = ext.replace(".", "");
 
@@ -51,19 +57,17 @@ export async function findConfigFile(
   };
 }
 
-/**
- *
- * @param confinfo 配置文件路径 和 类型
- */
 export async function resolveConfig<C>(
-  confinfo: ConfigFileInfo
+  fileinfo: ConfigFileInfo
 ): Promise<C | undefined> {
   let conf: C | undefined = undefined;
 
-  if (!confinfo.isEMS || confinfo.type === "json") {
-    conf = await requireConfig(confinfo.path);
-  } else if (confinfo.isEMS) {
-    conf = await importConfig(confinfo.path);
+  const { isEMS, type, path } = fileinfo;
+
+  if (!isEMS || type === "json") {
+    conf = await requireConfig(path);
+  } else if (isEMS) {
+    conf = await importConfig(type);
   }
 
   return conf;
@@ -73,12 +77,12 @@ export async function resolveConfig<C>(
  * 准备编译配置读取配置的环境
  */
 export async function prepareEnvironment(root: string, conf: ConfigFileInfo) {
-  const TEMP_DIR_NAME = "cea-temp-" + Date.now() + "-";
+  const temp_dir_name = "cea-temp-" + Date.now() + "-";
   let tempDirPath: string | undefined;
   try {
-    tempDirPath = await mkdtemp(join(tmpdir(), TEMP_DIR_NAME));
+    tempDirPath = await mkdtemp(join(tmpdir(), temp_dir_name));
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 
   if (!tempDirPath) {
@@ -114,36 +118,49 @@ export async function prepareEnvironment(root: string, conf: ConfigFileInfo) {
   };
 }
 
-export async function readConfigFile(opt: CommonOptions) {
+export async function readConfigInfo(opt: CommonOptions) {
   const { root, configFilePath } = opt;
+
   const pathinfo = await findConfigFile(root, configFilePath);
-  const jsonConf = await readPackJsonFile(opt);
+  const { main, type } = await readPackJsonFile(opt);
 
-  if (/\.m[jt]s$/.test(pathinfo.path)) {
-    pathinfo.isEMS = true;
-  } else if (/\.c[jt]s$/.test(pathinfo.path)) {
-    pathinfo.isEMS = false;
-  }
+  if (pathinfo) {
+    if (/\.m[jt]s$/.test(pathinfo.path)) {
+      pathinfo!.isEMS = true;
+    } else if (/\.c[jt]s$/.test(pathinfo.path)) {
+      pathinfo!.isEMS = false;
+    }
+    if (type === "module") {
+      pathinfo!.isEMS = true;
+    } else {
+      pathinfo!.isEMS = false;
+    }
 
-  if (jsonConf.type === "module") {
-    pathinfo.isEMS = true;
+    const { clear, path } = await prepareEnvironment(root, pathinfo);
+    pathinfo!.path = path;
+
+    const finalConf = await resolveConfig<UseConfig>(pathinfo);
+
+    await clear();
+    return mergeConfig(finalConf);
   } else {
-    pathinfo.isEMS = false;
+    const viteFileinfo = await findFiles(root, viteFileNamas);
+    if (viteFileinfo.exist) {
+      return mergeConfig({
+        main: {
+          input: main,
+        },
+        renderer: viteFileinfo.path,
+      });
+    }
   }
-
-  const { clear, path } = await prepareEnvironment(root, pathinfo);
-  pathinfo.path = path;
-
-  const finalConf = await resolveConfig<UseConfig>(pathinfo);
-
-  await clear();
-  return mergeConfig(finalConf);
+  return undefined;
 }
 
 export async function readPackJsonFile({ root }: CommonOptions) {
   const pathinfo = await findConfigFile(root, "package.json");
-  pathinfo.isEMS = false;
-  return (await resolveConfig<any>(pathinfo))!;
+  pathinfo!.isEMS = false;
+  return (await resolveConfig<any>(pathinfo!))!;
 }
 
 export async function bundleConfigFile(

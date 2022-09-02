@@ -13,7 +13,7 @@ const createWindow = () => {
     height: 800,
     webPreferences: {
       nodeIntegration: true,
-      preload: getPath(electronAssets.preload ?? ""),
+      preload: electronAssets.preload && getPath(electronAssets.preload),
     },
   });
 

@@ -2,7 +2,7 @@ import { join, parse, relative } from "path";
 import { buildOptions, UseConfig, WindowsMain } from "../types";
 import { buildMain } from "./builds";
 import { buildViteBundle } from "./builds/vite";
-import { readConfigFile, readPackJsonFile } from "./config";
+import { readConfigInfo, readPackJsonFile } from "./config";
 import { buildApp, createTarget } from "./electron";
 import { clearPackJson, createFile, createNodeModule } from "./utils";
 import { log } from "./utils/log";
@@ -16,7 +16,7 @@ export const settingBuildOptions = (options: any) => {
 };
 
 export async function build(options: buildOptions) {
-  const useConfig = await readConfigFile(options);
+  const useConfig = await readConfigInfo(options);
   if (!useConfig) return;
   const envPath = join(options.root, useConfig.outDir!);
   const appOutDir = relative(envPath, join(options.root, useConfig.appOutDir!));

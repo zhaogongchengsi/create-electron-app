@@ -1,5 +1,5 @@
-import { join } from "path";
-import { isArray, isObject, isString } from "../utils";
+import { resolve } from "path";
+import { isObject, isString } from "../utils";
 import { ElectronAssets, UseConfig, WindowsMain } from "../../types";
 import { esbuild } from "./esbuild";
 
@@ -17,7 +17,7 @@ export async function buildMain({
   config,
 }: buildMainOption) {
   let entryPoints: string[] = [];
-  const outDir = join(root, idDev ? config.tempDirName! : config.outDir!);
+  const outDir = resolve(root, idDev ? config.tempDirName! : config.outDir!);
   //   if (isArray(conf.main)) {
   //     entryPoints = (conf.main as WindowsMain)
   //       .map((item) => {

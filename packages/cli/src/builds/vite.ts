@@ -1,4 +1,4 @@
-import { join, parse } from "path";
+import { join, parse, resolve } from "path";
 import {
   createServer,
   build,
@@ -17,7 +17,7 @@ export type MergeOption = {
 };
 
 export async function createViteServer(root: string, { renderer }: UseConfig) {
-  const { dir, base } = parse(join(root, renderer));
+  const { dir, base } = parse(resolve(root, renderer));
 
   const server = await createServer({
     root: dir,
@@ -35,8 +35,8 @@ export async function buildViteBundle(
   root: string,
   { renderer, outDir }: UseConfig
 ) {
-  const viteConfigFile = join(root, renderer);
-  const outdir = join(root, outDir ?? "dist");
+  const viteConfigFile = resolve(root, renderer);
+  const outdir = resolve(root, outDir ?? "dist");
   const { dir } = parse(viteConfigFile);
 
   process.chdir(root);
