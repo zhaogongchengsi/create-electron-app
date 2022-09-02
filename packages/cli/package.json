@@ -1,10 +1,26 @@
 {
-  "name": "@cea/cli",
-  "version": "0.0.1",
+  "name": "@zzhaon/create-electron-app",
+  "version": "0.1.1",
   "description": "Create a cli for electron app",
   "main": "index.js",
+  "author": "zhaozunhong",
+  "homepage": "https://github.com/zhaogongchengsi/create-electron-app/tree/master/packages/cli#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zhaogongchengsi/create-electron-app.git",
+    "directory": "packages/cli"
+  },
+  "bugs": {
+    "url": "https://github.com/zhaogongchengsi/create-electron-app/issues"
+  },
   "type": "module",
-  "types": "./types/**.d.ts",
+  "keywords": [
+    "electron",
+    "create-electron-app",
+    "esbuild",
+    "vite"
+  ],
+  "types": "./types",
   "scripts": {
     "dev": "cross-env NODE_ENV=development rollup --config rollup.config.js -w",
     "build": "cross-env NODE_ENV=production rollup --config rollup.config.js",
@@ -15,8 +31,6 @@
     "create-electron-app": "bin/cea.js",
     "cea": "bin/cea.js"
   },
-  "keywords": [],
-  "author": "",
   "license": "ISC",
   "dependencies": {
     "cac": "^6.7.14",

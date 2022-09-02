@@ -15,7 +15,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@cea/cli": "workspace:^0.0.1",
     "@vitejs/plugin-legacy": "^2.0.1",
     "terser": "^5.15.0"
   },
