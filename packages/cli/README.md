@@ -12,6 +12,17 @@ pnpm add  @zzhaon/create-electron-app --save-dev
 
 ```
 
+## Tip
+
+Users need to manually download electron and electron-builder by themselves
+
+```sh
+
+npm install electron electron-builder --save -dev
+
+```
+
+
 ## Usage
 
 ```json
