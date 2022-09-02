@@ -1,7 +1,6 @@
-import { createRequire } from "node:module";
 import { join, resolve, parse } from "path";
 import { CommonOptions, UseConfig } from "../types";
-import { importConfig, pathExist, requireConfig } from "./utils";
+import { createFile, importConfig, pathExist, requireConfig } from "./utils";
 import { build } from "esbuild";
 import { tmpdir } from "os";
 import { mkdtemp, rm, symlink, unlink, writeFile } from "fs/promises";
@@ -95,7 +94,11 @@ export async function prepareEnvironment(root: string, conf: ConfigFileInfo) {
 
   await symlink(rootModules, appDistModules, "junction");
 
-  await bundleConfigFile(conf.path, configOutFile, conf.isEMS);
+  const deleteConfigFile = await bundleConfigFile(
+    conf.path,
+    configOutFile,
+    conf.isEMS
+  );
 
   process.chdir(root);
 
@@ -103,6 +106,7 @@ export async function prepareEnvironment(root: string, conf: ConfigFileInfo) {
     path: configOutFile,
     clear: async () => {
       await unlink(appDistModules);
+      await deleteConfigFile();
       rm(tempDirPath as string, {
         recursive: true,
       });
@@ -162,10 +166,7 @@ export async function bundleConfigFile(
     },
   });
 
-  const controller = new AbortController();
-  const { signal } = controller;
-  const data = new Uint8Array(Buffer.from(result.outputFiles[0].text));
-  return writeFile(outFile, data, { signal });
+  return createFile(outFile, result.outputFiles[0].text);
 }
 
 /**

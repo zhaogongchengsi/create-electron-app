@@ -81,7 +81,7 @@ export async function prepareBuildEnvironment(
   json.main = name + ".js";
 
   const packAgeStr = clearPackJson(json);
-  const rmFile = await createFile(envPath, PACKAGE_JSON, packAgeStr);
+  const rmFile = await createFile(envPath, packAgeStr, PACKAGE_JSON);
   const unLink = await createNodeModule(envPath, opt.root);
 
   return async () => {

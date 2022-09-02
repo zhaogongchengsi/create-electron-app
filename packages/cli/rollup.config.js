@@ -59,6 +59,7 @@ export default async function () {
       entryFileNames: `index.js`,
       format: "es",
     },
+    sourceMap: process.env.NODE_ENV === "development",
     external: [
       "cac",
       "electron",

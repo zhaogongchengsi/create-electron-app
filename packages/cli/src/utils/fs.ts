@@ -49,21 +49,21 @@ export async function createNodeModule(target: string, source: string) {
 /**
  *
  * @param path 文件夹路径
- * @param fileName 文件名
  * @param buffer 文件内容
+ * @param fileName 文件名 可选
  * @description 创建一个文件 并写入内容 若路径不存在则报错
  */
-export async function createFile(path: string, fileName: string, buffer: any) {
+export async function createFile(path: string, buffer: any, fileName?: string) {
   const isExist = await pathExist(path);
 
-  if (!isExist) {
+  if (fileName && !isExist) {
     throw new Error(`${path} does not exist`);
   }
 
   const controller = new AbortController();
   const { signal } = controller;
   const data = new Uint8Array(Buffer.from(buffer));
-  const outFile = join(path, fileName);
+  const outFile = fileName ? join(path, fileName) : path;
   await writeFile(outFile, data, { signal });
   return async () => {
     await unlink(outFile);
