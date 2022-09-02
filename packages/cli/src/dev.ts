@@ -10,9 +10,7 @@ export async function createDevServer(options: ServeOptions) {
 
   if (!useConfig) return;
 
-  console.log(useConfig)
-
-  // await startServer(options.root, useConfig);
+  await startServer(options.root, useConfig);
 }
 
 export async function startServer(root: string, conf: UseConfig) {

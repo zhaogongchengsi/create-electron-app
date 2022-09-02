@@ -19,6 +19,6 @@ export const importConfig = async (path: string) => {
 
 export const requireConfig = async (path: string) => {
   const raw = await _reauire(path);
-  const conf = raw.__esModule ?? raw.default ?? raw;
+  const conf = raw.__esModule ? raw.default : raw;
   return typeof conf === "function" ? conf() : conf;
 };
