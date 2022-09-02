@@ -26,15 +26,15 @@ export async function build(options: buildOptions) {
 
   await buildCode(options.root, useConfig);
 
-  log.success("Prepare the environment");
-  
+  log.success("Prepare the environment \n");
+
   await prepareBuildEnvironment(
     envPath,
     { ...options, ...useConfig },
     pack_json
   );
 
-  log.success("ready to build the app...");
+  log.success("ready to build the app... \n");
 
   await buildApp({
     inputDir: join(options.root, useConfig.outDir!),
