@@ -4,6 +4,7 @@ export {
   createFile,
   pathExist,
   createDir,
+  findFiles,
 } from "./fs";
 
 export { importConfig, requireConfig, _reauire, _import } from "./module";

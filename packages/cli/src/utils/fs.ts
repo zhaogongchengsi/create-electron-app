@@ -96,3 +96,30 @@ export async function createDir(path: string, rebuild: boolean = true) {
     return clear;
   }
 }
+
+/**
+ *
+ * @param dir 目标文件夹
+ * @param fileName 需要寻找的文件集合
+ */
+export async function findFiles(
+  dir: string,
+  fileName: string[]
+): Promise<{ path: string; exist: boolean }> {
+  const info = {
+    path: dir,
+    exist: false,
+  };
+  for await (const name of fileName) {
+    const p = join(dir, name);
+    if (await pathExist(p)) {
+      info.path = p;
+      info.exist = true;
+      break;
+    } else {
+      info.path = p;
+      info.exist = false;
+    }
+  }
+  return info;
+}

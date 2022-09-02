@@ -11,17 +11,17 @@ export const createCli = ({ build, createDevServer }: cliMethod) => {
   const cli = cac("cea");
 
   cli
-    .command("[root]", "start dev server")
+    .command("[configPath]", "start dev server")
     .alias("serve") // the command is called 'serve' in Vite's API
     .alias("dev") // alias to align with the script name
     .option("--host [host]", `[string] specify hostname`)
     .option("--port <port>", `[number] specify port`)
-    .action(async (root: string, options: any) => {
+    .action(async (configPath: string, options: any) => {
       const { port, host } = options;
       try {
         createDevServer({
           root: process.cwd(),
-          configFilePath: root,
+          configFilePath: configPath,
           port,
           host,
         });
