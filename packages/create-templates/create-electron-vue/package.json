@@ -27,5 +27,19 @@
     "vitepress": "^1.0.0-alpha.13",
     "vue": "^3.2.38",
     "vue-tsc": "^0.39.5"
+  },
+  "build": {
+    "appId": "com.example.app",
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ]
+    }
   }
 }

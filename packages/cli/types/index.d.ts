@@ -1,4 +1,21 @@
-export interface CommonOptions {
+export interface OutputOptions {
+  /**
+   * 临时执行的目录
+   */
+  tempDirName?: string;
+
+  /**
+   * app resource 输出目录
+   */
+  outDir?: string;
+
+  /**
+   * app xxx.exe 输出目录
+   */
+  appOutDir?: string;
+}
+
+export interface CommonOptions extends OutputOptions {
   /**
    *配置文件的路径
    */
@@ -8,16 +25,6 @@ export interface CommonOptions {
    * 执行的目录 （execute directory）
    */
   root: string;
-
-  /**
-   * 临时执行的目录
-   */
-  tempDirName?: string;
-
-  /**
-   * app 输出目录
-   */
-  outDir?: string;
 }
 
 export interface ServeOptions extends CommonOptions {
@@ -40,11 +47,9 @@ export interface WindowsRenderer {
 export type Main = WindowsMain | string;
 export type Renderer = string;
 
-export interface UseConfig {
+export interface UseConfig extends OutputOptions {
   main: Main;
   renderer: Renderer;
-  outDir?: string;
-  tempDirName?: string;
 }
 
 export interface ElectronAssets {

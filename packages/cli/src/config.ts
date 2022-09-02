@@ -204,6 +204,7 @@ export function mergeConfig(...configs: (UseConfig | undefined)[]): UseConfig {
       },
       tempDirName: ".app",
       outDir: "dist",
+      appOutDir: "releases",
     }
   );
 }

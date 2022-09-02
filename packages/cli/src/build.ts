@@ -1,4 +1,4 @@
-import { join, parse } from "path";
+import { join, parse, relative } from "path";
 import { buildOptions, UseConfig, WindowsMain } from "../types";
 import { buildMain } from "./builds";
 import { buildViteBundle } from "./builds/vite";
@@ -7,15 +7,27 @@ import { buildApp, createTarget } from "./electron";
 import { clearPackJson, createFile, createNodeModule } from "./utils";
 import { log } from "./utils/log";
 
+export const settingBuildOptions = (options: any) => {
+  return {
+    directories: {
+      output: options.output,
+    },
+  };
+};
+
 export async function build(options: buildOptions) {
   const useConfig = await readConfigFile(options);
   if (!useConfig) return;
   const envPath = join(options.root, useConfig.outDir!);
+  const appOutDir = relative(envPath, join(options.root, useConfig.appOutDir!));
   const pack_json = await readPackJsonFile(options);
+
+  pack_json.build = settingBuildOptions({ output: appOutDir });
 
   await buildCode(options.root, useConfig);
 
   log.success("Prepare the environment");
+  
   await prepareBuildEnvironment(
     envPath,
     { ...options, ...useConfig },
@@ -67,6 +79,7 @@ export async function prepareBuildEnvironment(
   const { name } = parse(input);
   const PACKAGE_JSON = "package.json";
   json.main = name + ".js";
+
   const packAgeStr = clearPackJson(json);
   const rmFile = await createFile(envPath, PACKAGE_JSON, packAgeStr);
   const unLink = await createNodeModule(envPath, opt.root);
