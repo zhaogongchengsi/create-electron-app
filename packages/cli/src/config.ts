@@ -1,7 +1,7 @@
 import { createRequire } from "node:module";
 import { join, resolve, parse } from "path";
 import { CommonOptions, UseConfig } from "../types";
-import { pathExist } from "./utils";
+import { importConfig, pathExist, requireConfig } from "./utils";
 import { build } from "esbuild";
 import { tmpdir } from "os";
 import { mkdtemp, rm, symlink, unlink, writeFile } from "fs/promises";
@@ -52,8 +52,6 @@ export async function findConfigFile(
   };
 }
 
-const _require = createRequire(import.meta.url);
-
 /**
  *
  * @param confinfo 配置文件路径 和 类型
@@ -62,12 +60,11 @@ export async function resolveConfig<C>(
   confinfo: ConfigFileInfo
 ): Promise<C | undefined> {
   let conf: C | undefined = undefined;
+
   if (!confinfo.isEMS || confinfo.type === "json") {
-    const _conf = await _require(confinfo.path);
-    conf = typeof _conf === "function" ? _conf() : _conf;
+    conf = await requireConfig(confinfo.path);
   } else if (confinfo.isEMS) {
-    const c = await import("file://" + confinfo.path);
-    conf = typeof c.default === "function" ? c?.default() : c.default;
+    conf = await importConfig(confinfo.path);
   }
 
   return conf;
@@ -93,7 +90,7 @@ export async function prepareEnvironment(root: string, conf: ConfigFileInfo) {
   const appDistModules = join(tempDirPath, "node_modules");
   const configOutFile = join(
     tempDirPath,
-    conf.isEMS ? conf.name + ".mjs" : conf.name + ".js"
+    conf.isEMS ? conf.name + ".mjs" : conf.name + ".cjs"
   );
 
   await symlink(rootModules, appDistModules, "junction");
@@ -118,15 +115,15 @@ export async function readConfigFile(opt: CommonOptions) {
   const pathinfo = await findConfigFile(root, configFilePath);
   const jsonConf = await readPackJsonFile(opt);
 
-  if (jsonConf.type === "module") {
-    pathinfo.isEMS = true;
-  } else {
-    pathinfo.isEMS = false;
-  }
-
   if (/\.m[jt]s$/.test(pathinfo.path)) {
     pathinfo.isEMS = true;
   } else if (/\.c[jt]s$/.test(pathinfo.path)) {
+    pathinfo.isEMS = false;
+  }
+
+  if (jsonConf.type === "module") {
+    pathinfo.isEMS = true;
+  } else {
     pathinfo.isEMS = false;
   }
 
@@ -141,6 +138,7 @@ export async function readConfigFile(opt: CommonOptions) {
 
 export async function readPackJsonFile({ root }: CommonOptions) {
   const pathinfo = await findConfigFile(root, "package.json");
+  pathinfo.isEMS = false;
   return (await resolveConfig<any>(pathinfo))!;
 }
 

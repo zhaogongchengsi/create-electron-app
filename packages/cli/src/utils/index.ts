@@ -6,6 +6,8 @@ export {
   createDir,
 } from "./fs";
 
+export { importConfig, requireConfig, _reauire, _import } from "./module";
+
 enum toStringRes {
   object = "[object Object]",
   array = "[object Array]",
