@@ -32,8 +32,25 @@ const selectTsCompiler = () => {
 };
 
 export default async function () {
-  const tsPlugin = selectTsCompiler();
-  const plugins = [nodeResolve(), commonjs(), json(), tsPlugin];
+  const plugins = [
+    nodeResolve(),
+    commonjs(),
+    json(),
+    esbuild({
+      // All options are optional
+      include: /\.[jt]sx?$/, // default, inferred from `loaders` option
+      exclude: /node_modules/, // default
+      sourceMap: true, // default
+      minify: process.env.NODE_ENV === "production",
+      target: "esnext", // default, or 'es20XX', 'esnext'
+      tsconfig: "tsconfig.json", // default
+      loaders: {
+        ".json": "json",
+        ".ts": "ts",
+        ".js": "js",
+      },
+    }),
+  ];
 
   const indexConfig = {
     input: resolvePath("./src/index.ts"),

@@ -24,11 +24,11 @@ export async function build(options: buildOptions) {
 
   log.success("ready to build the app...");
 
-  // await buildApp({
-  //   inputDir: options.root,
-  //   targets: createTarget().createTarget(),
-  //   config: {},
-  // });
+  await buildApp({
+    inputDir: join(options.root, useConfig.outDir!),
+    targets: createTarget().createTarget(),
+    config: pack_json.build,
+  });
 
   log.success("build complete");
 }

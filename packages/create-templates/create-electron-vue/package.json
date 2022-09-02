@@ -2,7 +2,7 @@
   "name": "create-electron-vue",
   "version": "1.0.0",
   "description": "",
-  "main": "./dist/index.js",
+  "main": "./index.js",
   "scripts": {
     "dev": "cea",
     "build": "cea build ./cea.config.js",
