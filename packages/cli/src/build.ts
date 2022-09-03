@@ -41,9 +41,12 @@ export async function build(options: buildOptions) {
 
   log.success("ready to build the app... \n");
 
+  
+  const target = await createTarget();
+
   await buildApp({
     inputDir: envPath,
-    targets: createTarget().createTarget(),
+    targets: target.createTarget(),
     config: pack_json.build,
   });
 

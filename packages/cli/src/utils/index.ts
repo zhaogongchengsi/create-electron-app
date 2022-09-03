@@ -7,7 +7,13 @@ export {
   findFiles,
 } from "./fs";
 
-export { importConfig, requireConfig, _reauire, _import } from "./module";
+export {
+  importConfig,
+  requireConfig,
+  _reauire,
+  _import,
+  dynamicImport,
+} from "./module";
 
 enum toStringRes {
   object = "[object Object]",

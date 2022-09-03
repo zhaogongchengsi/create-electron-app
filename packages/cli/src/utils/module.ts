@@ -22,3 +22,14 @@ export const requireConfig = async (path: string) => {
   const conf = raw.__esModule ? raw.default : raw;
   return typeof conf === "function" ? conf() : conf;
 };
+
+export const dynamicImport = async (name: string) => {
+  try {
+    return import(name);
+  } catch (err) {
+    new Error(
+      `The ${name} module was not found. Try to install ${name} by running npm install ${name}`
+    );
+    process.exit(1);
+  }
+};

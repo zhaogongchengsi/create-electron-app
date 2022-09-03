@@ -1,3 +1,4 @@
+
 export interface OutputOptions {
   /**
    * 临时执行的目录
@@ -57,3 +58,16 @@ export interface ElectronAssets {
   preload?: string;
   loadUrl: string | number;
 }
+
+export type Callbacks = {
+  close?: (code: number | null) => void;
+  data?: (data: any) => void;
+};
+
+export type Platforms = "win" | "mac" | "lin" | "all";
+export type targets = Map<Platform, Map<Arch, Array<string>>>;
+export type BuildAppOptions = {
+  inputDir: string;
+  config: string | Configuration | null;
+  targets: targets;
+};
