@@ -24,12 +24,14 @@ export const requireConfig = async (path: string) => {
 };
 
 export const dynamicImport = async (name: string) => {
+  let module;
   try {
-    return import(name);
+    module = await _reauire(name);
   } catch (err) {
-    new Error(
+    throw new Error(
       `The ${name} module was not found. Try to install ${name} by running npm install ${name}`
     );
-    process.exit(1);
   }
+
+  return module;
 };
