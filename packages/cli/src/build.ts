@@ -16,11 +16,12 @@ export const settingBuildOptions = (options: any) => {
 };
 
 export async function build(options: buildOptions) {
-  const useConfig = await readConfigInfo(options);
+  const pack_json = await readPackJsonFile(options);
+
+  const useConfig = await readConfigInfo(options, pack_json);
   if (!useConfig) return;
   const envPath = join(options.root, useConfig.outDir!);
   const appOutDir = relative(envPath, join(options.root, useConfig.appOutDir!));
-  const pack_json = await readPackJsonFile(options);
 
   pack_json.build = settingBuildOptions({ output: appOutDir });
 
@@ -66,6 +67,7 @@ export async function buildCode(root: string, conf: UseConfig) {
       loadUrl: "./index.html",
       preload: pre + ".js",
     },
+    isEsm: false,
     idDev: false,
   });
 }

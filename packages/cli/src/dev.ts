@@ -1,19 +1,24 @@
 import { ServeOptions, UseConfig, WindowsMain } from "../types";
-import { readConfigInfo } from "./config";
+import { readConfigInfo, readPackJsonFile } from "./config";
 import { buildMain, createViteServer } from "./builds";
 import { parse } from "path";
 import { createDevElectronApp } from "./electron";
 import { log } from "./utils/log";
 
 export async function createDevServer(options: ServeOptions) {
-  const useConfig = await readConfigInfo(options);
+  const pack_json = await readPackJsonFile(options);
+  const useConfig = await readConfigInfo(options, pack_json);
 
   if (!useConfig) return;
 
-  await startServer(options.root, useConfig);
+  await startServer(options.root, useConfig, pack_json);
 }
 
-export async function startServer(root: string, conf: UseConfig) {
+export async function startServer(
+  root: string,
+  conf: UseConfig,
+  packJson: any
+) {
   let pre: string | undefined;
   const { preload, input } = conf.main as WindowsMain;
 
@@ -32,7 +37,7 @@ export async function startServer(root: string, conf: UseConfig) {
   const outDir = await buildMain({
     root,
     config: conf,
-    isEsm: false,
+    isEsm: packJson.type === "module",
     electronAssets: {
       loadUrl: `http://localhost:${port}`,
       mode: "development",

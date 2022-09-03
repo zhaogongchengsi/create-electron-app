@@ -117,11 +117,11 @@ export async function prepareEnvironment(root: string, conf: ConfigFileInfo) {
   };
 }
 
-export async function readConfigInfo(opt: CommonOptions) {
+export async function readConfigInfo(opt: CommonOptions, packJson: any) {
   const { root, configFilePath } = opt;
 
   const pathinfo = await findConfigFile(root, configFilePath);
-  const { main, type } = await readPackJsonFile(opt);
+  const { main, type } = packJson;
 
   if (pathinfo) {
     if (/\.m[jt]s$/.test(pathinfo.path)) {
