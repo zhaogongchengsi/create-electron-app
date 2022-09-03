@@ -31,7 +31,7 @@ export const createCli = ({ build, createDevServer }: cliMethod) => {
       }
     });
 
-  cli.command("build", "Build your app").action((config, options) => {
+  cli.command("build [root]", "Build your app").action((config, options) => {
     try {
       build({
         root: process.cwd(),

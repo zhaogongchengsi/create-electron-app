@@ -19,6 +19,7 @@ export async function build(options: buildOptions) {
   const pack_json = await readPackJsonFile(options);
 
   const useConfig = await readConfigInfo(options, pack_json);
+
   if (!useConfig) return;
   const envPath = join(options.root, useConfig.outDir!);
   const appOutDir = relative(envPath, join(options.root, useConfig.appOutDir!));
