@@ -1,5 +1,7 @@
 # create-electron-app
 
+![create-electron-app](https://img.shields.io/npm/v/@zzhaon/create-electron-app)
+
 Quickly create an electron-based app and help build the app
 
 ## Install

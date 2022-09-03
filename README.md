@@ -4,18 +4,9 @@
 
 # In development
 
-### Configuration File
+## packages
 
-#### mian
-
-```ts
-type main = WindowsMain[];
-
-interface WindowsMain {
-  input: string;
-  prload?: string;
-}
-```
-
-**input** 主窗口入口
-**prload**
+| Package                                     | Version (click for changelogs)                                                   |
+| ------------------------------------------- | :------------------------------------------------------------------------------- |
+|                                             |
+| [create-electron-app](packages/create-vite) | ![create-electron-app](https://img.shields.io/npm/v/@zzhaon/create-electron-app) |
