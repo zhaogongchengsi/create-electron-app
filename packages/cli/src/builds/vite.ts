@@ -16,8 +16,8 @@ export type MergeOption = {
   configRoot?: string;
 };
 
-export async function createViteServer(root: string, { renderer }: UseConfig) {
-  const { dir, base } = parse(resolve(root, renderer));
+export async function createViteServer(root: string, { vite }: UseConfig) {
+  const { dir, base } = parse(resolve(root, vite));
 
   const server = await createServer({
     root: dir,
@@ -33,9 +33,9 @@ export async function createViteServer(root: string, { renderer }: UseConfig) {
 
 export async function buildViteBundle(
   root: string,
-  { renderer, outDir }: UseConfig
+  { vite, outDir }: UseConfig
 ) {
-  const viteConfigFile = resolve(root, renderer);
+  const viteConfigFile = resolve(root, vite);
   const outdir = resolve(root, outDir ?? "dist");
   const { dir } = parse(viteConfigFile);
 

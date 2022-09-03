@@ -49,7 +49,7 @@ export type Renderer = string;
 
 export interface UseConfig extends OutputOptions {
   main: Main;
-  renderer: Renderer;
+  vite: string;
 }
 
 export interface ElectronAssets {

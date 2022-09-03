@@ -32,6 +32,7 @@ export async function startServer(root: string, conf: UseConfig) {
   const outDir = await buildMain({
     root,
     config: conf,
+    isEsm: false,
     electronAssets: {
       loadUrl: `http://localhost:${port}`,
       mode: "development",

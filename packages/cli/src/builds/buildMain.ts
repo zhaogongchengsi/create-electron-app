@@ -8,6 +8,7 @@ export type buildMainOption = {
   config: UseConfig;
   electronAssets?: ElectronAssets;
   idDev?: boolean;
+  isEsm: boolean;
 };
 
 export async function buildMain({
@@ -15,6 +16,7 @@ export async function buildMain({
   idDev = true,
   electronAssets,
   config,
+  isEsm = false,
 }: buildMainOption) {
   let entryPoints: string[] = [];
   const outDir = resolve(root, idDev ? config.tempDirName! : config.outDir!);
@@ -45,6 +47,7 @@ export async function buildMain({
   await esbuild({
     input: entryPoints,
     outdir: outDir,
+    format: isEsm ? "esm" : "cjs",
     electronAssets: electronAssets,
   });
 

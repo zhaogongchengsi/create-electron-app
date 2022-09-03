@@ -5,7 +5,7 @@ const config: UseConfig = {
     input: "./main/index.ts",
     preload: "./main/preload.ts"
   },
-  renderer: "./vite.config.ts"
+  vite: "./vite.config.ts"
 };
 
 export default config;

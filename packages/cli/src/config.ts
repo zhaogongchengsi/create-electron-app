@@ -2,6 +2,7 @@ import { join, resolve, parse } from "path";
 import { CommonOptions, UseConfig } from "../types";
 import {
   createFile,
+  createNodeModule,
   findFiles,
   importConfig,
   pathExist,
@@ -67,7 +68,7 @@ export async function resolveConfig<C>(
   if (!isEMS || type === "json") {
     conf = await requireConfig(path);
   } else if (isEMS) {
-    conf = await importConfig(type);
+    conf = await importConfig(path);
   }
 
   return conf;
@@ -89,14 +90,12 @@ export async function prepareEnvironment(root: string, conf: ConfigFileInfo) {
     throw new Error(`Failed to read configuration file`);
   }
 
-  const rootModules = join(root, "node_modules");
-  const appDistModules = join(tempDirPath, "node_modules");
   const configOutFile = join(
     tempDirPath,
     conf.isEMS ? conf.name + ".mjs" : conf.name + ".cjs"
   );
 
-  await symlink(rootModules, appDistModules, "junction");
+  const unlink = await createNodeModule(tempDirPath, root);
 
   const deleteConfigFile = await bundleConfigFile(
     conf.path,
@@ -109,7 +108,7 @@ export async function prepareEnvironment(root: string, conf: ConfigFileInfo) {
   return {
     path: configOutFile,
     clear: async () => {
-      await unlink(appDistModules);
+      await unlink();
       await deleteConfigFile();
       rm(tempDirPath as string, {
         recursive: true,
@@ -150,7 +149,7 @@ export async function readConfigInfo(opt: CommonOptions) {
         main: {
           input: main,
         },
-        renderer: viteFileinfo.path,
+        vite: viteFileinfo.path,
       });
     }
   }
@@ -214,7 +213,7 @@ export function mergeConfig(...configs: (UseConfig | undefined)[]): UseConfig {
       return pre;
     },
     {
-      renderer: "",
+      vite: "",
       main: {
         input: "",
       },
