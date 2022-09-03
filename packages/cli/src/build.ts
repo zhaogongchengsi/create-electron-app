@@ -7,6 +7,8 @@ import { buildApp, createTarget } from "./electron";
 import { clearPackJson, createFile, createNodeModule } from "./utils";
 import { log } from "./utils/log";
 
+const FilE_EXTENSION = "cjs";
+
 export const settingBuildOptions = (options: any) => {
   return {
     directories: {
@@ -39,7 +41,7 @@ export async function build(options: buildOptions) {
   log.success("ready to build the app... \n");
 
   await buildApp({
-    inputDir: join(options.root, useConfig.outDir!),
+    inputDir: envPath,
     targets: createTarget().createTarget(),
     config: pack_json.build,
   });
@@ -66,7 +68,7 @@ export async function buildCode(root: string, conf: UseConfig) {
     electronAssets: {
       mode: "production",
       loadUrl: "./index.html",
-      preload: pre + ".js",
+      preload: pre + FilE_EXTENSION,
     },
     isEsm: false,
     idDev: false,
@@ -81,7 +83,7 @@ export async function prepareBuildEnvironment(
   const { input } = opt.main as WindowsMain;
   const { name } = parse(input);
   const PACKAGE_JSON = "package.json";
-  json.main = name + ".js";
+  json.main = name + FilE_EXTENSION;
 
   const packAgeStr = clearPackJson(json);
   const rmFile = await createFile(envPath, packAgeStr, PACKAGE_JSON);
