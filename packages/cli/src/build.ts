@@ -1,5 +1,5 @@
 import { join, parse, relative } from "path";
-import { buildOptions, UseConfig, WindowsMain } from "../types";
+import { buildOptions, ElectronAssets, UseConfig, WindowsMain } from "../types";
 import { buildMain } from "./builds";
 import { buildViteBundle } from "./builds/vite";
 import { readConfigInfo, readPackJsonFile } from "./config";
@@ -7,10 +7,11 @@ import { buildApp, createTarget } from "./electron";
 import { clearPackJson, createFile, createNodeModule } from "./utils";
 import { log } from "./utils/log";
 
-const FilE_EXTENSION = "cjs";
+const FilE_EXTENSION = ".cjs";
 
 export const settingBuildOptions = (options: any) => {
   return {
+    ...options.build,
     directories: {
       output: options.output,
     },
@@ -53,9 +54,13 @@ export async function buildCode(root: string, conf: UseConfig) {
   const res = await buildViteBundle(root, conf);
   const { preload } = conf.main as WindowsMain;
 
-  let pre;
+  const electronAssets: ElectronAssets = {
+    mode: "production",
+    loadUrl: "./index.html",
+  };
+
   if (preload) {
-    pre = parse(preload).name;
+    electronAssets.preload = parse(preload).name + FilE_EXTENSION;
   }
 
   if (res !== true) {
@@ -65,11 +70,7 @@ export async function buildCode(root: string, conf: UseConfig) {
   await buildMain({
     root,
     config: conf,
-    electronAssets: {
-      mode: "production",
-      loadUrl: "./index.html",
-      preload: pre + FilE_EXTENSION,
-    },
+    electronAssets: electronAssets,
     isEsm: false,
     idDev: false,
   });
