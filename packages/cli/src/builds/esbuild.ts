@@ -36,6 +36,7 @@ export async function esbuild({
     define: {
       electronAssets: JSON.stringify(electronAssets),
     },
+    outExtension: { ".js": ".cjs" },
     platform: "node",
     external: ["electron"],
   });

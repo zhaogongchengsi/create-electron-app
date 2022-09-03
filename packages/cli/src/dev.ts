@@ -37,15 +37,17 @@ export async function startServer(
   const outDir = await buildMain({
     root,
     config: conf,
-    isEsm: packJson.type === "module",
+    isEsm: false,
     electronAssets: {
       loadUrl: `http://localhost:${port}`,
       mode: "development",
-      preload: pre,
+      preload: pre + ".cjs",
     },
   });
 
-  await createDevElectronApp(outDir, parse(input).name, {
+  const { name } = parse(input);
+
+  await createDevElectronApp(outDir, name + ".cjs", {
     close() {
       log.success("app close");
       process.exit(1);

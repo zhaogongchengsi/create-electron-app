@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "main": "./main/index.ts",
+  "type": "module",
   "scripts": {
     "dev:app": "cea",
     "dev:vite": "vite",
