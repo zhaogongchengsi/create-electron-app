@@ -37,7 +37,7 @@ export async function startServer(
   server.printUrls();
 
   if (preload) {
-    pre = parse(preload).name;
+    pre = parse(preload).name + FilE_EXTENSION;
   }
 
   const { port } = server.httpServer?.address() as AddressInfo;
@@ -48,7 +48,7 @@ export async function startServer(
     electronAssets: {
       loadUrl: server.resolvedUrls?.local[0] ?? `http:localhost://${port}`,
       mode: "development",
-      preload: pre + FilE_EXTENSION,
+      preload: pre,
     },
   });
 
