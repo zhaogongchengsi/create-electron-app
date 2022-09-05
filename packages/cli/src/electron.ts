@@ -2,14 +2,17 @@ import { spawn } from "node:child_process";
 import { BuildAppOptions, Callbacks, Platforms } from "../types";
 import { dynamicImport } from "./utils";
 
+//@ts-ignore
 import electronmon from "electronmon";
+
+export const ELECTRONEXE = "electron";
 
 export async function createDevElectronApp(
   root: string,
   file: string,
   callbacks?: Callbacks
 ) {
-  const ls = spawn(`electron`, [file], {
+  const ls = spawn(ELECTRONEXE, [file], {
     cwd: root,
     shell: true,
   });

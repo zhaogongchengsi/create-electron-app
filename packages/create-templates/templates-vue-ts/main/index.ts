@@ -22,7 +22,6 @@ const createWindow = () => {
   } else {
     win.loadURL(electronAssets.loadUrl);
   }
-
 };
 
 app

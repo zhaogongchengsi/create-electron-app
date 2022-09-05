@@ -48,12 +48,24 @@ export type Main = WindowsMain | string;
 export type Renderer = string;
 
 export interface UseConfig extends OutputOptions {
+  /**
+   * entry file path
+   */
   main: Main;
+
+  /**
+   * vite.config path
+   */
   vite: string;
+
+  /**
+   *  hot update
+   */
+  watch?: boolean;
 }
 
 export interface ElectronAssets {
-  mode: "production" | "development";
+  mode: Mode;
   preload?: string;
   loadUrl: string | number;
 }

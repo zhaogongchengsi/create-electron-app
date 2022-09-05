@@ -217,6 +217,7 @@ export function mergeConfig(...configs: (UseConfig | undefined)[]): UseConfig {
       main: {
         input: "",
       },
+      watch: true,
       tempDirName: ".app",
       outDir: "dist",
       appOutDir: "releases",
