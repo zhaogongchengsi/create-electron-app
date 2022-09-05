@@ -1,0 +1,27 @@
+{
+  "name": "@zzhaon/create-templates",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "typs": "module",
+  "bin": {
+    "create-electron-template": "index.js",
+    "create-et": "index.js"
+  },
+  "scripts": {
+    "dev": "create-et"
+  },
+  "files": [
+    "index.js",
+    "template-*"
+  ],
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "prompts": "^2.4.2"
+  },
+  "devDependencies": {
+    "@types/prompts": "^2.0.14"
+  }
+}
