@@ -25,7 +25,7 @@ export async function createDevServer(options: ServeOptions) {
 export async function startServer(
   root: string,
   conf: UseConfig,
-  packJson: any
+  packJson?: any
 ) {
   let pre: string | undefined;
   const { preload, input } = conf.main as WindowsMain;
@@ -35,8 +35,6 @@ export async function startServer(
   const server = await createViteServer(root, conf);
   await server.listen();
   server.printUrls();
-
-  console.log(server.resolvedUrls);
 
   if (preload) {
     pre = parse(preload).name;
