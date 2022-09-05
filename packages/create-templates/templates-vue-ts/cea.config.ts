@@ -6,7 +6,7 @@ const config: UseConfig = {
     preload: "./main/preload.ts"
   },
   vite: "./vite.config.ts",
-  watch: true
+  watch: false
 };
 
 export default config;

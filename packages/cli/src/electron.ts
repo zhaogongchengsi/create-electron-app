@@ -1,6 +1,6 @@
 import { spawn } from "node:child_process";
 import { BuildAppOptions, Callbacks, Platforms } from "../types";
-import { dynamicImport } from "./utils";
+import { dynamicImport, _reauire } from "./utils";
 
 //@ts-ignore
 import electronmon from "electronmon";
@@ -12,7 +12,8 @@ export async function createDevElectronApp(
   file: string,
   callbacks?: Callbacks
 ) {
-  const ls = spawn(ELECTRONEXE, [file], {
+  const electron = await _reauire("electron");
+  const ls = spawn(electron, [file], {
     cwd: root,
     shell: true,
   });
