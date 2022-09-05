@@ -7,14 +7,14 @@ titleTemplate: Next Generation Frontend Tooling
 hero:
   name: create electron app
   text: Quickly create an electron app
-  tagline: Quickly create an electron app based on esbuild vite.
-  image:
-    src: /logo-with-shadow.png
-    alt: Vite
+  tagline: Based on esbuild and vite, both development and build are very fast
+  # image:
+  #   src: /logo-with-shadow.png
+  #   alt: Vite
   actions:
     - theme: brand
       text: Get Started
-      link: /guide/
+      link: /guide/index.md
     - theme: alt
       text: Why cea?
       link: /guide/why
