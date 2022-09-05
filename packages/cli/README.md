@@ -2,7 +2,7 @@
 
 ![create-electron-app](https://img.shields.io/npm/v/@zzhaon/create-electron-app?color=red&label=create-electron-app)
 
-Create electron App is a way to create electron applications. Just need a simple configuration to focus on the business without paying attention to the details of application construction
+🔊 Create electron App is a way to create electron applications. Just need a simple configuration to focus on the business without paying attention to the details of application construction
 
 ## Install
 
@@ -14,7 +14,7 @@ pnpm add  @zzhaon/create-electron-app --save-dev
 
 ```
 
-## Tip
+## Tip ❗
 
 Users need to manually download electron and electron-builder by themselves
 

@@ -5,12 +5,11 @@ import {
   createNodeModule,
   findFiles,
   importConfig,
-  pathExist,
   requireConfig,
 } from "./utils";
 import { build } from "esbuild";
 import { tmpdir } from "os";
-import { mkdtemp, rm, symlink, unlink } from "fs/promises";
+import { mkdtemp, rm } from "fs/promises";
 
 export type fileType = "ts" | "js" | "json";
 
