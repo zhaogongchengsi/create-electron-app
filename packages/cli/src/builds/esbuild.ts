@@ -1,4 +1,5 @@
 import { build } from "esbuild";
+import { Mode } from "../../types";
 
 export type Format = "iife" | "cjs" | "esm";
 
@@ -9,7 +10,16 @@ export interface esbuildOptions {
   sourcemap?: boolean;
   format?: Format;
   electronAssets: any;
+  mode?: Mode;
 }
+
+const LOADER = {
+  ".ts": "ts",
+  ".js": "js",
+  ".json": "json",
+  ".png": "file",
+  ".jpg": "file",
+} as const;
 
 export async function esbuild({
   input,
@@ -18,6 +28,7 @@ export async function esbuild({
   sourcemap = false,
   format = "cjs",
   electronAssets = {},
+  mode = "development",
 }: esbuildOptions) {
   return build({
     entryPoints: input,
@@ -27,15 +38,11 @@ export async function esbuild({
     bundle: true,
     sourcemap: sourcemap,
     format: format,
-    loader: {
-      ".ts": "ts",
-      ".js": "js",
-      ".json": "json",
-      ".png": "file",
-    },
+    loader: LOADER,
     define: {
       electronAssets: JSON.stringify(electronAssets),
     },
+    watch: mode === "development",
     outExtension: { ".js": ".cjs" },
     platform: "node",
     external: ["electron"],

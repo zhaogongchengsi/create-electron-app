@@ -2,6 +2,8 @@ import { spawn } from "node:child_process";
 import { BuildAppOptions, Callbacks, Platforms } from "../types";
 import { dynamicImport } from "./utils";
 
+import electronmon from "electronmon";
+
 export async function createDevElectronApp(
   root: string,
   file: string,
@@ -43,3 +45,10 @@ export const createTarget = async (platforms?: Platforms) => {
   }
   return Platform.current();
 };
+
+export async function electronmonApp(root: string, file: string) {
+  return electronmon({
+    cwd: root,
+    args: [file],
+  });
+}

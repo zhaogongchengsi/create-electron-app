@@ -67,6 +67,7 @@ export default async function () {
       "vite",
       "@vitejs/plugin-legacy",
       "electron-builder",
+      "electronmon",
     ],
     plugins: plugins,
   };

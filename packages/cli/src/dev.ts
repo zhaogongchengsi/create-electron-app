@@ -2,7 +2,7 @@ import { ServeOptions, UseConfig, WindowsMain } from "../types";
 import { readConfigInfo, readPackJsonFile } from "./config";
 import { buildMain, createViteServer } from "./builds";
 import { parse } from "path";
-import { createDevElectronApp } from "./electron";
+import { createDevElectronApp, electronmonApp } from "./electron";
 import { log } from "./utils/log";
 
 export async function createDevServer(options: ServeOptions) {
@@ -46,10 +46,12 @@ export async function startServer(
 
   const { name } = parse(input);
 
-  await createDevElectronApp(outDir, name + ".cjs", {
-    close() {
-      log.success("app close");
-      process.exit(1);
-    },
-  });
+  // await createDevElectronApp(outDir, name + ".cjs", {
+  //   close() {
+  //     log.success("app close");
+  //     process.exit(1);
+  //   },
+  // });
+
+  await electronmonApp(outDir, name + ".cjs");
 }

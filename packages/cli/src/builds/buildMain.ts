@@ -1,25 +1,28 @@
 import { resolve } from "path";
 import { isObject, isString } from "../utils";
-import { ElectronAssets, UseConfig, WindowsMain } from "../../types";
+import { ElectronAssets, Mode, UseConfig, WindowsMain } from "../../types";
 import { esbuild } from "./esbuild";
 
 export type buildMainOption = {
   root: string;
   config: UseConfig;
   electronAssets?: ElectronAssets;
-  idDev?: boolean;
+  mode?: Mode;
   isEsm?: boolean;
 };
 
 export async function buildMain({
   root,
-  idDev = true,
+  mode = "development",
   electronAssets,
   config,
   isEsm = false,
 }: buildMainOption) {
   let entryPoints: string[] = [];
-  const outDir = resolve(root, idDev ? config.tempDirName! : config.outDir!);
+  const outDir = resolve(
+    root,
+    mode == "development" ? config.tempDirName! : config.outDir!
+  );
 
   if (isObject(config.main)) {
     const { input, preload } = config.main as WindowsMain;
@@ -38,6 +41,7 @@ export async function buildMain({
     outdir: outDir,
     format: isEsm ? "esm" : "cjs",
     electronAssets: electronAssets,
+    mode,
   });
 
   return outDir;

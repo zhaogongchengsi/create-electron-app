@@ -125,18 +125,18 @@ export async function readConfigInfo(opt: CommonOptions, packJson: any) {
 
   if (pathinfo) {
     if (/\.m[jt]s$/.test(pathinfo.path)) {
-      pathinfo!.isEMS = true;
+      pathinfo.isEMS = true;
     } else if (/\.c[jt]s$/.test(pathinfo.path)) {
-      pathinfo!.isEMS = false;
+      pathinfo.isEMS = false;
     }
     if (type === "module") {
-      pathinfo!.isEMS = true;
+      pathinfo.isEMS = true;
     } else {
-      pathinfo!.isEMS = false;
+      pathinfo.isEMS = false;
     }
 
     const { clear, path } = await prepareEnvironment(root, pathinfo);
-    pathinfo!.path = path;
+    pathinfo.path = path;
 
     const finalConf = await resolveConfig<UseConfig>(pathinfo);
 

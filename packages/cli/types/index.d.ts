@@ -1,4 +1,3 @@
-
 export interface OutputOptions {
   /**
    * 临时执行的目录
@@ -71,3 +70,5 @@ export type BuildAppOptions = {
   config: string | Configuration | null;
   targets: targets;
 };
+
+export type Mode = "development" | "production";

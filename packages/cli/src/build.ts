@@ -75,7 +75,7 @@ export async function buildCode(root: string, conf: UseConfig) {
     config: conf,
     electronAssets: electronAssets,
     isEsm: false,
-    idDev: false,
+    mode: "production",
   });
 }
 
