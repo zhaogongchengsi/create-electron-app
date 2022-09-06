@@ -1,0 +1,17 @@
+{
+  "name": "vanilla",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "main": "./main/index.js",
+  "scripts": {
+    "dev": "cea",
+    "build": "cea build",
+    "dev:vite": "vite",
+    "build:vite": "vue-tsc --noEmit && vite build",
+    "preview:vite": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^3.1.0"
+  }
+}

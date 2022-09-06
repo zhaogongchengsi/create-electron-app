@@ -36,6 +36,7 @@ const prompts = require("prompts");
       choices: [
         { title: "React", value: "react" },
         { title: "Vue", value: "vue" },
+        { title: "Vanilla", value: "vanilla" },
       ],
       message: "choose frame",
     },

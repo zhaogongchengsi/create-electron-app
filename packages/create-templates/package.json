@@ -1,7 +1,7 @@
 {
-  "name": "@zzhaon/create-template",
-  "version": "1.0.0",
-  "description": "",
+  "name": "create-cea",
+  "version": "0.0.4",
+  "description": "Create a basic electron app",
   "main": "index.js",
   "typs": "module",
   "bin": {
@@ -9,15 +9,23 @@
     "cbe": "index.js"
   },
   "scripts": {
-    "dev": "create-et"
+    "update": "npm publish"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zhaogongchengsi/create-electron-app.git",
+    "directory": "packages/create-templates"
   },
   "files": [
     "index.js",
     "templates/*",
     "util.js"
   ],
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "electron",
+    "create-electron-app"
+  ],
+  "author": "zhaozunhong",
   "license": "ISC",
   "dependencies": {
     "prompts": "^2.4.2"
