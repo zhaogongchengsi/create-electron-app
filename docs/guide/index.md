@@ -10,7 +10,7 @@ Vite 需要 Node.js 版本 14.18+，16+， 所以我们也需要兼容 vite 的 
 
 :::tip 使用说明
 
-使用时需要自动下载 electron 和 electron-builder 两个库
+无论使用哪种方法都需要使用时需要自动下载 electron 和 electron-builder 两个库
 
 :::
 
@@ -78,10 +78,26 @@ app
   }
 ```
 
-### 4. 运行命令
+### 4. 安装 create-electron-app
+
+```bash
+npm install @zzhaon/create-electron-app --save-dev
+```
+
+### 5. 运行命令
 
 ```bash
 npm run dev:app
 ```
 
 稍等片刻 即可看见创建好的 桌面应用程序的窗口
+
+## 快速创建一个基础模板
+
+**使用 npm：**
+
+```bash
+npm create cea
+```
+
+然后按照提示操作即可
