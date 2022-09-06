@@ -1,20 +1,19 @@
 {
-  "name": "@zzhaon/create-templates",
+  "name": "@zzhaon/create-template",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "typs": "module",
   "bin": {
     "create-electron-template": "index.js",
-    "create-et": "index.js"
+    "cet": "index.js"
   },
   "scripts": {
     "dev": "create-et"
   },
   "files": [
     "index.js",
-    "createMainFile.js",
-    "createRendererProject/*",
+    "templates/*",
     "util.js"
   ],
   "keywords": [],
