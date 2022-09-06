@@ -5,8 +5,8 @@
   "main": "index.js",
   "typs": "module",
   "bin": {
-    "create-electron-template": "index.js",
-    "cet": "index.js"
+    "create-base-electron": "index.js",
+    "cbe": "index.js"
   },
   "scripts": {
     "dev": "create-et"
