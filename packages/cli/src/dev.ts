@@ -28,17 +28,24 @@ export async function startServer(
   packJson?: any
 ) {
   let pre: string | undefined;
-  const { preload, input } = conf.main as WindowsMain;
+
+  let input: string | undefined;
+
+  if (typeof conf.main === "object") {
+    const { preload, input: i } = conf.main as WindowsMain;
+    input = i;
+    if (preload) {
+      pre = parse(preload).name + FilE_EXTENSION;
+    }
+  } else {
+    input = conf.main;
+  }
 
   log.success("app starts");
 
   const server = await createViteServer(root, conf);
   await server.listen();
   server.printUrls();
-
-  if (preload) {
-    pre = parse(preload).name + FilE_EXTENSION;
-  }
 
   const { port } = server.httpServer?.address() as AddressInfo;
 

@@ -1,3 +1,5 @@
+import { BuildOptions as esbuildOpetions } from "esbuild";
+
 export interface OutputOptions {
   /**
    * 临时执行的目录
@@ -62,6 +64,10 @@ export interface UseConfig extends OutputOptions {
    *  hot update
    */
   watch?: boolean;
+
+  electronAssets?: ElectronAssets;
+
+  build?: esbuildOpetions;
 }
 
 export interface ElectronAssets {

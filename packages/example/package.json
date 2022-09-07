@@ -1,0 +1,24 @@
+{
+  "name": "exp",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "main": "./main/index.ts",
+  "scripts": {
+    "dev": "cea",
+    "build": "cea build",
+    "dev:vite": "vite",
+    "build:vite": "vue-tsc --noEmit && vite build",
+    "preview:vite": "vite preview"
+  },
+  "dependencies": {
+    "@zzhaon/create-electron-app": "workspace:^0.1.6",
+    "vue": "^3.2.37"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^3.1.0",
+    "typescript": "^4.6.4",
+    "vite": "^3.1.0",
+    "vue-tsc": "^0.40.4"
+  }
+}
