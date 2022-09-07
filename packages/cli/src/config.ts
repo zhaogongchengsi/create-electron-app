@@ -1,10 +1,12 @@
 import { join, resolve, parse } from "path";
-import { CommonOptions, UseConfig } from "../types";
+import { CommonOptions, Main, UseConfig, WindowsMain } from "../types";
 import {
   createFile,
   createNodeModule,
   findFiles,
   importConfig,
+  isObject,
+  isString,
   requireConfig,
 } from "./utils";
 import { build } from "esbuild";
@@ -222,4 +224,32 @@ export function mergeConfig(...configs: (UseConfig | undefined)[]): UseConfig {
       appOutDir: "releases",
     }
   );
+}
+
+/**
+ *
+ * @param main config.main
+ * @description 返回一个数组 数组第一项为文件入口值 其他的为 preload 可能多个
+ */
+export function identifyMainType(main: Main): [string, ...string[]] {
+  let res: [string, ...string[]] = [""];
+  if (isObject(main)) {
+    const { input, preload } = main as WindowsMain;
+    res[0] = input;
+    if (preload) {
+      res.push(preload);
+    }
+  }
+
+  if (isString(main)) {
+    res[0] = main as string;
+  }
+
+  if (!res[0] && res[0] === "") {
+    throw new Error(
+      `The main field entry file does not exist, please provide at least one`
+    );
+  }
+
+  return res;
 }

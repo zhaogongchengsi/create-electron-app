@@ -2,6 +2,7 @@ import { resolve } from "path";
 import { isObject, isString } from "../utils";
 import { ElectronAssets, Mode, UseConfig, WindowsMain } from "../../types";
 import { esbuild } from "./esbuild";
+import { identifyMainType } from "../config";
 
 export type buildMainOption = {
   root: string;
@@ -18,23 +19,12 @@ export async function buildMain({
   config,
   isEsm = false,
 }: buildMainOption) {
-  let entryPoints: string[] = [];
   const outDir = resolve(
     root,
     mode == "development" ? config.tempDirName! : config.outDir!
   );
 
-  if (isObject(config.main)) {
-    const { input, preload } = config.main as WindowsMain;
-    entryPoints = [input];
-    if (preload) {
-      entryPoints.push(preload);
-    }
-  }
-
-  if (isString(config.main)) {
-    entryPoints = [config.main as string];
-  }
+  const entryPoints = identifyMainType(config.main);
 
   await esbuild({
     input: entryPoints,

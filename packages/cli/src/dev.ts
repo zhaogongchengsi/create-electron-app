@@ -1,5 +1,5 @@
 import { ServeOptions, UseConfig, WindowsMain } from "../types";
-import { readConfigInfo, readPackJsonFile } from "./config";
+import { identifyMainType, readConfigInfo, readPackJsonFile } from "./config";
 import { buildMain, createViteServer } from "./builds";
 import { parse } from "path";
 import { createDevElectronApp, electronmonApp } from "./electron";
@@ -24,34 +24,29 @@ export async function createDevServer(options: ServeOptions) {
 
 export async function startServer(
   root: string,
-  conf: UseConfig,
+  config: UseConfig,
   packJson?: any
 ) {
-  let pre: string | undefined;
+  const [input, preload] = identifyMainType(config.main);
 
-  let input: string | undefined;
-
-  if (typeof conf.main === "object") {
-    const { preload, input: i } = conf.main as WindowsMain;
-    input = i;
-    if (preload) {
-      pre = parse(preload).name + FilE_EXTENSION;
-    }
-  } else {
-    input = conf.main;
-  }
+  console.log(input, preload);
 
   log.success("app starts");
 
-  const server = await createViteServer(root, conf);
+  const server = await createViteServer(root, config);
   await server.listen();
   server.printUrls();
 
   const { port } = server.httpServer?.address() as AddressInfo;
 
+  let pre: string | undefined;
+  if (preload) {
+    pre = parse(preload).name + FilE_EXTENSION;
+  }
+
   const outDir = await buildMain({
     root,
-    config: conf,
+    config: config,
     electronAssets: {
       loadUrl: server.resolvedUrls?.local[0] ?? `http:localhost://${port}`,
       mode: "development",
@@ -61,7 +56,7 @@ export async function startServer(
 
   const name = parse(input).name + FilE_EXTENSION;
 
-  conf.watch
+  config.watch
     ? await electronmonApp(outDir, name)
     : await createDevElectronApp(outDir, name, {
         close() {
