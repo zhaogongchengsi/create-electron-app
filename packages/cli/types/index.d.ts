@@ -1,4 +1,4 @@
-import { BuildOptions as esbuildOpetions } from "esbuild";
+import { BuildOptions as esbuildOpetions, Plugin } from "esbuild";
 
 export interface OutputOptions {
   /**
@@ -67,7 +67,25 @@ export interface UseConfig extends OutputOptions {
 
   electronAssets?: ElectronAssets;
 
+  /**
+   * Documentation https://esbuild.github.io/api/#build-api
+   *
+   * Not all configurations are valid
+   */
   build?: esbuildOpetions;
+}
+
+interface build {
+  minify?: boolean;
+  /** Documentation: https://esbuild.github.io/plugins/ */
+  plugins?: Plugin[];
+  /** Documentation: https://esbuild.github.io/api/#define */
+  define?: { [key: string]: string };
+  /** Documentation: https://esbuild.github.io/api/#target */
+  target: string | string[];
+  sourcemap: boolean;
+  /** Documentation: https://esbuild.github.io/api/#tsconfig */
+  tsconfig?: string;
 }
 
 export interface ElectronAssets {
