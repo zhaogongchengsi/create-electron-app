@@ -27,9 +27,10 @@ export async function startServer(
   config: UseConfig,
   packJson?: any
 ) {
-  const [input, preload] = identifyMainType(config.main);
-
-  console.log(input, preload);
+  const [input, preload] = identifyMainType(config.main, {
+    root,
+    ext: "cjs",
+  });
 
   log.success("app starts");
 
@@ -39,10 +40,10 @@ export async function startServer(
 
   const { port } = server.httpServer?.address() as AddressInfo;
 
-  let pre: string | undefined;
-  if (preload) {
-    pre = parse(preload).name + FilE_EXTENSION;
-  }
+  // let pre: string | undefined;
+  // if (preload) {
+  //   pre = parse(preload).name + FilE_EXTENSION;
+  // }
 
   const outDir = await buildMain({
     root,
@@ -50,7 +51,7 @@ export async function startServer(
     electronAssets: {
       loadUrl: server.resolvedUrls?.local[0] ?? `http:localhost://${port}`,
       mode: "development",
-      preload: pre,
+      preload,
     },
   });
 

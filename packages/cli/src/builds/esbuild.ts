@@ -30,8 +30,6 @@ export async function esbuild({
   electronAssets = {},
   mode = "development",
 }: esbuildOptions) {
-  console.log("esbuild", input);
-
   return build({
     entryPoints: input,
     outdir: outdir,

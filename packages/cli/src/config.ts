@@ -226,26 +226,49 @@ export function mergeConfig(...configs: (UseConfig | undefined)[]): UseConfig {
   );
 }
 
+export type MainOption = {
+  ext?: "js" | "ts" | "cjs" | "mjs";
+  root?: string;
+};
+
 /**
  *
  * @param main config.main
  * @description 返回一个数组 数组第一项为文件入口值 其他的为 preload 可能多个
  */
-export function identifyMainType(main: Main): [string, ...string[]] {
+export function identifyMainType(
+  main: Main,
+  options?: MainOption
+): [string, ...string[]] {
   let res: [string, ...string[]] = [""];
+
+  const formatPath = (str: string) => {
+    if (!options) {
+      return str;
+    }
+
+    const pathinfo = parse(str);
+    const { ext, root } = options;
+
+    return (
+      join(root ?? pathinfo.dir, pathinfo.name) +
+      (ext ? "." + ext : pathinfo.ext)
+    );
+  };
+
   if (isObject(main)) {
     const { input, preload } = main as WindowsMain;
-    res[0] = input;
+    res[0] = formatPath(input);
     if (preload) {
-      res.push(preload);
+      res.push(formatPath(preload));
     }
   }
 
   if (isString(main)) {
-    res[0] = main as string;
+    res[0] = formatPath(main as string);
   }
 
-  if (!res[0] && res[0] === "") {
+  if (!res[0] || res[0] === "") {
     throw new Error(
       `The main field entry file does not exist, please provide at least one`
     );
