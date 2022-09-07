@@ -2,7 +2,7 @@ import { join, parse, relative } from "path";
 import { buildOptions, ElectronAssets, UseConfig, WindowsMain } from "../types";
 import { buildMain } from "./builds";
 import { buildViteBundle } from "./builds/vite";
-import { readConfigInfo, readPackJsonFile } from "./config";
+import { identifyMainType, readConfigInfo, readPackJsonFile } from "./config";
 import { buildApp, createTarget } from "./electron";
 import { clearPackJson, createFile, createNodeModule } from "./utils";
 import { log } from "./utils/log";
@@ -41,30 +41,28 @@ export async function build(options: buildOptions) {
 
   log.success("ready to build the app... \n");
 
-  
   const target = await createTarget();
 
-  await buildApp({
-    inputDir: envPath,
-    targets: target.createTarget(),
-    config: pack_json.build,
-  });
+  // await buildApp({
+  //   inputDir: envPath,
+  //   targets: target.createTarget(),
+  //   config: pack_json.build,
+  // });
 
   log.success("build complete");
 }
 
 export async function buildCode(root: string, conf: UseConfig) {
   const res = await buildViteBundle(root, conf);
-  const { preload } = conf.main as WindowsMain;
+  const [_, preload] = identifyMainType(conf.main, {
+    ext: "cjs",
+  });
 
   const electronAssets: ElectronAssets = {
     mode: "production",
     loadUrl: "./index.html",
+    preload: preload ? parse(preload).base : undefined,
   };
-
-  if (preload) {
-    electronAssets.preload = parse(preload).name + FilE_EXTENSION;
-  }
 
   if (res !== true) {
     throw new Error(`vite Build failed please try again`);
@@ -84,7 +82,7 @@ export async function prepareBuildEnvironment(
   opt: buildOptions & UseConfig,
   json: any = {}
 ) {
-  const { input } = opt.main as WindowsMain;
+  const [input] = identifyMainType(opt.main);
   const { name } = parse(input);
   const PACKAGE_JSON = "package.json";
   json.main = name + FilE_EXTENSION;

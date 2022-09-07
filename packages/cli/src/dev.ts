@@ -5,8 +5,6 @@ import { parse } from "path";
 import { createDevElectronApp, electronmonApp } from "./electron";
 import { log } from "./utils/log";
 
-const FilE_EXTENSION = ".cjs";
-
 interface AddressInfo {
   address: string;
   family: string;
@@ -40,11 +38,6 @@ export async function startServer(
 
   const { port } = server.httpServer?.address() as AddressInfo;
 
-  // let pre: string | undefined;
-  // if (preload) {
-  //   pre = parse(preload).name + FilE_EXTENSION;
-  // }
-
   const outDir = await buildMain({
     root,
     config: config,
@@ -55,7 +48,7 @@ export async function startServer(
     },
   });
 
-  const name = parse(input).name + FilE_EXTENSION;
+  const name = parse(input).base;
 
   config.watch
     ? await electronmonApp(outDir, name)
