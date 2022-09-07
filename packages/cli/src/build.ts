@@ -83,9 +83,8 @@ export async function prepareBuildEnvironment(
   json: any = {}
 ) {
   const [input] = identifyMainType(opt.main);
-  const { name } = parse(input);
   const PACKAGE_JSON = "package.json";
-  json.main = name + FilE_EXTENSION;
+  json.main = parse(input).base;
 
   const packAgeStr = clearPackJson(json);
   const rmFile = await createFile(envPath, packAgeStr, PACKAGE_JSON);
