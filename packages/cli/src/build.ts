@@ -43,11 +43,11 @@ export async function build(options: buildOptions) {
 
   const target = await createTarget();
 
-  // await buildApp({
-  //   inputDir: envPath,
-  //   targets: target.createTarget(),
-  //   config: pack_json.build,
-  // });
+  await buildApp({
+    inputDir: envPath,
+    targets: target.createTarget(),
+    config: pack_json.build,
+  });
 
   log.success("build complete");
 }

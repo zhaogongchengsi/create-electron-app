@@ -21,3 +21,4 @@ dist/**/*
 packages/cli/dist/**/*
 **/dist/**/*
 **/.app/**/*
+**/releases/**/*

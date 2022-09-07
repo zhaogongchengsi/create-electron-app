@@ -44,7 +44,7 @@ export async function startServer(
     electronAssets: {
       loadUrl: server.resolvedUrls?.local[0] ?? `http:localhost://${port}`,
       mode: "development",
-      preload,
+      preload: parse(preload).base,
     },
   });
 
