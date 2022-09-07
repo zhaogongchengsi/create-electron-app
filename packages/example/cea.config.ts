@@ -1,12 +1,13 @@
 import { UseConfig } from "@zzhaon/create-electron-app";
+import { resolve } from "path";
 
-const conf: UseConfig = {
-  main: {
-    input: "./main/index.ts",
-    preload: "./main/preload.ts",
-  },
-  vite: "./vite.config.ts",
-  build: {},
+export default (): UseConfig => {
+  return {
+    main: {
+      input: resolve("./main/index.ts"),
+      preload: resolve("./main/preload.ts"),
+    },
+    vite: "./vite.config.ts",
+    build: {},
+  };
 };
-
-export default conf;

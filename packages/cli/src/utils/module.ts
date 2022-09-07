@@ -14,7 +14,7 @@ export const _import = async (path: string) => {
 export const importConfig = async (path: string) => {
   const raw = await _import(path);
   const conf = raw.default ?? raw;
-  return typeof module === "function" ? conf() : conf;
+  return typeof conf === "function" ? conf() : conf;
 };
 
 export const requireConfig = async (path: string) => {

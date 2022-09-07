@@ -1,4 +1,4 @@
-import { ServeOptions, UseConfig, WindowsMain } from "../types";
+import { ServeOptions, UseConfig } from "../types";
 import { identifyMainType, readConfigInfo, readPackJsonFile } from "./config";
 import { buildMain, createViteServer } from "./builds";
 import { parse } from "path";
