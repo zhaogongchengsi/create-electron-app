@@ -43,6 +43,14 @@ Then add the command
     }
 ```
 
+## npm
+
+```sh
+npm create cea
+```
+
+Operate as directed
+
 > Create a js or ts file named cea.config
 
 ---
