@@ -74,10 +74,14 @@ export async function resolveConfig<C>(
 
   const { isEMS, type, path } = fileinfo;
 
-  if (!isEMS || type === "json") {
-    conf = await requireConfig(path);
-  } else if (isEMS) {
-    conf = await importConfig(path);
+  try {
+    if (!isEMS || type === "json") {
+      conf = await requireConfig(path);
+    } else if (isEMS) {
+      conf = await importConfig(path);
+    }
+  } catch (err) {
+    console.log("require:", err);
   }
 
   return conf;
@@ -119,7 +123,7 @@ export async function prepareEnvironment(root: string, conf: ConfigFileInfo) {
     clear: async () => {
       await unlink();
       await deleteConfigFile();
-      rm(tempDirPath as string, {
+      await rm(tempDirPath as string, {
         recursive: true,
       });
     },
@@ -130,26 +134,35 @@ export async function readConfigInfo(opt: CommonOptions, packJson: any) {
   const { root, configFilePath } = opt;
 
   const pathinfo = await findConfigFile(root, configFilePath);
+
   const { main, type } = packJson;
 
   if (pathinfo) {
-    if (/\.m[jt]s$/.test(pathinfo.path)) {
-      pathinfo.isEMS = true;
-    } else if (/\.c[jt]s$/.test(pathinfo.path)) {
-      pathinfo.isEMS = false;
-    }
     if (type === "module") {
       pathinfo.isEMS = true;
     } else {
       pathinfo.isEMS = false;
     }
 
-    const { clear, path } = await prepareEnvironment(root, pathinfo);
-    pathinfo.path = path;
+    if (/\.m[jt]s$/.test(pathinfo.path)) {
+      pathinfo.isEMS = true;
+    } else if (/\.c[jt]s$/.test(pathinfo.path)) {
+      pathinfo.isEMS = false;
+    }
 
-    const finalConf = await resolveConfig<UseConfig>(pathinfo);
+    // 直接把 配置文件编译成为 cjs ??? 
+    // pathinfo.isEMS = false;
 
-    await clear();
+    let clear: any;
+    let finalConf: any;
+    try {
+      const { clear: c, path } = await prepareEnvironment(root, pathinfo);
+      pathinfo.path = path;
+      clear = c;
+      finalConf = await resolveConfig<UseConfig>(pathinfo);
+    } finally {
+      await clear();
+    }
     return mergeConfig(finalConf);
   } else {
     const viteFileinfo = await findFiles(root, viteFileNamas);

@@ -1,4 +1,4 @@
-import { build, BuildOptions } from "esbuild";
+import { build, BuildOptions, transform } from "esbuild";
 import { Mode } from "../../types";
 import { mergeEsBuild } from "../config";
 
@@ -65,4 +65,16 @@ export async function buildPlan(
   console.log(cop);
 
   return build(cop);
+}
+
+export async function transformWithEsbuild(
+  code: string,
+  loader: "ts" | "js" = "js"
+) {
+  return transform(code, {
+    target: "esnext",
+    format: "cjs",
+    loader: loader,
+    platform: "node",
+  });
 }
