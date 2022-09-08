@@ -24,7 +24,8 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development rollup --config rollup.config.js -w",
     "build": "cross-env NODE_ENV=production rollup --config rollup.config.js",
-    "test": "vitest --ui",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
     "coverage": "vitest run --coverage",
     "update": "npm publish",
     "prepublish": "cross-env NODE_ENV=production rollup --config rollup.config.js"

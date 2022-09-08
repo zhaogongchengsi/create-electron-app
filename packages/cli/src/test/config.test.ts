@@ -1,4 +1,4 @@
-import { identifyMainType, mergeConfig, mergeEsbuild } from "../config";
+import { identifyMainType, mergeConfig, mergeEsBuild } from "../config";
 import { describe, it, expect } from "vitest";
 import { join } from "path";
 import { esBuild } from "../../types";
@@ -185,18 +185,17 @@ describe("identifyMainType", () => {
 
 describe("mergeEsbuild", () => {
   it("Original value", () => {
-    const p1: esBuild = {
+    const p1 = {
       treeShaking: false,
       outfile: "abc",
-
       preserveSymlinks: true,
     };
-    const p2: esBuild = {
+    const p2 = {
       treeShaking: true,
       outfile: "abc2",
     };
 
-    const p3 = mergeEsbuild(p1, p2);
+    const p3 = mergeEsBuild(p1, p2);
 
     expect(p3).toEqual({
       treeShaking: true,
@@ -219,7 +218,7 @@ describe("mergeEsbuild", () => {
       },
     };
 
-    const p3 = mergeEsbuild(p1, p2);
+    const p3 = mergeEsBuild(p1, p2);
 
     expect(p3).toEqual({
       define: {
@@ -231,16 +230,14 @@ describe("mergeEsbuild", () => {
   });
 
   it("ignore option", () => {
-    const p1: esBuild = {
-      // @ts-ignore
+    const p1 = {
       watch: false,
     };
-    const p2: esBuild = {
-      // @ts-ignore
+    const p2 = {
       watch: true,
     };
 
-    const p3 = mergeEsbuild(p1, p2);
+    const p3 = mergeEsBuild(p1, p2);
 
     expect(p3).toEqual({
       watch: false,
@@ -259,7 +256,7 @@ describe("mergeEsbuild", () => {
       external: ["electron-builder"],
     };
 
-    const p3 = mergeEsbuild(p1, p2);
+    const p3 = mergeEsBuild(p1, p2);
 
     expect(p3).toEqual({
       external: ["electron", "electron-builder"],

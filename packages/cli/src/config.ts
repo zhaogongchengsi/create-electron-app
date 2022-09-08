@@ -17,6 +17,7 @@ import {
   requireConfig,
 } from "./utils";
 import { build } from "esbuild";
+import type { BuildOptions } from "esbuild";
 import { tmpdir } from "os";
 import { mkdtemp, rm } from "fs/promises";
 
@@ -314,11 +315,10 @@ const customBehavior = {
   },
 };
 
-export function mergeEsbuild(target: esBuild, source: esBuild): esBuild {
-  const hasOwnCall = (source: any, key: string) => {
-    return Object.prototype.hasOwnProperty.call(source, key);
-  };
-
+export function mergeEsBuild(
+  target: esBuild | BuildOptions,
+  source: esBuild | BuildOptions
+): esBuild {
   for (const [key, value] of Object.entries(source)) {
     if (ignoreOption.includes(key as OmitBuildField)) {
       //@ts-ignore
@@ -326,15 +326,13 @@ export function mergeEsbuild(target: esBuild, source: esBuild): esBuild {
       continue;
     }
 
-    if (hasOwnCall(source, key)) {
-      if (key in customBehavior) {
-        //@ts-ignore
-        target[key] = customBehavior[key](target, value);
-      }
-      if (typeof value !== "object") {
-        if (key in target) {
-          (target as any)[key] = value;
-        }
+    if (key in customBehavior) {
+      //@ts-ignore
+      target[key] = customBehavior[key](target, value);
+    }
+    if (typeof value !== "object") {
+      if (key in target) {
+        (target as any)[key] = value;
       }
     }
   }
