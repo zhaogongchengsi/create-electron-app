@@ -206,7 +206,7 @@ export function mergeConfig(...configs: (UseConfig | undefined)[]): UseConfig {
       if (Object.prototype.hasOwnProperty.call(cun, key)) {
         // Merge esbuild config with another strategy
         if (key === "build") {
-          pre[key] = Object.assign(pre[key], cun[key]);
+          pre[key] = cun[key];
           continue;
         }
 
@@ -307,18 +307,23 @@ const customBehavior = {
     const DEFINE = "define";
     //@ts-ignore
     delete value.electronAssets;
-    return Object.assign(target[DEFINE]!, value);
+    return Object.assign(target[DEFINE] ?? {}, value);
   },
   external(target: esBuild, value: any) {
     const EXTERNAL = "external";
     return [].concat(target[EXTERNAL] as any).concat(value);
   },
+  //plugins
 };
 
 export function mergeEsBuild(
   target: esBuild | BuildOptions,
   source: esBuild | BuildOptions
-): esBuild {
+): BuildOptions {
+  const assign = <T, S>(target?: T, object?: S) => {
+    return Object.assign(target ?? {}, object ?? {});
+  };
+
   for (const [key, value] of Object.entries(source)) {
     if (ignoreOption.includes(key as OmitBuildField)) {
       //@ts-ignore
@@ -329,12 +334,16 @@ export function mergeEsBuild(
     if (key in customBehavior) {
       //@ts-ignore
       target[key] = customBehavior[key](target, value);
+      continue;
     }
-    if (typeof value !== "object") {
-      if (key in target) {
-        (target as any)[key] = value;
-      }
-    }
+
+    (target as any)[key] = value;
+
+    // if (typeof value !== "object") {
+
+    // } else {
+    //   (target as any)[key] = assign((target as any)[key], value);
+    // }
   }
 
   return target;

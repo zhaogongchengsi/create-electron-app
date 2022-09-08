@@ -31,47 +31,46 @@ export async function build(options: buildOptions) {
 
   await buildCode(options.root, useConfig);
 
-  log.success("Prepare the environment \n");
+  // log.success("Prepare the environment \n");
 
-  await prepareBuildEnvironment(
-    envPath,
-    { ...options, ...useConfig },
-    pack_json
-  );
+  // await prepareBuildEnvironment(
+  //   envPath,
+  //   { ...options, ...useConfig },
+  //   pack_json
+  // );
 
-  log.success("ready to build the app... \n");
+  // log.success("ready to build the app... \n");
 
-  const target = await createTarget();
+  // const target = await createTarget();
 
-  await buildApp({
-    inputDir: envPath,
-    targets: target.createTarget(),
-    config: pack_json.build,
-  });
+  // await buildApp({
+  //   inputDir: envPath,
+  //   targets: target.createTarget(),
+  //   config: pack_json.build,
+  // });
 
   log.success("build complete");
 }
 
 export async function buildCode(root: string, conf: UseConfig) {
-  const res = await buildViteBundle(root, conf);
-  const [_, preload] = identifyMainType(conf.main, {
-    ext: "cjs",
-  });
+  // const res = await buildViteBundle(root, conf);
+  // const [_, preload] = identifyMainType(conf.main, {
+  //   ext: "cjs",
+  // });
 
-  const electronAssets: ElectronAssets = {
-    mode: "production",
-    loadUrl: "./index.html",
-    preload: preload ? parse(preload).base : undefined,
-  };
+  // const electronAssets: ElectronAssets = {
+  //   mode: "production",
+  //   loadUrl: "./index.html",
+  //   preload: preload ? parse(preload).base : undefined,
+  // };
 
-  if (res !== true) {
-    throw new Error(`vite Build failed please try again`);
-  }
+  // if (res !== true) {
+  //   throw new Error(`vite Build failed please try again`);
+  // }
 
   await buildMain({
     root,
     config: conf,
-    electronAssets: electronAssets,
     isEsm: false,
     mode: "production",
   });

@@ -78,6 +78,7 @@ importers:
       '@zzhaon/create-electron-app': workspace:^0.1.6
       electron: ^20.1.1
       electron-builder: ^23.3.3
+      esbuild-plugin-markdown: ^0.0.3
       typescript: ^4.6.4
       vite: ^3.1.0
       vue: ^3.2.37
@@ -89,6 +90,7 @@ importers:
       '@vitejs/plugin-vue': registry.npmmirror.com/@vitejs/plugin-vue/3.1.0_vite@3.1.0+vue@3.2.38
       electron: registry.npmmirror.com/electron/20.1.1
       electron-builder: registry.npmmirror.com/electron-builder/23.3.3
+      esbuild-plugin-markdown: registry.npmmirror.com/esbuild-plugin-markdown/0.0.3
       typescript: registry.npmmirror.com/typescript/4.8.2
       vite: registry.npmmirror.com/vite/3.1.0
       vue-tsc: registry.npmmirror.com/vue-tsc/0.40.10_typescript@4.8.2
@@ -2492,6 +2494,16 @@ packages:
     dev: true
     optional: true
 
+  registry.npmmirror.com/esbuild-plugin-markdown/0.0.3:
+    resolution: {integrity: sha512-vtfCewRN5RIO2bM7BD4sbTczOu85u4gzdU5j+BOYS10LhAkCyAZ+QXawmtWTQtP1pp2+Kn9qfIuG6BKgYLDKIQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/esbuild-plugin-markdown/-/esbuild-plugin-markdown-0.0.3.tgz}
+    name: esbuild-plugin-markdown
+    version: 0.0.3
+    dependencies:
+      fs-extra: registry.npmmirror.com/fs-extra/9.1.0
+      highlight.js: registry.npmmirror.com/highlight.js/10.7.3
+      marked: registry.npmmirror.com/marked/2.1.3
+    dev: true
+
   registry.npmmirror.com/esbuild-sunos-64/0.14.54:
     resolution: {integrity: sha512-28GZ24KmMSeKi5ueWzMcco6EBHStL3B6ubM7M51RmPwXQGLe0teBGJocmWhgwccA1GeFXqxzILIxXpHbl9Q/Kw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/esbuild-sunos-64/-/esbuild-sunos-64-0.14.54.tgz}
     name: esbuild-sunos-64
@@ -3056,6 +3068,12 @@ packages:
     dependencies:
       function-bind: registry.npmmirror.com/function-bind/1.1.1
 
+  registry.npmmirror.com/highlight.js/10.7.3:
+    resolution: {integrity: sha512-tzcUFauisWKNHaRkN4Wjl/ZA07gENAjFl3J/c480dprkGTg5EQstgaNFqBfUqCq54kZRIEcreTsAgF/m2quD7A==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/highlight.js/-/highlight.js-10.7.3.tgz}
+    name: highlight.js
+    version: 10.7.3
+    dev: true
+
   registry.npmmirror.com/hosted-git-info/4.1.0:
     resolution: {integrity: sha512-kyCuEOWjJqZuDbRHzL8V93NzQhwIB71oFWSyzVo+KPZI+pnQPPxucdkrOZvkLRnrf5URsQM+IJ09Dw29cRALIA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/hosted-git-info/-/hosted-git-info-4.1.0.tgz}
     name: hosted-git-info
@@ -3494,6 +3512,14 @@ packages:
     resolution: {integrity: sha512-s8UhlNe7vPKomQhC1qFelMokr/Sc3AgNbso3n74mVPA5LTZwkB9NlXf4XPamLxJE8h0gh73rM94xvwRT2CVInw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/make-error/-/make-error-1.3.6.tgz}
     name: make-error
     version: 1.3.6
+    dev: true
+
+  registry.npmmirror.com/marked/2.1.3:
+    resolution: {integrity: sha512-/Q+7MGzaETqifOMWYEA7HVMaZb4XbcRfaOzcSsHZEith83KGlvaSG33u0SKu89Mj5h+T8V2hM+8O45Qc5XTgwA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/marked/-/marked-2.1.3.tgz}
+    name: marked
+    version: 2.1.3
+    engines: {node: '>= 10'}
+    hasBin: true
     dev: true
 
   registry.npmmirror.com/matcher/3.0.0:

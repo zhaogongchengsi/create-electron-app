@@ -1,5 +1,6 @@
-import { build } from "esbuild";
+import { build, BuildOptions } from "esbuild";
 import { Mode } from "../../types";
+import { mergeEsBuild } from "../config";
 
 export type Format = "iife" | "cjs" | "esm";
 
@@ -47,4 +48,21 @@ export async function esbuild({
     platform: "node",
     external: ["electron"],
   });
+}
+
+/**
+ *
+ * @param baseOptions 构建后台带代码所需要的配置
+ * @param userOpt 用户定义的配置
+ * @returns Promise<BuildResult>
+ */
+export async function buildPlan(
+  baseOptions: BuildOptions,
+  userOpt?: BuildOptions
+) {
+  const cop = mergeEsBuild(baseOptions, userOpt ?? {});
+
+  console.log(cop);
+
+  return build(cop);
 }
