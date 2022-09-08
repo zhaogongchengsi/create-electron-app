@@ -1,6 +1,7 @@
-import { identifyMainType, mergeConfig } from "../config";
+import { identifyMainType, mergeConfig, mergeEsbuild } from "../config";
 import { describe, it, expect } from "vitest";
 import { join } from "path";
+import { esBuild } from "../../types";
 
 describe("mergeConfig", () => {
   it("mergeConfig default", () => {
@@ -179,5 +180,72 @@ describe("identifyMainType", () => {
 
     expect(input).toBe(join(root, "index" + "." + ext));
     expect(preload).toBe(join(root, "preload" + "." + ext));
+  });
+});
+
+describe("mergeEsbuild", () => {
+  it("Original value", () => {
+    const p1: esBuild = {
+      treeShaking: false,
+      outfile: "abc",
+      outbase: "abc1",
+      preserveSymlinks: true,
+    };
+    const p2: esBuild = {
+      treeShaking: true,
+      outfile: "abc2",
+      outbase: "abc3",
+    };
+
+    const p3 = mergeEsbuild(p1, p2);
+
+    expect(p3).toEqual({
+      treeShaking: true,
+      outfile: "abc2",
+      outbase: "abc3",
+      preserveSymlinks: true,
+    });
+  });
+
+  it("The electronAssets option inside the bundle will not work", () => {
+    const p1: esBuild = {
+      define: {
+        electronAssets: "1",
+      },
+    };
+    const p2: esBuild = {
+      define: {
+        electronAssets: "2",
+        b: "1",
+        c: "1",
+      },
+    };
+
+    const p3 = mergeEsbuild(p1, p2);
+
+    expect(p3).toEqual({
+      define: {
+        electronAssets: "1",
+        b: "1",
+        c: "1",
+      },
+    });
+  });
+
+  it("ignore option", () => {
+    const p1: esBuild = {
+      // @ts-ignore
+      watch: false,
+    };
+    const p2: esBuild = {
+      // @ts-ignore
+      watch: true,
+    };
+
+    const p3 = mergeEsbuild(p1, p2);
+
+    expect(p3).toEqual({
+      watch: false,
+    });
   });
 });

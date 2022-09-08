@@ -1,4 +1,4 @@
-import { BuildOptions as esbuildOpetions, Plugin } from "esbuild";
+import { BuildOptions as esbuildOpetions } from "esbuild";
 
 export interface OutputOptions {
   /**
@@ -72,22 +72,21 @@ export interface UseConfig extends OutputOptions {
    *
    * Not all configurations are valid
    */
-  build?: esbuildOpetions;
+  build?: esBuild;
 }
 
-interface build {
-  minify?: boolean;
-  /** Documentation: https://esbuild.github.io/plugins/ */
-  plugins?: Plugin[];
-  /** Documentation: https://esbuild.github.io/api/#define */
-  define?: { [key: string]: string };
-  /** Documentation: https://esbuild.github.io/api/#target */
-  target: string | string[];
-  sourcemap: boolean;
-  /** Documentation: https://esbuild.github.io/api/#tsconfig */
-  tsconfig?: string;
-}
+export type OmitBuildField =
+  | "watch"
+  | "entryPoints"
+  | "outExtension"
+  | "write"
+  | "platform"
+  | "target"
+  | "outdir";
 
+export type esBuild = Omit<esbuildOpetions, OmitBuildField>;
+
+// drop
 export interface ElectronAssets {
   mode: Mode;
   preload?: string;

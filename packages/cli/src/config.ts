@@ -1,5 +1,12 @@
 import { join, resolve, parse } from "path";
-import { CommonOptions, Main, UseConfig, WindowsMain } from "../types";
+import {
+  CommonOptions,
+  esBuild,
+  Main,
+  OmitBuildField,
+  UseConfig,
+  WindowsMain,
+} from "../types";
 import {
   createFile,
   createNodeModule,
@@ -281,4 +288,51 @@ export function identifyMainType(
   }
 
   return res;
+}
+
+const ignoreOption: OmitBuildField[] = [
+  "watch",
+  "entryPoints",
+  "outExtension",
+  "write",
+  "platform",
+  "target",
+  "outdir",
+];
+
+const customBehavior = {
+  define(target: esBuild, value: any) {
+    const DEFINE = "define";
+    //@ts-ignore
+    delete value.electronAssets;
+    return Object.assign(target[DEFINE]!, value);
+  },
+};
+
+export function mergeEsbuild(target: esBuild, source: esBuild): esBuild {
+  const hasOwnCall = (source: any, key: string) => {
+    return Object.prototype.hasOwnProperty.call(source, key);
+  };
+
+  for (const [key, value] of Object.entries(source)) {
+    if (ignoreOption.includes(key as OmitBuildField)) {
+      //@ts-ignore
+      delete source[key];
+      continue;
+    }
+
+    if (hasOwnCall(source, key)) {
+      if (key in customBehavior) {
+        //@ts-ignore
+        target[key] = customBehavior[key](target, value);
+      }
+      if (typeof value !== "object") {
+        if (key in target) {
+          (target as any)[key] = value;
+        }
+      }
+    }
+  }
+
+  return target;
 }
