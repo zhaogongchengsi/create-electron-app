@@ -85,4 +85,9 @@ Then add the command
 
 # About esbuild configuration merge
 
+| field      | operate                                                                                                         |
+| ---------- | --------------------------------------------------------------------------------------------------------------- |
+| `define`   | [Object.assign](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/assign) |
+| `external` | concat                                                                                                          |
+
 ### [Documentation](https://github.com/zhaogongchengsi/create-electron-app)
