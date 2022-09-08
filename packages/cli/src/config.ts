@@ -298,6 +298,7 @@ const ignoreOption: OmitBuildField[] = [
   "platform",
   "target",
   "outdir",
+  "outbase",
 ];
 
 const customBehavior = {
@@ -306,6 +307,10 @@ const customBehavior = {
     //@ts-ignore
     delete value.electronAssets;
     return Object.assign(target[DEFINE]!, value);
+  },
+  external(target: esBuild, value: any) {
+    const EXTERNAL = "external";
+    return [].concat(target[EXTERNAL] as any).concat(value);
   },
 };
 

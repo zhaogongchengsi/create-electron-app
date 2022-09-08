@@ -82,7 +82,8 @@ export type OmitBuildField =
   | "write"
   | "platform"
   | "target"
-  | "outdir";
+  | "outdir"
+  | "outbase";
 
 export type esBuild = Omit<esbuildOpetions, OmitBuildField>;
 

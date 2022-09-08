@@ -188,13 +188,12 @@ describe("mergeEsbuild", () => {
     const p1: esBuild = {
       treeShaking: false,
       outfile: "abc",
-      outbase: "abc1",
+
       preserveSymlinks: true,
     };
     const p2: esBuild = {
       treeShaking: true,
       outfile: "abc2",
-      outbase: "abc3",
     };
 
     const p3 = mergeEsbuild(p1, p2);
@@ -202,7 +201,6 @@ describe("mergeEsbuild", () => {
     expect(p3).toEqual({
       treeShaking: true,
       outfile: "abc2",
-      outbase: "abc3",
       preserveSymlinks: true,
     });
   });
@@ -246,6 +244,25 @@ describe("mergeEsbuild", () => {
 
     expect(p3).toEqual({
       watch: false,
+    });
+
+    expect(p2).toEqual({
+      watch: undefined,
+    });
+  });
+
+  it("merge external", () => {
+    const p1: esBuild = {
+      external: ["electron"],
+    };
+    const p2: esBuild = {
+      external: ["electron-builder"],
+    };
+
+    const p3 = mergeEsbuild(p1, p2);
+
+    expect(p3).toEqual({
+      external: ["electron", "electron-builder"],
     });
   });
 });

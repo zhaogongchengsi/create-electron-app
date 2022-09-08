@@ -83,6 +83,6 @@ Then add the command
 
   The output directory of the application
 
-## Documentation
+# About esbuild configuration merge
 
-To be developed...
+### [Documentation](https://github.com/zhaogongchengsi/create-electron-app)
