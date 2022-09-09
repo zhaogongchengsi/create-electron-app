@@ -51,8 +51,6 @@ export async function startServer(
 
   const name = parse(input).base;
 
-  console.log(outDir, name);
-
   config.watch
     ? await electronmonApp(outDir, name)
     : await createDevElectronApp(outDir, name, {

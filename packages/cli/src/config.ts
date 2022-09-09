@@ -164,8 +164,14 @@ export async function readConfigInfo(opt: CommonOptions, packJson: any) {
       pathinfo.path = path;
       clear = c;
       finalConf = await resolveConfig<UseConfig>(pathinfo);
+    } catch (e) {
+      throw e;
     } finally {
-      await clear();
+      try {
+        await clear();
+      } catch (err) {
+        // do something here
+      }
     }
     return mergeConfig(finalConf);
   } else {

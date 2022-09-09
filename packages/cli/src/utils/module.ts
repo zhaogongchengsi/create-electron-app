@@ -1,16 +1,16 @@
 import { existsSync, readFileSync, statSync } from "node:fs";
 import { createRequire } from "node:module";
 import { dirname, join } from "node:path";
+import { pathToFileURL } from "node:url";
 
 const _REQUIRE = createRequire(import.meta.url);
-const FILE = "file://";
 
 export const _reauire = async (path: string) => {
   return _REQUIRE(path);
 };
 
 export const _import = async (path: string) => {
-  return import(FILE + path);
+  return import(pathToFileURL(path).href);
 };
 
 export const importConfig = async (path: string) => {
