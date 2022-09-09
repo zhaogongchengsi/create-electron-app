@@ -212,7 +212,6 @@ export async function bundleConfigFile(
       ".js": "js",
       ".ts": "ts",
     },
-
     define: {
       __dirname: DIR_NAME_VAR,
       __filename: FILE_NAME_VAR,

@@ -7,8 +7,6 @@ import { buildApp, createTarget } from "./electron";
 import { clearPackJson, createFile, createNodeModule } from "./utils";
 import { log } from "./utils/log";
 
-const FilE_EXTENSION = ".cjs";
-
 export const settingBuildOptions = (options: any) => {
   return {
     ...options.build,
@@ -30,32 +28,40 @@ export async function build(options: buildOptions) {
 
   pack_json.build = settingBuildOptions({ output: appOutDir });
 
-  await buildCode(options.root, useConfig);
+  const path = await buildCode(options.root, useConfig);
 
-  // log.success("Prepare the environment \n");
+  log.success("Prepare the environment \n");
 
-  // await prepareBuildEnvironment(
-  //   envPath,
-  //   { ...options, ...useConfig },
-  //   pack_json
-  // );
+  await prepareBuildEnvironment(
+    envPath,
+    {
+      main: path,
+      root: options.root,
+    },
+    pack_json
+  );
 
-  // log.success("ready to build the app... \n");
+  log.success("ready to build the app... \n");
 
-  // const target = await createTarget();
+  const target = await createTarget();
 
-  // await buildApp({
-  //   inputDir: envPath,
-  //   targets: target.createTarget(),
-  //   config: pack_json.build,
-  // });
+  await buildApp({
+    inputDir: envPath,
+    targets: target.createTarget(),
+    config: pack_json.build,
+  });
 
-  // log.success("build complete");
+  log.success("build complete");
 }
 
 export async function buildCode(root: string, conf: UseConfig) {
-  // const res = await buildViteBundle(root, conf);
-  const [_, preload] = identifyMainType(conf.main, {
+  const res = await buildViteBundle(root, conf);
+
+  if (res !== true) {
+    throw new Error(`vite Build failed please try again`);
+  }
+
+  const [input, preload] = identifyMainType(conf.main, {
     ext: "cjs",
   });
 
@@ -65,10 +71,6 @@ export async function buildCode(root: string, conf: UseConfig) {
     preload: preload ? parse(preload).base : undefined,
   };
 
-  // if (res !== true) {
-  //   throw new Error(`vite Build failed please try again`);
-  // }
-
   await buildMain({
     root,
     config: conf,
@@ -76,11 +78,16 @@ export async function buildCode(root: string, conf: UseConfig) {
     mode: "production",
     electronAssets,
   });
+
+  return input;
 }
 
 export async function prepareBuildEnvironment(
   envPath: string,
-  opt: buildOptions & UseConfig,
+  opt: {
+    main: string;
+    root: string;
+  },
   json: any = {}
 ) {
   const [input] = identifyMainType(opt.main);
