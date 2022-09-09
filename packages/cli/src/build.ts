@@ -1,11 +1,16 @@
-import { join, parse, relative } from "path";
-import { buildOptions, ElectronAssets, UseConfig, WindowsMain } from "../types";
-import { buildMain } from "./builds";
+import { join, parse, relative, resolve } from "path";
+import { buildOptions, ElectronAssets, UseConfig } from "../types";
 import { buildViteBundle } from "./builds/vite";
-import { identifyMainType, readConfigInfo, readPackJsonFile } from "./config";
+import {
+  identifyMainType,
+  mergeEsBuild,
+  readConfigInfo,
+  readPackJsonFile,
+} from "./config";
 import { buildApp, createTarget } from "./electron";
 import { clearPackJson, createFile, createNodeModule } from "./utils";
 import { log } from "./utils/log";
+import { build as esbuild } from "esbuild";
 
 export const settingBuildOptions = (options: any) => {
   return {
@@ -28,14 +33,14 @@ export async function build(options: buildOptions) {
 
   pack_json.build = settingBuildOptions({ output: appOutDir });
 
-  const path = await buildCode(options.root, useConfig);
+  const { name } = await buildCode(options.root, useConfig);
 
   log.success("Prepare the environment \n");
 
   await prepareBuildEnvironment(
     envPath,
     {
-      main: path,
+      main: name,
       root: options.root,
     },
     pack_json
@@ -54,32 +59,45 @@ export async function build(options: buildOptions) {
   log.success("build complete");
 }
 
-export async function buildCode(root: string, conf: UseConfig) {
-  const res = await buildViteBundle(root, conf);
+export async function buildCode(root: string, config: UseConfig) {
+  const res = await buildViteBundle(root, config);
 
   if (res !== true) {
     throw new Error(`vite Build failed please try again`);
   }
 
-  const [input, preload] = identifyMainType(conf.main, {
-    ext: "cjs",
-  });
+  const outdir = resolve(root, config.outDir!);
+  const mode = "production";
+  const isEsm = false;
+
+  const [input, preload] = identifyMainType(config.main);
 
   const electronAssets: ElectronAssets = {
-    mode: "production",
+    mode,
     loadUrl: "./index.html",
     preload: preload ? parse(preload).base : undefined,
   };
 
-  await buildMain({
-    root,
-    config: conf,
-    isEsm: false,
-    mode: "production",
-    electronAssets,
-  });
+  const cop = mergeEsBuild(
+    {
+      entryPoints: [input, preload],
+      outdir,
+      format: isEsm ? "esm" : "cjs",
+      define: {
+        electronAssets: JSON.stringify(electronAssets),
+      },
+      target: "esnext",
+      platform: "node",
+    },
+    config.build ?? {}
+  );
 
-  return input;
+  await esbuild(cop);
+
+  return {
+    outdir,
+    name: parse(input).name + ".js",
+  };
 }
 
 export async function prepareBuildEnvironment(
@@ -90,10 +108,8 @@ export async function prepareBuildEnvironment(
   },
   json: any = {}
 ) {
-  const [input] = identifyMainType(opt.main);
   const PACKAGE_JSON = "package.json";
-  json.main = parse(input).base;
-
+  json.main = opt.main;
   const packAgeStr = clearPackJson(json);
   const rmFile = await createFile(envPath, packAgeStr, PACKAGE_JSON);
   const unLink = await createNodeModule(envPath, opt.root);
