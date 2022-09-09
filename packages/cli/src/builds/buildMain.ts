@@ -23,7 +23,7 @@ export async function buildMain({
     root,
     mode == "development" ? config.tempDirName! : config.outDir!
   );
-  
+
   const entryPoints = identifyMainType(config.main);
 
   await buildPlan(
@@ -37,7 +37,7 @@ export async function buildMain({
       target: "esnext",
       platform: "node",
       watch: mode === "development",
-      outExtension: { ".js": ".cjs" },
+      outExtension: { ".js": isEsm ? ".js" : ".cjs" },
     },
     config.build
   );
