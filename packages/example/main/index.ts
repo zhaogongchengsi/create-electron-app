@@ -1,8 +1,6 @@
 import { BrowserWindow, app } from "electron";
 import { resolve } from "path";
 
-import markdownFile from "./test.md";
-
 let win: BrowserWindow | undefined = undefined;
 
 const getPath = (path: string) => {
@@ -33,5 +31,3 @@ app
     win?.webContents.openDevTools();
   })
   .catch(console.error);
-
-console.log(markdownFile);

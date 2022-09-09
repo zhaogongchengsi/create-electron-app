@@ -61,9 +61,6 @@ export async function buildPlan(
   userOpt?: BuildOptions
 ) {
   const cop = mergeEsBuild(baseOptions, userOpt ?? {});
-
-  console.log(cop);
-
   return build(cop);
 }
 

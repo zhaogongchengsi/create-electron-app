@@ -46,9 +46,12 @@ export async function startServer(
       mode: "development",
       preload: parse(preload).base,
     },
+    isEsm: false,
   });
 
   const name = parse(input).base;
+
+  console.log(outDir, name);
 
   config.watch
     ? await electronmonApp(outDir, name)

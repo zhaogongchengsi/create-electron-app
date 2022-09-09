@@ -23,16 +23,8 @@ export async function buildMain({
     root,
     mode == "development" ? config.tempDirName! : config.outDir!
   );
-
+  
   const entryPoints = identifyMainType(config.main);
-
-  // await esbuild({
-  //   input: entryPoints,
-  //   outdir: outDir,
-  //   format: isEsm ? "esm" : "cjs",
-  //   electronAssets: electronAssets,
-  //   mode,
-  // });
 
   await buildPlan(
     {
@@ -42,7 +34,10 @@ export async function buildMain({
       define: {
         electronAssets: JSON.stringify(electronAssets),
       },
+      target: "esnext",
+      platform: "node",
       watch: mode === "development",
+      outExtension: { ".js": ".cjs" },
     },
     config.build
   );
