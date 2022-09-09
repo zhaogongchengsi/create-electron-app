@@ -68,6 +68,7 @@ export default async function () {
       "@vitejs/plugin-legacy",
       "electron-builder",
       "electronmon",
+      "@zzhaon/electron-hmr",
     ],
     plugins: plugins,
   };
