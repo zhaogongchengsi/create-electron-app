@@ -1,6 +1,7 @@
 import { UseConfig } from "@zzhaon/create-electron-app";
 import { resolve } from "path";
-import { markdownPlugin } from "esbuild-plugin-markdown";
+
+import { markdown } from "esbuild-plugin-markdown-import";
 
 export default (): UseConfig => {
   return {
@@ -18,7 +19,7 @@ export default (): UseConfig => {
       define: {
         testDefine: "abc",
       },
-      plugins: [markdownPlugin({})],
+      plugins: [markdown({})],
     },
   };
 };

@@ -1,4 +1,6 @@
+import { existsSync, readFileSync, statSync } from "node:fs";
 import { createRequire } from "node:module";
+import { dirname, join } from "node:path";
 
 const _REQUIRE = createRequire(import.meta.url);
 const FILE = "file://";
@@ -35,3 +37,28 @@ export const dynamicImport = async (name: string) => {
 
   return module;
 };
+
+export function lookupFile(
+  dir: string,
+  formats: string[],
+  options?: any
+): string | undefined {
+  for (const format of formats) {
+    const fullPath = join(dir, format);
+    if (existsSync(fullPath) && statSync(fullPath).isFile()) {
+      const result = options?.pathOnly
+        ? fullPath
+        : readFileSync(fullPath, "utf-8");
+      if (!options?.predicate || options.predicate(result)) {
+        return result;
+      }
+    }
+  }
+  const parentDir = dirname(dir);
+  if (
+    parentDir !== dir &&
+    (!options?.rootDir || parentDir.startsWith(options?.rootDir))
+  ) {
+    return lookupFile(parentDir, formats, options);
+  }
+}

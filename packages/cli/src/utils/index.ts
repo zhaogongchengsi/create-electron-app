@@ -13,6 +13,7 @@ export {
   _reauire,
   _import,
   dynamicImport,
+  lookupFile,
 } from "./module";
 
 enum toStringRes {

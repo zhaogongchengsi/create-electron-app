@@ -1,7 +1,6 @@
 import { BrowserWindow, app } from "electron";
 import { resolve } from "path";
 
-// @ts-ignore
 import markdownFile from "./test.md";
 
 let win: BrowserWindow | undefined = undefined;

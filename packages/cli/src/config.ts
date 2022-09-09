@@ -20,6 +20,13 @@ import { build } from "esbuild";
 import type { BuildOptions } from "esbuild";
 import { tmpdir } from "os";
 import { mkdtemp, rm } from "fs/promises";
+import {
+  esbuildPlugingExternalizeDeps,
+  esbuildPlugingInjectFileScopeVariables,
+  DIR_NAME_VAR,
+  FILE_NAME_VAR,
+  IMPORT_META_URE_VAR,
+} from "./builds";
 
 export type fileType = "ts" | "js" | "json";
 
@@ -150,9 +157,6 @@ export async function readConfigInfo(opt: CommonOptions, packJson: any) {
       pathinfo.isEMS = false;
     }
 
-    // 直接把 配置文件编译成为 cjs ??? 
-    // pathinfo.isEMS = false;
-
     let clear: any;
     let finalConf: any;
     try {
@@ -202,6 +206,16 @@ export async function bundleConfigFile(
       ".js": "js",
       ".ts": "ts",
     },
+
+    define: {
+      __dirname: DIR_NAME_VAR,
+      __filename: FILE_NAME_VAR,
+      "import.meta.url": IMPORT_META_URE_VAR,
+    },
+    plugins: [
+      esbuildPlugingExternalizeDeps(input, isESM),
+      esbuildPlugingInjectFileScopeVariables(),
+    ],
   });
 
   return createFile(outFile, result.outputFiles[0].text);
@@ -351,12 +365,6 @@ export function mergeEsBuild(
     }
 
     (target as any)[key] = value;
-
-    // if (typeof value !== "object") {
-
-    // } else {
-    //   (target as any)[key] = assign((target as any)[key], value);
-    // }
   }
 
   return target;
