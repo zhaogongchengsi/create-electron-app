@@ -1,6 +1,5 @@
 import { resolve } from "path";
-import { isObject, isString } from "../utils";
-import { ElectronAssets, Mode, UseConfig, WindowsMain } from "../../types";
+import { ElectronAssets, Mode, UseConfig } from "../../types";
 import { buildPlan, esbuild } from "./esbuild";
 import { identifyMainType } from "../config";
 
