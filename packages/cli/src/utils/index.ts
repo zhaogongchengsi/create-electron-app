@@ -47,3 +47,13 @@ export function clearPackJson(pack: any): string {
   delete pack.scripts;
   return JSON.stringify(pack);
 }
+
+export function debounce(func: () => void, time: number = 400) {
+  let _timeId: string | number | NodeJS.Timeout | undefined;
+  return function () {
+    clearTimeout(_timeId);
+    setTimeout(() => {
+      func();
+    }, time);
+  };
+}

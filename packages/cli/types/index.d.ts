@@ -1,4 +1,5 @@
 import { BuildOptions as esbuildOpetions } from "esbuild";
+import { WatchOptions } from "chokidar";
 
 export interface OutputOptions {
   /**
@@ -63,7 +64,7 @@ export interface UseConfig extends OutputOptions {
   /**
    *  hot update
    */
-  watch?: boolean;
+  watch?: boolean | WatchOptions;
 
   electronAssets?: ElectronAssets;
 

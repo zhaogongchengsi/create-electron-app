@@ -1,9 +1,11 @@
+import ElectronMon from "./mon";
 import { spawn } from "node:child_process";
-import { BuildAppOptions, Callbacks, Platforms } from "../types";
-import { dynamicImport, _reauire } from "./utils";
+import { BuildAppOptions, Callbacks, Platforms } from "../../types";
+import { dynamicImport, _reauire } from "../utils";
+
+export { ElectronMon };
 
 //@ts-ignore
-import electronmon from "electronmon";
 
 export const ELECTRONEXE = "electron";
 
@@ -49,10 +51,3 @@ export const createTarget = async (platforms?: Platforms) => {
   }
   return Platform.current();
 };
-
-export async function electronmonApp(root: string, file: string) {
-  return electronmon({
-    cwd: root,
-    args: [file],
-  });
-}

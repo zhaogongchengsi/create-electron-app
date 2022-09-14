@@ -52,5 +52,8 @@
     "unbuild": "^0.8.8",
     "vite": "^3.0.7",
     "vitest": "^0.22.0"
+  },
+  "dependencies": {
+    "chokidar": "^3.5.3"
   }
 }

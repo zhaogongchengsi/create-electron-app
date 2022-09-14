@@ -2,8 +2,8 @@ import { ServeOptions, UseConfig } from "../types";
 import { identifyMainType, readConfigInfo, readPackJsonFile } from "./config";
 import { buildMain, createViteServer } from "./builds";
 import { parse } from "path";
-import { createDevElectronApp, electronmonApp } from "./electron";
 import { log } from "./utils/log";
+import { ElectronMon } from "./electron";
 
 interface AddressInfo {
   address: string;
@@ -49,14 +49,21 @@ export async function startServer(
     isEsm: false,
   });
 
+  const watchOption =
+    typeof config.watch === "object" ? config.watch : undefined;
+
+  const electron = new ElectronMon(outDir, watchOption);
+
   const name = parse(input).base;
 
-  config.watch
-    ? await electronmonApp(outDir, name)
-    : await createDevElectronApp(outDir, name, {
-        close() {
-          log.success("app close");
-          process.exit(1);
-        },
-      });
+  config.watch ? electron.longTermRun(outDir, name) : console.log("启动");
+
+  // config.watch
+  //   ? createWatch(outDir)
+  //   : await createDevElectronApp(outDir, name, {
+  //       close() {
+  //         log.success("app close");
+  //         process.exit(1);
+  //       },
+  //     });
 }

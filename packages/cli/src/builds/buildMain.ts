@@ -38,7 +38,7 @@ export async function buildMain({
       watch: mode === "development",
       outExtension: { ".js": isEsm ? ".js" : ".cjs" },
     },
-    config.build
+    mode === "production" ? config.build : undefined
   );
 
   return outdir;
