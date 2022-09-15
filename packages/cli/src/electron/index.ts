@@ -2,6 +2,7 @@ import ElectronMon from "./mon";
 import { spawn } from "node:child_process";
 import { BuildAppOptions, Callbacks, Platforms } from "../../types";
 import { dynamicImport, _reauire } from "../utils";
+import elecrtronmon from "electronmon";
 
 export { ElectronMon };
 
@@ -50,4 +51,11 @@ export const createTarget = async (platforms?: Platforms) => {
       return new Platform("linux", "linux", "linux");
   }
   return Platform.current();
+};
+
+export const electronMon = (root: string, args: string[]) => {
+  return elecrtronmon({
+    cwd: root,
+    args,
+  });
 };

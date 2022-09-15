@@ -1,6 +1,7 @@
 import { watch, WatchOptions, FSWatcher } from "chokidar";
 import { spawn, ChildProcessWithoutNullStreams } from "node:child_process";
 import { _reauire, debounce } from "../utils";
+import ElectronMon from "./electronmon";
 
 export enum QuitName {
   exit = "exit",
@@ -11,41 +12,16 @@ export enum QuitName {
   SIGTERM = "SIGTERM",
 }
 
-export default class ElectronMon {
+export default class {
   watcher: FSWatcher;
 
-  private readonly ELECTRON = "electron";
+  isExit: boolean = false;
 
-  constructor(path: string | readonly string[], options?: WatchOptions) {
-    this.watcher = watch(path, options);
-  }
+  private electronmon: ElectronMon | undefined;
 
-  electron_process: ChildProcessWithoutNullStreams | undefined = undefined;
-
-  /**
-   * 创建一个 electron 的进程
-   */
-  private async createElectronProcess(
-    root: string,
-    args: string | string[] = "index.js"
-  ) {
-    let electronModule;
-    try {
-      electronModule = await _reauire(this.ELECTRON);
-    } catch (err) {
-      throw new Error(
-        `electron may not be installed, try running npm install electron --save-dev and try again`
-      );
-    }
-
-    const _args = typeof args != "string" ? args : [args];
-
-    const ls = spawn(electronModule, _args, {
-      cwd: root,
-      shell: true,
-    });
-
-    this.electron_process = ls;
+  constructor(root: string, options?: WatchOptions) {
+    this.watcher = watch(root, options);
+    this.electronmon = new ElectronMon(root);
   }
 
   private add(path: string) {
@@ -58,7 +34,6 @@ export default class ElectronMon {
 
   private error(error: Error) {
     console.log(`watch error ${error}`);
-    this.exit();
   }
 
   private raw(event: string, path: string, details: any) {
@@ -71,20 +46,6 @@ export default class ElectronMon {
 
   private ready(path: string) {
     console.log(`watch ready ${path}`);
-  }
-
-  private close() {}
-
-  async exit() {
-    this.electron_process?.removeAllListeners();
-    this.electron_process?.kill("SIGHUP");
-
-    this.watcher.removeAllListeners();
-    await this.watcher.close();
-
-    process.removeAllListeners();
-
-    process.exit(1);
   }
 
   private bindWatcherEvent() {
@@ -105,12 +66,19 @@ export default class ElectronMon {
   bindProcessEvent() {
     const exit = (code: string) => {
       console.log("当前进程退出" + code);
-      this.exit();
+      process.removeAllListeners();
+      this.electronmon?.close();
+
+      
+      process.exit(1);
+
+      // this.closeElectronProcess();
     };
 
     process.on(QuitName.exit, function () {
       exit(QuitName.exit);
     });
+
     process.on(QuitName.disconnect, () => exit(QuitName.disconnect));
     process.on(QuitName.SIGKILL, () => exit(QuitName.SIGKILL));
     process.on(QuitName.SIGHUP, () => exit(QuitName.SIGHUP));
@@ -119,26 +87,9 @@ export default class ElectronMon {
     return this;
   }
 
-  bindElectronProcess() {
-    const exit = (code: string) => {
-      console.log("electron 进程退出" + code);
-      this.exit();
-    };
-    this.electron_process?.on("exit", () => exit("electron_exit"));
-    this.electron_process?.on("disconnect", () => exit("electron_disconnect"));
-    this.electron_process?.on("close", () => exit("disconnect_close"));
-    return this;
-  }
-
-  longTermRun(root: string, filename: string) {
-    this.bindWatcherEvent().bindProcessEvent();
-    this.createElectronProcess(root, filename)
-      .then(() => {
-        this.bindElectronProcess();
-      })
-      .catch((err) => {
-        this.exit();
-      });
+  async longTermRun(filename: string) {
+    this.bindProcessEvent();
+    await this.electronmon?.start(filename);
   }
 
   run() {}

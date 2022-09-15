@@ -3,7 +3,7 @@ import { identifyMainType, readConfigInfo, readPackJsonFile } from "./config";
 import { buildMain, createViteServer } from "./builds";
 import { parse } from "path";
 import { log } from "./utils/log";
-import { ElectronMon } from "./electron";
+import { electronMon, ElectronMon } from "./electron";
 
 interface AddressInfo {
   address: string;
@@ -56,7 +56,11 @@ export async function startServer(
 
   const name = parse(input).base;
 
-  config.watch ? electron.longTermRun(outDir, name) : console.log("启动");
+  if (config.watch) {
+    await electron.longTermRun(name);
+  } else {
+    console.log("启动");
+  }
 
   // config.watch
   //   ? createWatch(outDir)
