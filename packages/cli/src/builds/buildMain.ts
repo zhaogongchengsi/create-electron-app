@@ -1,7 +1,8 @@
-import { resolve } from "path";
+import { parse, resolve } from "path";
 import { ElectronAssets, Mode, UseConfig } from "../../types";
 import { buildPlan, esbuild } from "./esbuild";
 import { identifyMainType } from "../config";
+import { WatchMode } from "esbuild";
 
 export type buildMainOption = {
   root: string;
@@ -9,6 +10,7 @@ export type buildMainOption = {
   electronAssets?: ElectronAssets;
   mode?: Mode;
   isEsm?: boolean;
+  watch?: WatchMode;
 };
 
 export async function buildMain({
@@ -17,6 +19,9 @@ export async function buildMain({
   electronAssets,
   config,
   isEsm = false,
+  watch = {
+    onRebuild: (err: any, res: any) => {},
+  },
 }: buildMainOption) {
   const outdir = resolve(
     root,
@@ -24,6 +29,8 @@ export async function buildMain({
   );
 
   const entryPoints = identifyMainType(config.main);
+
+  const ext = isEsm ? ".js" : ".cjs";
 
   await buildPlan(
     {
@@ -35,11 +42,18 @@ export async function buildMain({
       },
       target: "esnext",
       platform: "node",
-      watch: mode === "development",
-      outExtension: { ".js": isEsm ? ".js" : ".cjs" },
+      watch: mode === "development" ? watch : false,
+      outExtension: { ".js": ext },
     },
     mode === "production" ? config.build : undefined
   );
 
-  return outdir;
+  const { name } = parse(entryPoints[0]);
+
+  return {
+    outdir,
+    ext: ext,
+    name,
+    base: name + ext,
+  };
 }

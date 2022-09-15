@@ -3,7 +3,7 @@ import { identifyMainType, readConfigInfo, readPackJsonFile } from "./config";
 import { buildMain, createViteServer } from "./builds";
 import { parse } from "path";
 import { log } from "./utils/log";
-import { electronMon, ElectronMon } from "./electron";
+import { electronStart } from "./electron";
 
 interface AddressInfo {
   address: string;
@@ -25,7 +25,7 @@ export async function startServer(
   config: UseConfig,
   packJson?: any
 ) {
-  const [input, preload] = identifyMainType(config.main, {
+  const [_, preload] = identifyMainType(config.main, {
     root,
     ext: "cjs",
   });
@@ -38,6 +38,8 @@ export async function startServer(
 
   const { port } = server.httpServer?.address() as AddressInfo;
 
+  let electron: electronStart | undefined;
+
   const outDir = await buildMain({
     root,
     config: config,
@@ -46,28 +48,17 @@ export async function startServer(
       mode: "development",
       preload: parse(preload).base,
     },
+    watch: {
+      onRebuild: (err, res) => {
+        if (!electron) return;
+        if (!config.watch) return;
+        electron?.restart && electron.restart();
+      },
+    },
     isEsm: false,
   });
 
-  const watchOption =
-    typeof config.watch === "object" ? config.watch : undefined;
+  electron = new electronStart(outDir.outdir);
 
-  const electron = new ElectronMon(outDir, watchOption);
-
-  const name = parse(input).base;
-
-  if (config.watch) {
-    await electron.longTermRun(name);
-  } else {
-    console.log("启动");
-  }
-
-  // config.watch
-  //   ? createWatch(outDir)
-  //   : await createDevElectronApp(outDir, name, {
-  //       close() {
-  //         log.success("app close");
-  //         process.exit(1);
-  //       },
-  //     });
+  await electron.start(outDir.base);
 }

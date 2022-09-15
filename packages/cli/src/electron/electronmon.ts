@@ -1,5 +1,6 @@
 import { ChildProcessWithoutNullStreams, spawn } from "node:child_process";
 import { _reauire } from "../utils";
+import { resolve } from "path";
 
 export default class ElectronMon {
   cwd: string = process.cwd();
@@ -13,30 +14,20 @@ export default class ElectronMon {
 
   private _process: ChildProcessWithoutNullStreams | null = null;
 
-  private _controller: AbortController | undefined;
+  electronModule: any;
 
   private async createElectronProcess(args: string | string[]) {
-    let electronModule;
     try {
-      electronModule = await _reauire(this.ELECTRON);
+      this.electronModule = await _reauire(this.ELECTRON);
     } catch (err) {
       throw new Error(
         `electron may not be installed, try running npm install electron --save-dev and try again`
       );
     }
-
     const _args = typeof args != "string" ? args : [args];
-
-    const controller = new AbortController();
-    const { signal } = controller;
-
-    const ls = spawn(electronModule, _args, {
+    const ls = spawn(this.electronModule, _args, {
       cwd: this.cwd,
-      shell: true,
-      signal,
     });
-
-    this._controller = controller;
     this._process = ls;
   }
 
@@ -44,22 +35,24 @@ export default class ElectronMon {
   async start(fileName: string) {
     this.fileName = fileName;
     await this.createElectronProcess(fileName);
+  }
 
-    this._process?.on("exit", () => {
-      console.log("electronmon exit");
-      this._process = null;
-      this._controller = undefined;
+  private killElectronProcess() {
+    return new Promise((resolve) => {
+      this._process?.on("exit", () => {
+        this._process = null;
+        resolve(true);
+      });
+      this._process?.kill("SIGINT");
     });
   }
 
-  close() {
-    this._process?.removeAllListeners();
-    console.log("关闭子进程");
-    this._process?.kill("SIGSTOP");
+  async close() {
+    await this.killElectronProcess();
   }
 
   async restart() {
-    this.close();
+    await this.close();
     await this.start(this.fileName!);
   }
 }

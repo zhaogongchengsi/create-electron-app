@@ -1,16 +1,15 @@
-import { join, parse, relative, resolve } from "path";
+import { join, parse, relative } from "path";
 import { buildOptions, ElectronAssets, UseConfig } from "../types";
 import { buildViteBundle } from "./builds/vite";
 import {
   identifyMainType,
-  mergeEsBuild,
   readConfigInfo,
   readPackJsonFile,
 } from "./config";
 import { buildApp, createTarget } from "./electron";
 import { clearPackJson, createFile, createNodeModule } from "./utils";
 import { log } from "./utils/log";
-import { build as esbuild } from "esbuild";
+import { buildMain } from "./builds";
 
 export const settingBuildOptions = (options: any) => {
   return {
@@ -33,7 +32,10 @@ export async function build(options: buildOptions) {
 
   pack_json.build = settingBuildOptions({ output: appOutDir });
 
-  const { name } = await buildCode(options.root, useConfig);
+  const { name } = await buildCode(
+    options.root,
+    useConfig
+  );
 
   log.success("Prepare the environment \n");
 
@@ -66,11 +68,9 @@ export async function buildCode(root: string, config: UseConfig) {
     throw new Error(`vite Build failed please try again`);
   }
 
-  const outdir = resolve(root, config.outDir!);
   const mode = "production";
-  const isEsm = false;
 
-  const [input, preload] = identifyMainType(config.main);
+  const [_, preload] = identifyMainType(config.main);
 
   const electronAssets: ElectronAssets = {
     mode,
@@ -78,25 +78,15 @@ export async function buildCode(root: string, config: UseConfig) {
     preload: preload ? parse(preload).base : undefined,
   };
 
-  const cop = mergeEsBuild(
-    {
-      entryPoints: [input, preload],
-      outdir,
-      format: isEsm ? "esm" : "cjs",
-      define: {
-        electronAssets: JSON.stringify(electronAssets),
-      },
-      target: "esnext",
-      platform: "node",
-    },
-    config.build ?? {}
-  );
-
-  await esbuild(cop);
+  const fineInfo = await buildMain({
+    root: root,
+    electronAssets,
+    config,
+    mode,
+  });
 
   return {
-    outdir,
-    name: parse(input).name + ".js",
+    name: fineInfo.base,
   };
 }
 
