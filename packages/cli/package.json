@@ -39,6 +39,7 @@
     "@zzhaon/electron-hmr": "workspace:^0.0.1",
     "cac": "^6.7.14",
     "chokidar": "^3.5.3",
+    "dotenv": "^16.0.2",
     "electronmon": "^2.0.2",
     "esbuild": "^0.15.5",
     "picocolors": "^1.0.0",

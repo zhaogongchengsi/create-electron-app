@@ -27,6 +27,7 @@ export async function buildMain({
       format: isEMS ? "esm" : "cjs",
       define: {
         electronAssets: JSON.stringify(ctx.eleAssets),
+        "import.mate.env": JSON.stringify(ctx.env),
       },
       target: "esnext",
       platform: "node",

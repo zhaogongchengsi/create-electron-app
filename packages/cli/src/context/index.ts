@@ -2,7 +2,6 @@ import { join, parse, relative, resolve } from "path";
 import { UserConfig } from "vite";
 import { ElectronAssets, Mode, UseConfig } from "../../types";
 import { identifyMainType } from "../config";
-import pc from "picocolors";
 import LogLevel from "./log";
 
 type logfunc = (mag: string) => void;
@@ -20,6 +19,7 @@ export interface CeaContextOptions {
   packageJson?: any;
   mode?: Mode;
   log?: log;
+  env?: Record<string, string>;
 }
 
 export class CeaContext {
@@ -50,19 +50,22 @@ export class CeaContext {
    */
   logLevel: log;
 
+  env: Record<string, string>;
+
   constructor({
     root,
     config,
     packageJson = {},
     mode,
     log = new LogLevel(),
+    env = {},
   }: CeaContextOptions) {
     this.root = root ?? process.cwd();
     this.config = config;
     this.build = packageJson.build ?? {};
     this.mode = mode ?? "development";
     this.logLevel = log;
-
+    this.env = env;
     const { base, dir, root: r } = parse(this.config.html!);
     this._html = relative(join(this.root, r, dir), base);
 

@@ -5,6 +5,7 @@ import { buildApp, createTarget } from "./electron";
 import { clearPackJson, createFile, createNodeModule } from "./utils";
 import { buildMain } from "./builds";
 import { CeaContext } from "./context";
+import { parseEnv } from "./env";
 
 export const settingBuildOptions = (options: any) => {
   return {
@@ -20,13 +21,17 @@ export async function build(options: buildOptions) {
 
   const useConfig = await readConfigInfo(options, pack_json);
 
+  const mode = "production";
+
   if (!useConfig) return;
+
+  const env = await parseEnv(options.root, mode);
 
   const ctx = new CeaContext({
     root: options.root,
     config: useConfig,
     packageJson: pack_json,
-    mode: "production",
+    mode,
   });
 
   ctx.envPath();

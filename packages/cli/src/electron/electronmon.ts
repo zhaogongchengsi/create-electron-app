@@ -7,9 +7,12 @@ export default class ElectronMon {
   config: any;
   private readonly ELECTRON = "electron";
 
+  env: Record<string, string> = {};
+
   constructor(root: string, config?: any) {
     this.cwd = root;
-    this.config - config;
+    this.config = config;
+    this.env = config.env;
   }
 
   private _process: ChildProcessWithoutNullStreams | null = null;
@@ -27,6 +30,7 @@ export default class ElectronMon {
     const _args = typeof args != "string" ? args : [args];
     const ls = spawn(this.electronModule, _args, {
       cwd: this.cwd,
+      env: this.env ?? {},
     });
     this._process = ls;
   }

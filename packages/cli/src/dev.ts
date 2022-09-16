@@ -4,6 +4,7 @@ import { buildMain, createViteServer } from "./builds";
 import { log } from "./utils/log";
 import { electronStart } from "./electron";
 import { CeaContext } from "./context";
+import { parseEnv } from "./env";
 
 interface AddressInfo {
   address: string;
@@ -17,11 +18,16 @@ export async function createDevServer(options: ServeOptions) {
 
   if (!useConfig) return;
 
+  const mode = "development";
+
+  const env = await parseEnv(options.root, mode);
+
   const ctx = new CeaContext({
     root: options.root,
     config: useConfig,
     packageJson: pack_json,
-    mode: "development",
+    mode: mode,
+    env,
   });
 
   ctx.envPath();
@@ -55,6 +61,9 @@ export async function startServer(ctx: CeaContext) {
 
   ctx.logLevel.info("app starts");
 
-  electron = new electronStart(outDir.outdir!);
+  electron = new electronStart(outDir.outdir!, {
+    env: ctx.env,
+  });
+  
   await electron.start(outDir.base);
 }

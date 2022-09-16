@@ -33,3 +33,4 @@ app
   .catch(console.error);
 
   
+console.log("node env:",process.env)
