@@ -1,14 +1,25 @@
 import { join, parse, relative, resolve } from "path";
 import { UserConfig } from "vite";
-import { S } from "vitest/dist/global-fe52f84b";
 import { ElectronAssets, Mode, UseConfig } from "../../types";
 import { identifyMainType } from "../config";
+import pc from "picocolors";
+import LogLevel from "./log";
+
+type logfunc = (mag: string) => void;
+
+export interface log {
+  info: logfunc;
+  warn: logfunc;
+  error: (err: Error) => void;
+  silent: logfunc;
+}
 
 export interface CeaContextOptions {
   root: string;
   config: UseConfig;
   packageJson?: any;
   mode?: Mode;
+  log?: log;
 }
 
 export class CeaContext {
@@ -35,15 +46,22 @@ export class CeaContext {
   };
 
   /**
-   * 日志等级
+   * 日志
    */
-  logLevel: "info" | "warn" | "error" | "silent" = "info";
+  logLevel: log;
 
-  constructor({ root, config, packageJson = {}, mode }: CeaContextOptions) {
+  constructor({
+    root,
+    config,
+    packageJson = {},
+    mode,
+    log = new LogLevel(),
+  }: CeaContextOptions) {
     this.root = root ?? process.cwd();
     this.config = config;
     this.build = packageJson.build ?? {};
     this.mode = mode ?? "development";
+    this.logLevel = log;
 
     const { base, dir, root: r } = parse(this.config.html!);
     this._html = relative(join(this.root, r, dir), base);

@@ -1,10 +1,8 @@
-import { join, parse, relative } from "path";
-import { buildOptions, ElectronAssets, UseConfig } from "../types";
+import { buildOptions } from "../types";
 import { buildViteBundle } from "./builds/vite";
-import { identifyMainType, readConfigInfo, readPackJsonFile } from "./config";
+import { readConfigInfo, readPackJsonFile } from "./config";
 import { buildApp, createTarget } from "./electron";
 import { clearPackJson, createFile, createNodeModule } from "./utils";
-import { log } from "./utils/log";
 import { buildMain } from "./builds";
 import { CeaContext } from "./context";
 
@@ -46,13 +44,21 @@ export async function build(options: buildOptions) {
     pack_json
   );
 
+  ctx.logLevel.info("start building the app");
+
   const target = await createTarget();
 
-  await buildApp({
-    inputDir: ctx.runPath!,
-    targets: target.createTarget(),
-    config: pack_json.build,
-  });
+  try {
+    await buildApp({
+      inputDir: ctx.runPath!,
+      targets: target.createTarget(),
+      config: pack_json.build,
+    });
+  } catch (err) {
+    ctx.logLevel.error(err as Error);
+  }
+
+  ctx.logLevel.info("app build complete");
 }
 
 export async function buildCode(ctx: CeaContext) {

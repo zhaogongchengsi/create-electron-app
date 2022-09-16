@@ -1,7 +1,6 @@
-import { ServeOptions, UseConfig } from "../types";
-import { identifyMainType, readConfigInfo, readPackJsonFile } from "./config";
+import { ServeOptions } from "../types";
+import { readConfigInfo, readPackJsonFile } from "./config";
 import { buildMain, createViteServer } from "./builds";
-import { parse } from "path";
 import { log } from "./utils/log";
 import { electronStart } from "./electron";
 import { CeaContext } from "./context";
@@ -31,8 +30,6 @@ export async function createDevServer(options: ServeOptions) {
 }
 
 export async function startServer(ctx: CeaContext) {
-  log.success("app starts");
-
   const server = await createViteServer(ctx.root, ctx.config);
   await server.listen();
   server.printUrls();
@@ -55,6 +52,8 @@ export async function startServer(ctx: CeaContext) {
       },
     },
   });
+
+  ctx.logLevel.info("app starts");
 
   electron = new electronStart(outDir.outdir!);
   await electron.start(outDir.base);
