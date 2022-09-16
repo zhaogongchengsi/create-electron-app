@@ -6,6 +6,7 @@ import { buildApp, createTarget } from "./electron";
 import { clearPackJson, createFile, createNodeModule } from "./utils";
 import { log } from "./utils/log";
 import { buildMain } from "./builds";
+import { CeaContext } from "./context";
 
 export const settingBuildOptions = (options: any) => {
   return {
@@ -23,17 +24,21 @@ export async function build(options: buildOptions) {
 
   if (!useConfig) return;
 
-  const envPath = join(options.root, useConfig.outDir!);
-  const appOutDir = relative(envPath, join(options.root, useConfig.appOutDir!));
+  const ctx = new CeaContext({
+    root: options.root,
+    config: useConfig,
+    packageJson: pack_json,
+    mode: "production",
+  });
 
-  pack_json.build = settingBuildOptions({ output: appOutDir });
+  ctx.envPath();
 
-  const fileName = await buildCode(options.root, useConfig);
+  pack_json.build = settingBuildOptions({ output: ctx.exePath });
 
-  log.success("Prepare the environment \n");
+  const fileName = await buildCode(ctx);
 
   await prepareBuildEnvironment(
-    envPath,
+    ctx.runPath!,
     {
       main: fileName,
       root: options.root,
@@ -41,50 +46,29 @@ export async function build(options: buildOptions) {
     pack_json
   );
 
-  log.success("ready to build the app... \n");
-
   const target = await createTarget();
 
   await buildApp({
-    inputDir: envPath,
+    inputDir: ctx.runPath!,
     targets: target.createTarget(),
     config: pack_json.build,
   });
-
-  log.success("build complete");
 }
 
-export async function buildCode(root: string, config: UseConfig, json?: any) {
+export async function buildCode(ctx: CeaContext) {
+  const root = ctx.root;
+  const config = ctx.config;
+
   const res = await buildViteBundle(root, config);
 
   if (res !== true) {
     throw new Error(`vite Build failed please try again`);
   }
 
-  const mode = "production";
-  const isEsm = false;
-  const { base, dir, root: r } = parse(config.html!);
-
-  const html = relative(join(root, r, dir), base);
-
-  const [_, preload] = identifyMainType(config.main);
-
-  console.log("html: ", html);
-
-  const electronAssets: ElectronAssets = {
-    mode,
-    loadUrl: "./index.html",
-    preload: preload
-      ? parse(preload).name + (isEsm ? ".js" : ".cjs")
-      : undefined,
-  };
+  ctx.createElectronAssets();
 
   const fineInfo = await buildMain({
-    root: root,
-    electronAssets,
-    config,
-    mode,
-    isEsm,
+    ctx: ctx,
   });
 
   return fineInfo.base;

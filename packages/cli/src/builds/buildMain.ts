@@ -3,55 +3,43 @@ import { ElectronAssets, Mode, UseConfig } from "../../types";
 import { buildPlan, esbuild } from "./esbuild";
 import { identifyMainType } from "../config";
 import { WatchMode } from "esbuild";
+import { CeaContext } from "../context";
 
 export type buildMainOption = {
-  root: string;
-  config: UseConfig;
-  electronAssets?: ElectronAssets;
-  mode?: Mode;
-  isEsm?: boolean;
+  ctx: CeaContext;
   watch?: WatchMode;
 };
 
 export async function buildMain({
-  root,
-  mode = "development",
-  electronAssets,
-  config,
-  isEsm = false,
+  ctx,
   watch = {
     onRebuild: (err: any, res: any) => {},
   },
 }: buildMainOption) {
-  const outdir = resolve(
-    root,
-    mode == "development" ? config.tempDirName! : config.outDir!
-  );
-
-  const entryPoints = identifyMainType(config.main);
-
-  const ext = isEsm ? ".js" : ".cjs";
+  const isEMS = ctx._isEms;
+  const mode = ctx.mode;
+  const ext = ctx._isEms ? ".js" : ".cjs";
 
   await buildPlan(
     {
-      entryPoints,
-      outdir,
-      format: isEsm ? "esm" : "cjs",
+      entryPoints: ctx.entryPoints,
+      outdir: ctx.runPath,
+      format: isEMS ? "esm" : "cjs",
       define: {
-        electronAssets: JSON.stringify(electronAssets),
+        electronAssets: JSON.stringify(ctx.eleAssets),
       },
       target: "esnext",
       platform: "node",
       watch: mode === "development" ? watch : false,
       outExtension: { ".js": ext },
     },
-    mode === "production" ? config.build : undefined
+    mode === "production" ? ctx.config.build : undefined
   );
 
-  const { name } = parse(entryPoints[0]);
+  const { name } = parse(ctx.entryPoints[0]);
 
   return {
-    outdir,
+    outdir: ctx.runPath,
     ext: ext,
     name,
     base: name + ext,

@@ -21,6 +21,5 @@ export default (): UseConfig => {
       },
       plugins: [markdown({})],
     },
-    html: "./src/index.html"
   };
 };
