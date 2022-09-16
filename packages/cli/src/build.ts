@@ -43,13 +43,13 @@ export async function build(options: buildOptions) {
 
   log.success("ready to build the app... \n");
 
-  // const target = await createTarget();
+  const target = await createTarget();
 
-  // await buildApp({
-  //   inputDir: envPath,
-  //   targets: target.createTarget(),
-  //   config: pack_json.build,
-  // });
+  await buildApp({
+    inputDir: envPath,
+    targets: target.createTarget(),
+    config: pack_json.build,
+  });
 
   log.success("build complete");
 }
@@ -63,8 +63,13 @@ export async function buildCode(root: string, config: UseConfig, json?: any) {
 
   const mode = "production";
   const isEsm = false;
+  const { base, dir, root: r } = parse(config.html!);
+
+  const html = relative(join(root, r, dir), base);
 
   const [_, preload] = identifyMainType(config.main);
+
+  console.log("html: ", html);
 
   const electronAssets: ElectronAssets = {
     mode,

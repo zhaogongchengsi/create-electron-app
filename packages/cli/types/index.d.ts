@@ -64,7 +64,7 @@ export interface UseConfig extends OutputOptions {
   /**
    *  hot update
    */
-  watch?: boolean | WatchOptions;
+  watch?: boolean;
 
   electronAssets?: ElectronAssets;
 
@@ -74,6 +74,11 @@ export interface UseConfig extends OutputOptions {
    * Not all configurations are valid
    */
   build?: esBuild;
+
+  /**
+   * .html The default is index.html of the root directory
+   */
+  html?: string;
 }
 
 export type OmitBuildField =
