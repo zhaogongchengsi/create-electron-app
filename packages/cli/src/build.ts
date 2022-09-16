@@ -1,11 +1,7 @@
 import { join, parse, relative } from "path";
 import { buildOptions, ElectronAssets, UseConfig } from "../types";
 import { buildViteBundle } from "./builds/vite";
-import {
-  identifyMainType,
-  readConfigInfo,
-  readPackJsonFile,
-} from "./config";
+import { identifyMainType, readConfigInfo, readPackJsonFile } from "./config";
 import { buildApp, createTarget } from "./electron";
 import { clearPackJson, createFile, createNodeModule } from "./utils";
 import { log } from "./utils/log";
@@ -32,17 +28,14 @@ export async function build(options: buildOptions) {
 
   pack_json.build = settingBuildOptions({ output: appOutDir });
 
-  const { name } = await buildCode(
-    options.root,
-    useConfig
-  );
+  const fileName = await buildCode(options.root, useConfig);
 
   log.success("Prepare the environment \n");
 
   await prepareBuildEnvironment(
     envPath,
     {
-      main: name,
+      main: fileName,
       root: options.root,
     },
     pack_json
@@ -50,18 +43,18 @@ export async function build(options: buildOptions) {
 
   log.success("ready to build the app... \n");
 
-  const target = await createTarget();
+  // const target = await createTarget();
 
-  await buildApp({
-    inputDir: envPath,
-    targets: target.createTarget(),
-    config: pack_json.build,
-  });
+  // await buildApp({
+  //   inputDir: envPath,
+  //   targets: target.createTarget(),
+  //   config: pack_json.build,
+  // });
 
   log.success("build complete");
 }
 
-export async function buildCode(root: string, config: UseConfig) {
+export async function buildCode(root: string, config: UseConfig, json?: any) {
   const res = await buildViteBundle(root, config);
 
   if (res !== true) {
@@ -69,13 +62,16 @@ export async function buildCode(root: string, config: UseConfig) {
   }
 
   const mode = "production";
+  const isEsm = false;
 
   const [_, preload] = identifyMainType(config.main);
 
   const electronAssets: ElectronAssets = {
     mode,
     loadUrl: "./index.html",
-    preload: preload ? parse(preload).base : undefined,
+    preload: preload
+      ? parse(preload).name + (isEsm ? ".js" : ".cjs")
+      : undefined,
   };
 
   const fineInfo = await buildMain({
@@ -83,11 +79,10 @@ export async function buildCode(root: string, config: UseConfig) {
     electronAssets,
     config,
     mode,
+    isEsm,
   });
 
-  return {
-    name: fineInfo.base,
-  };
+  return fineInfo.base;
 }
 
 export async function prepareBuildEnvironment(

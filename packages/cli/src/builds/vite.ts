@@ -49,7 +49,7 @@ export async function buildViteBundle(
   });
 
   try {
-    await build({
+    const res = await build({
       root,
       mode: "production",
       base: "./",
@@ -59,7 +59,7 @@ export async function buildViteBundle(
       },
     });
   } catch (err) {
-    return err;
+    throw err;
   }
   return true;
 }
