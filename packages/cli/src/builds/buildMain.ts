@@ -20,15 +20,17 @@ export async function buildMain({
   const mode = ctx.mode;
   const ext = ctx._isEms ? ".js" : ".cjs";
 
-  await buildPlan(
+  const res = await buildPlan(
     {
       entryPoints: ctx.entryPoints,
       outdir: ctx.runPath,
       format: isEMS ? "esm" : "cjs",
       define: {
         electronAssets: JSON.stringify(ctx.eleAssets),
-        "import.mate.env": JSON.stringify(ctx.env),
       },
+
+      // 会获取打包后是文件信息
+      metafile: true,
       target: "esnext",
       platform: "node",
       watch: mode === "development" ? watch : false,
