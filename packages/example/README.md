@@ -1,4 +1,1 @@
-# Vue 3 + TypeScript + Vite + electron + esbuild
-
-
-
+# Vite + esbuild + electron + (Vue 3 || React) + (TypeScript || Javascript) Template engineering
