@@ -52,7 +52,7 @@ export async function esbuild({
 
 /**
  *
- * @param baseOptions 构建后台带代码所需要的配置
+ * @param baseOptions 构建主线程代码所需要的基础配置 该配置优先级最高
  * @param userOpt 用户定义的配置
  * @returns Promise<BuildResult>
  */
