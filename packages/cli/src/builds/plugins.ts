@@ -17,15 +17,15 @@ export const esbuildPlugingExternalizeDeps = (
             external: true,
           };
         }
-        const idFsPath = resolve(dirname(importer), id);
-        const idPkgPath = lookupFile(idFsPath, [`package.json`], {
+        const idPath = resolve(dirname(importer), id);
+        const idPackAgePath = lookupFile(idPath, [`package.json`], {
           pathOnly: true,
         });
-        if (idPkgPath) {
-          const idPkgDir = dirname(idPkgPath);
+        if (idPackAgePath) {
+          const idPkgDir = dirname(idPackAgePath);
           if (relative(idPkgDir, fileName).startsWith("..")) {
             return {
-              path: isESM ? pathToFileURL(idFsPath).href : idFsPath,
+              path: isESM ? pathToFileURL(idPath).href : idPath,
               external: true,
             };
           }
