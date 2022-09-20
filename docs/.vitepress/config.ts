@@ -32,7 +32,15 @@ export default defineConfig({
             {
               text: "electronAssets",
               link: "/guide/electronAssets",
-            }
+            },
+            {
+              text: "环境变量与模式",
+              link: "/guide/env",
+            },
+            {
+              text: "使用插件",
+              link: "/guide/plugins",
+            },
           ],
         },
       ],

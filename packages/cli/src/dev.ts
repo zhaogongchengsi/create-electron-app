@@ -32,9 +32,7 @@ export async function createDevServer(options: ServeOptions) {
 
   ctx.envPath();
 
-  console.log(env)
-
-  // await startServer(ctx);
+  await startServer(ctx);
 }
 
 export async function startServer(ctx: CeaContext) {
@@ -66,6 +64,6 @@ export async function startServer(ctx: CeaContext) {
   electron = new electronStart(outDir.outdir!, {
     env: ctx.env,
   });
-  
+
   await electron.start(outDir.base);
 }
