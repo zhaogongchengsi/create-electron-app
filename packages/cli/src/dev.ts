@@ -32,7 +32,9 @@ export async function createDevServer(options: ServeOptions) {
 
   ctx.envPath();
 
-  await startServer(ctx);
+  console.log(env)
+
+  // await startServer(ctx);
 }
 
 export async function startServer(ctx: CeaContext) {

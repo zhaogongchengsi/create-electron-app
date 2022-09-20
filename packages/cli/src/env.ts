@@ -3,8 +3,6 @@ import { readFile } from "fs/promises";
 import { Mode } from "../types";
 import { findFiles } from "./utils";
 
-const localArr = [".env.local", ".env"];
-
 export async function parseEnv(root: string, mode: Mode) {
   const paths = await fincEnvFile(root, mode);
   const env = {};
@@ -13,7 +11,7 @@ export async function parseEnv(root: string, mode: Mode) {
       return readEnvFile(path);
     })
   );
-  
+
   strs.forEach((value) => {
     const e = dotenv.parse(value);
     Object.assign(env, e);
@@ -25,7 +23,8 @@ export async function parseEnv(root: string, mode: Mode) {
 export async function fincEnvFile(root: string, mode: Mode): Promise<string[]> {
   const paths: string[] = [];
   const res = await Promise.all([
-    findFiles(root, localArr),
+    findFiles(root, [".env.local"]),
+    findFiles(root, [".env"]),
     findFiles(root, [`.env.${mode}`]),
   ]);
   res.forEach(({ exist, path }) => {
