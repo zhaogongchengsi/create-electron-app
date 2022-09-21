@@ -27,6 +27,7 @@ export async function buildMain({
       format: isEMS ? "esm" : "cjs",
       define: {
         electronAssets: JSON.stringify(ctx.eleAssets),
+        "import.meta.env": JSON.stringify({ ...ctx.env, ...ctx.eleAssets }),
       },
 
       // 会获取打包后是文件信息

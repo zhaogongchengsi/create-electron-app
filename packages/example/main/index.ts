@@ -3,6 +3,9 @@ import { resolve } from "path";
 
 let win: BrowserWindow | undefined = undefined;
 
+
+const { loadUrl, mode, preload } = import.meta.env;
+
 const getPath = (path: string) => {
   return resolve(__dirname, path);
 };
@@ -13,14 +16,14 @@ const createWindow = () => {
     height: 800,
     webPreferences: {
       nodeIntegration: true,
-      preload: electronAssets.preload && getPath(electronAssets.preload),
+      preload: preload && getPath(preload),
     },
   });
 
   if (electronAssets.mode === "production") {
-    win.loadFile(electronAssets.loadUrl);
+    win.loadFile(loadUrl);
   } else {
-    win.loadURL(electronAssets.loadUrl);
+    win.loadURL(loadUrl);
   }
 };
 
@@ -28,9 +31,10 @@ app
   .whenReady()
   .then(() => {
     createWindow();
-    win?.webContents.openDevTools();
+    mode === "development" && win?.webContents.openDevTools();
   })
   .catch(console.error);
 
   
 console.log("node env:",process.env)
+console.log(import.meta.env)
