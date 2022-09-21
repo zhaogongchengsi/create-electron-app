@@ -1,11 +1,17 @@
-import { ChildProcessWithoutNullStreams, spawn } from "node:child_process";
+import { ChildProcess, spawn, StdioOptions } from "node:child_process";
 import { _reauire } from "../utils";
-import { resolve } from "path";
 
+
+const isStdReadable = (stream: any) => stream === process.stdin;
+const isStdWritable = (stream:  any) =>
+  stream === process.stdout || stream === process.stderr;
+  
 export default class ElectronMon {
   cwd: string = process.cwd();
   config: any;
   private readonly ELECTRON = "electron";
+
+  stdio = [process.stdin, process.stdout, process.stderr];
 
   env: Record<string, string> = {};
 
@@ -15,7 +21,7 @@ export default class ElectronMon {
     this.env = config.env;
   }
 
-  private _process: ChildProcessWithoutNullStreams | null = null;
+  private _process: ChildProcess | null = null;
 
   electronModule: any;
 
@@ -27,11 +33,22 @@ export default class ElectronMon {
         `electron may not be installed, try running npm install electron --save-dev and try again`
       );
     }
+
+    const stdioArg: StdioOptions = [
+      isStdReadable(this.stdio[0]) ? "inherit" : "pipe",
+      isStdWritable(this.stdio[1]) ? "inherit" : "pipe",
+      isStdWritable(this.stdio[2]) ? "inherit" : "pipe",
+      "ipc",
+    ];
+
     const _args = typeof args != "string" ? args : [args];
+
     const ls = spawn(this.electronModule, _args, {
       cwd: this.cwd,
       env: this.env ?? {},
+      stdio: stdioArg,
     });
+
     this._process = ls;
   }
 

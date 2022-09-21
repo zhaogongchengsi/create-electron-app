@@ -17,7 +17,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^3.1.0",
-    "electron": "^20.1.1",
+    "electron": "^20.1.4",
     "electron-builder": "^23.3.3",
     "esbuild-plugin-markdown": "^0.0.3",
     "esbuild-plugin-markdown-import": "^0.3.1",
