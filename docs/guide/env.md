@@ -1,4 +1,12 @@
 # 环境变量与模式
+环境变量会挂载在一个`import.meta.env`的对象上
+- `import.meta.env.loadUrl` 应用运行的渲染线程的路径
+    - 生产环境下是 `index.html` 文件的路径
+    - 开发环境下是 [vite.server](https://vitejs.cn/vite3-cn/config/server-options.html#server-port) 的 url 路径
+- `import.meta.env.mode` 应用运行的模式
+    - `development` 开发模式
+    - `production` 生产模式 (应用以打包)
+- `import.meta.preload` [Electron BrowserWindow.webPreferences.preload](https://www.electronjs.org/zh/docs/latest/api/context-bridge#exposing-node-global-symbols)
 
 ## .env 文件
 
