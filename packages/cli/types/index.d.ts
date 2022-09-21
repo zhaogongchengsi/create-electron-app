@@ -1,4 +1,4 @@
-import { BuildOptions as esbuildOpetions } from "esbuild";
+import { BuildOptions as esbuildOpetions, Plugin } from "esbuild";
 import { WatchOptions } from "chokidar";
 
 export interface OutputOptions {
@@ -79,6 +79,8 @@ export interface UseConfig extends OutputOptions {
    * .html The default is index.html of the root directory
    */
   html?: string;
+
+  plugins?: Plugin[]
 }
 
 export type OmitBuildField =
