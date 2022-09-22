@@ -10,16 +10,6 @@ export default (): UseConfig => {
       preload: resolve("./main/preload.ts"),
     },
     vite: "./vite.config.ts",
-    build: {
-      sourcemap: "linked",
-      minify: false,
-      banner: {
-        js: `/*comment*/`,
-      },
-      define: {
-        testDefine: "abc",
-      },
-      plugins: [markdown({})],
-    },
+    plugins: [markdown({})],
   };
 };

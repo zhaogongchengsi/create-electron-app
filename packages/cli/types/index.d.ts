@@ -66,14 +66,12 @@ export interface UseConfig extends OutputOptions {
    */
   watch?: boolean;
 
-  electronAssets?: ElectronAssets;
-
   /**
    * Documentation https://esbuild.github.io/api/#build-api
    *
    * Not all configurations are valid
    */
-  build?: esBuild;
+  // build?: esBuild;
 
   /**
    * .html The default is index.html of the root directory

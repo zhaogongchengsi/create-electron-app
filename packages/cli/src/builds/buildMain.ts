@@ -1,7 +1,5 @@
-import { parse, resolve } from "path";
-import { ElectronAssets, Mode, UseConfig } from "../../types";
-import { buildPlan, esbuild } from "./esbuild";
-import { identifyMainType } from "../config";
+import { parse } from "path";
+import { buildPlan } from "./esbuild";
 import { WatchMode } from "esbuild";
 import { CeaContext } from "../context";
 
@@ -9,6 +7,8 @@ export type buildMainOption = {
   ctx: CeaContext;
   watch?: WatchMode;
 };
+
+const IMPORT_META_ENV_VAR = "import.meta.env";
 
 export async function buildMain({
   ctx,
@@ -20,25 +20,20 @@ export async function buildMain({
   const mode = ctx.mode;
   const ext = ctx._isEms ? ".js" : ".cjs";
 
-  const res = await buildPlan(
-    {
-      entryPoints: ctx.entryPoints,
-      outdir: ctx.runPath,
-      format: isEMS ? "esm" : "cjs",
-      define: {
-        electronAssets: JSON.stringify(ctx.eleAssets),
-        "import.meta.env": JSON.stringify({ ...ctx.env, ...ctx.eleAssets }),
-      },
-
-      // 会获取打包后是文件信息
-      metafile: true,
-      target: "esnext",
-      platform: "node",
-      watch: mode === "development" ? watch : false,
-      outExtension: { ".js": ext },
+  await buildPlan({
+    entryPoints: ctx.entryPoints,
+    outdir: ctx.runPath,
+    format: isEMS ? "esm" : "cjs",
+    define: {
+      [IMPORT_META_ENV_VAR]: JSON.stringify({ ...ctx.env, ...ctx.eleAssets }),
     },
-    mode === "production" ? ctx.config.build : undefined
-  );
+    metafile: true,
+    target: "esnext",
+    platform: "node",
+    watch: mode === "development" ? watch : false,
+    outExtension: { ".js": ext },
+    plugins: ctx.config.plugins,
+  });
 
   const { name } = parse(ctx.entryPoints[0]);
 
