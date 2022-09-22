@@ -20,7 +20,7 @@ const createWindow = () => {
     },
   });
 
-  if (electronAssets.mode === "production") {
+  if (mode === "production") {
     win.loadFile(loadUrl);
   } else {
     win.loadURL(loadUrl);
