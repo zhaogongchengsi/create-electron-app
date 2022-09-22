@@ -4,6 +4,13 @@
 
 🔊 Create electron app only requires lightweight configuration
 
+Using esbuild and vite
+
+- Typescript support
+- Hot
+- Build and launch fast
+- seamless vite
+
 ## Install
 
 ```sh
@@ -26,24 +33,86 @@ npm install electron electron-builder --save -dev
 
 ## Usage
 
-## 1. The simplest first
+1. Initialize a [vite](https://cn.vitejs.dev/guide/#scaffolding-your-first-vite-project) project
 
-> Configure the `main` field of the `package.json`, which is the entry file of electron
->
-> In the project root directory, configure a `vite.config` file, and the configuration of all rendering layers is based on changing the file
-
-## 2. According to the second way of using the configuration file
-
-Then add the command
-
-```json
-    "script": {
-        "dev": "cea",
-        "build": "cea build",
-    }
+```sh
+npm create vite@latest
 ```
 
-## npm
+2. New program entry file
+
+```ts
+// index.ts  You can freely choose ts or js
+
+import { BrowserWindow, app } from "electron";
+import { resolve } from "path";
+
+let win: BrowserWindow | undefined = undefined;
+
+const { loadUrl, mode, preload } = import.meta.env; // Get data from environment variables
+
+const getPath = (path: string) => {
+  return resolve(__dirname, path);
+};
+
+const createWindow = () => {
+  win = new BrowserWindow({
+    width: 1200,
+    height: 800,
+    webPreferences: {
+      nodeIntegration: true,
+      preload: preload && getPath(preload),
+    },
+  });
+
+  if (mode === "production") {
+    win.loadFile(loadUrl); // index.html
+  } else {
+    win.loadURL(loadUrl); // http:localhost:3000  vite server url
+  }
+};
+
+app
+  .whenReady()
+  .then(() => {
+    createWindow();
+
+    // current environment
+    mode === "development" && win?.webContents.openDevTools();
+  })
+  .catch(console.error);
+```
+
+3. modify the package.json file
+
+   Add entry file and add command
+
+```json
+{
+  "name": "your app name",
+  "private": true,
+  "version": "0.0.0",
++  "main": "./index.ts",
+  "script": {
++   "dev": "cea",
++   "build": "cea build"
+  }
+}
+```
+
+run command
+
+```sh
+# develop
+npm run dev
+
+# build production
+npm run build
+```
+
+## or use npm
+
+Just follow the prompts
 
 ```sh
 npm create cea

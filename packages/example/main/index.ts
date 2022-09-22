@@ -34,7 +34,3 @@ app
     mode === "development" && win?.webContents.openDevTools();
   })
   .catch(console.error);
-
-  
-console.log("node env:",process.env)
-console.log(import.meta.env)
