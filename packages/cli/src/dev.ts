@@ -61,8 +61,6 @@ export async function startServer(ctx: CeaContext) {
 
   ctx.logLevel.info("app starts");
 
-  console.log(outDir);
-
   electron = new electronStart(outDir.outdir!, {
     env: ctx.env,
   });
