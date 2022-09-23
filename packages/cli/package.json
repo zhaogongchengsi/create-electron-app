@@ -1,6 +1,6 @@
 {
   "name": "@zzhaon/create-electron-app",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Create a cli for electron app",
   "main": "index.js",
   "author": "zhaozunhong",
