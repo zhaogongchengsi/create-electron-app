@@ -1,4 +1,4 @@
-export { esbuild } from "./esbuild";
+export { esbuild, printMetaFile } from "./esbuild";
 export { buildMain } from "./buildMain";
 export { createViteServer } from "./vite";
 export {

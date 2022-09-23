@@ -1,6 +1,5 @@
 import { parse } from "path";
-import { buildPlan } from "./esbuild";
-import { WatchMode } from "esbuild";
+import { WatchMode, build } from "esbuild";
 import { CeaContext } from "../context";
 
 export type buildMainOption = {
@@ -9,6 +8,7 @@ export type buildMainOption = {
 };
 
 const IMPORT_META_ENV_VAR = "import.meta.env";
+const EXTERNAL = ["electron"];
 
 export async function buildMain({
   ctx,
@@ -18,22 +18,33 @@ export async function buildMain({
 }: buildMainOption) {
   const isEMS = ctx._isEms;
   const mode = ctx.mode;
-  const ext = ctx._isEms ? ".js" : ".cjs";
+  const ext = isEMS ? ".js" : ".cjs";
 
-  await buildPlan({
+  const { config } = ctx;
+
+  const define = {
+    [IMPORT_META_ENV_VAR]: JSON.stringify({ ...ctx.env, ...ctx.eleAssets }),
+    ...config.define,
+  };
+  const external = EXTERNAL.concat(config.external ?? []);
+  const sourcemap = config.sourcemap ? config.sourcemap : "both";
+
+  const result = await build({
     entryPoints: ctx.entryPoints,
     outdir: ctx.runPath,
-    bundle: true,
     format: isEMS ? "esm" : "cjs",
-    define: {
-      [IMPORT_META_ENV_VAR]: JSON.stringify({ ...ctx.env, ...ctx.eleAssets }),
-    },
-    metafile: true,
+    watch: mode === "development" ? watch : false,
     target: "esnext",
     platform: "node",
-    watch: mode === "development" ? watch : false,
     outExtension: { ".js": ext },
-    plugins: ctx.config.plugins,
+    
+    allowOverwrite: true,
+    bundle: true,
+    metafile: true,
+    plugins: config.plugins,
+    sourcemap,
+    define,
+    external,
   });
 
   const { name } = parse(ctx.entryPoints[0]);
@@ -43,5 +54,6 @@ export async function buildMain({
     ext: ext,
     name,
     base: name + ext,
+    metafile: result.metafile,
   };
 }

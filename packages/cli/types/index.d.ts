@@ -67,18 +67,16 @@ export interface UseConfig extends OutputOptions {
   watch?: boolean;
 
   /**
-   * Documentation https://esbuild.github.io/api/#build-api
-   *
-   * Not all configurations are valid
-   */
-  // build?: esBuild;
-
-  /**
    * .html The default is index.html of the root directory
    */
   html?: string;
 
-  plugins?: Plugin[]
+  // Let's configure esbuild
+  
+  plugins?: Plugin[];
+  external?: string[];
+  define?: Record<string, string>;
+  sourcemap?: "both" | "external" | "inline" | "linked";
 }
 
 export type OmitBuildField =

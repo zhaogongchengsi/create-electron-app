@@ -3,7 +3,7 @@ import { buildViteBundle } from "./builds/vite";
 import { readConfigInfo, readPackJsonFile } from "./config";
 import { buildApp, createTarget } from "./electron";
 import { clearPackJson, createFile, createNodeModule } from "./utils";
-import { buildMain } from "./builds";
+import { buildMain, printMetaFile } from "./builds";
 import { CeaContext } from "./context";
 import { parseEnv } from "./env";
 
@@ -43,7 +43,7 @@ export async function build(options: buildOptions) {
   await prepareBuildEnvironment(
     ctx.runPath!,
     {
-      main: fileName,
+      main: fileName.base,
       root: options.root,
     },
     pack_json
@@ -54,11 +54,14 @@ export async function build(options: buildOptions) {
   const target = await createTarget();
 
   try {
-    await buildApp({
-      inputDir: ctx.runPath!,
-      targets: target.createTarget(),
-      config: pack_json.build,
-    });
+    // await buildApp({
+    //   inputDir: ctx.runPath!,
+    //   targets: target.createTarget(),
+    //   config: pack_json.build,
+    // });
+
+    const res = await printMetaFile(fileName.metafile);
+    res && ctx.logLevel.info(res);
   } catch (err) {
     ctx.logLevel.error(err as Error);
   }
@@ -82,7 +85,7 @@ export async function buildCode(ctx: CeaContext) {
     ctx: ctx,
   });
 
-  return fineInfo.base;
+  return fineInfo;
 }
 
 export async function prepareBuildEnvironment(

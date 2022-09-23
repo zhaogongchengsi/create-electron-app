@@ -1,4 +1,10 @@
-import { build, BuildOptions, transform } from "esbuild";
+import {
+  build,
+  BuildOptions,
+  transform,
+  Metafile,
+  analyzeMetafile,
+} from "esbuild";
 import { Mode } from "../../types";
 import { mergeEsBuild } from "../config";
 
@@ -28,7 +34,6 @@ export async function esbuild({
   minify = false,
   sourcemap = false,
   format = "cjs",
-  electronAssets = {},
   mode = "development",
 }: esbuildOptions) {
   return build({
@@ -40,9 +45,6 @@ export async function esbuild({
     sourcemap: sourcemap,
     format: format,
     loader: LOADER,
-    define: {
-      electronAssets: JSON.stringify(electronAssets),
-    },
     watch: mode === "development",
     outExtension: { ".js": ".cjs" },
     platform: "node",
@@ -74,4 +76,8 @@ export async function transformWithEsbuild(
     loader: loader,
     platform: "node",
   });
+}
+
+export function printMetaFile(files?: Metafile) {
+  if (files) return analyzeMetafile(files);
 }
