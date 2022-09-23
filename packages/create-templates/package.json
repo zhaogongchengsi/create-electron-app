@@ -1,12 +1,12 @@
 {
   "name": "create-cea",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Create a basic electron app",
   "main": "index.js",
   "typs": "module",
   "bin": {
     "create-base-electron": "index.js",
-    "cbe": "index.js"
+    "cea": "index.js"
   },
   "scripts": {
     "update": "npm publish"
