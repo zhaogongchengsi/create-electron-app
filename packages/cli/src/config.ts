@@ -237,7 +237,7 @@ export function mergeConfig(...configs: (UseConfig | undefined)[]): UseConfig {
     for (const key in cun) {
       if (Object.prototype.hasOwnProperty.call(cun, key)) {
         // Merge esbuild config with another strategy
-        if (key === "build") {
+        if (key === "plugins") {
           pre[key] = cun[key];
           continue;
         }

@@ -33,7 +33,7 @@ importers:
       ts-node: ^10.9.1
       tslib: ^2.4.0
       typescript: ^4.8.2
-      vite: ^3.0.9
+      vite: ^3.1.3
       vitepress: ^1.0.0-alpha.13
       vitest: ^0.22.1
       vue: ^3.2.37
@@ -77,9 +77,10 @@ importers:
   packages/example:
     specifiers:
       '@vitejs/plugin-vue': ^3.1.0
-      '@zzhaon/create-electron-app': workspace:^0.1.6
+      '@zzhaon/create-electron-app': workspace:^0.2.0
       electron: ^20.1.4
       electron-builder: ^23.3.3
+      esbuild-plugin-alias: ^0.2.1
       esbuild-plugin-markdown: ^0.0.3
       esbuild-plugin-markdown-import: ^0.3.1
       typescript: ^4.6.4
@@ -93,6 +94,7 @@ importers:
       '@vitejs/plugin-vue': registry.npmmirror.com/@vitejs/plugin-vue/3.1.0_vite@3.1.3+vue@3.2.39
       electron: registry.npmmirror.com/electron/20.1.4
       electron-builder: registry.npmmirror.com/electron-builder/23.3.3
+      esbuild-plugin-alias: registry.npmmirror.com/esbuild-plugin-alias/0.2.1
       esbuild-plugin-markdown: registry.npmmirror.com/esbuild-plugin-markdown/0.0.3
       esbuild-plugin-markdown-import: registry.npmmirror.com/esbuild-plugin-markdown-import/0.3.1
       typescript: registry.npmmirror.com/typescript/4.8.3
@@ -699,6 +701,7 @@ packages:
     resolution: {integrity: sha512-ULqvZNGMv0zRFvqn8/4LSPtnmN4MfhlPNtJCTpKuIIxGVGZ2rYWzFXrvEBoh9CVyqSE7D6YFRJ1hydLHI6kbWw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@types/plist/-/plist-3.0.2.tgz}
     name: '@types/plist'
     version: 3.0.2
+    requiresBuild: true
     dependencies:
       '@types/node': registry.npmmirror.com/@types/node/18.7.18
       xmlbuilder: registry.npmmirror.com/xmlbuilder/15.1.1
@@ -731,6 +734,7 @@ packages:
     resolution: {integrity: sha512-NNm+gdePAX1VGvPcGZCDKQZKYSiAWigKhKaz5KF94hG6f2s8de9Ow5+7AbXoeKxL8gavZfk4UquSAygOF2duEQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@types/verror/-/verror-1.10.6.tgz}
     name: '@types/verror'
     version: 1.10.6
+    requiresBuild: true
     dev: true
     optional: true
 
@@ -793,7 +797,7 @@ packages:
       vite: ^3.0.0
       vue: ^3.2.25
     dependencies:
-      vite: registry.npmmirror.com/vite/3.1.3
+      vite: registry.npmmirror.com/vite/3.1.3_terser@5.15.0
       vue: registry.npmmirror.com/vue/3.2.39
     dev: true
 
@@ -1176,6 +1180,7 @@ packages:
     name: assert-plus
     version: 1.0.0
     engines: {node: '>=0.8'}
+    requiresBuild: true
     dev: true
     optional: true
 
@@ -1190,6 +1195,7 @@ packages:
     name: astral-regex
     version: 2.0.0
     engines: {node: '>=8'}
+    requiresBuild: true
     dev: true
     optional: true
 
@@ -1229,6 +1235,7 @@ packages:
     resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/base64-js/-/base64-js-1.5.1.tgz}
     name: base64-js
     version: 1.5.1
+    requiresBuild: true
     dev: true
 
   registry.npmmirror.com/binary-extensions/2.2.0:
@@ -1351,6 +1358,7 @@ packages:
     resolution: {integrity: sha512-EHcyIPBQ4BSGlvjB16k5KgAJ27CIsHY/2JBmCRReo48y9rQ3MaUzWX3KVlBa4U7MyX02HdVj0K7C3WaB3ju7FQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/buffer/-/buffer-5.7.1.tgz}
     name: buffer
     version: 5.7.1
+    requiresBuild: true
     dependencies:
       base64-js: registry.npmmirror.com/base64-js/1.5.1
       ieee754: registry.npmmirror.com/ieee754/1.2.1
@@ -1526,6 +1534,7 @@ packages:
     name: cli-truncate
     version: 2.1.0
     engines: {node: '>=8'}
+    requiresBuild: true
     dependencies:
       slice-ansi: registry.npmmirror.com/slice-ansi/3.0.0
       string-width: registry.npmmirror.com/string-width/4.2.3
@@ -1655,6 +1664,7 @@ packages:
     resolution: {integrity: sha512-3lqz5YjWTYnW6dlDa5TLaTCcShfar1e40rmcJVwCBJC6mWlFuj0eCHIElmG1g5kyuJ/GD+8Wn4FFCcz4gJPfaQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/core-util-is/-/core-util-is-1.0.2.tgz}
     name: core-util-is
     version: 1.0.2
+    requiresBuild: true
     dev: true
     optional: true
 
@@ -1662,6 +1672,7 @@ packages:
     resolution: {integrity: sha512-iX3mfgcTMIq3ZKLIsVFAbv7+Mc10kxabAGQb8HvjA1o3T1PIYprbakQ65d3I+2HGHt6nSKkM9PYjgoJO2KcFBQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/crc/-/crc-3.8.0.tgz}
     name: crc
     version: 3.8.0
+    requiresBuild: true
     dependencies:
       buffer: registry.npmmirror.com/buffer/5.7.1
     dev: true
@@ -2179,6 +2190,12 @@ packages:
     requiresBuild: true
     optional: true
 
+  registry.npmmirror.com/esbuild-plugin-alias/0.2.1:
+    resolution: {integrity: sha512-jyfL/pwPqaFXyKnj8lP8iLk6Z0m099uXR45aSN8Av1XD4vhvQutxxPzgA2bTcAwQpa1zCXDcWOlhFgyP3GKqhQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/esbuild-plugin-alias/-/esbuild-plugin-alias-0.2.1.tgz}
+    name: esbuild-plugin-alias
+    version: 0.2.1
+    dev: true
+
   registry.npmmirror.com/esbuild-plugin-markdown-import/0.3.1:
     resolution: {integrity: sha512-c59K1gkiOPY/Ne+jpIsHIKrr1agzuKiU0diElGU4gJeJziQdjKDMz6LXAP+ID1pbcyO0Wemeqgq0ptUNUQ4ptg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/esbuild-plugin-markdown-import/-/esbuild-plugin-markdown-import-0.3.1.tgz}
     name: esbuild-plugin-markdown-import
@@ -2334,6 +2351,7 @@ packages:
     name: extsprintf
     version: 1.4.1
     engines: {'0': node >=0.6.0}
+    requiresBuild: true
     dev: true
     optional: true
 
@@ -2341,12 +2359,14 @@ packages:
     resolution: {integrity: sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/fast-deep-equal/-/fast-deep-equal-3.1.3.tgz}
     name: fast-deep-equal
     version: 3.1.3
+    requiresBuild: true
     dev: true
 
   registry.npmmirror.com/fast-json-stable-stringify/2.1.0:
     resolution: {integrity: sha512-lhd/wF+Lk98HZoTCtlVraHtfh5XYijIjalXck7saUtuanSDyLMxnHhSXEDJqHxD7msR8D0uCmqlkwjCV8xvwHw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/fast-json-stable-stringify/-/fast-json-stable-stringify-2.1.0.tgz}
     name: fast-json-stable-stringify
     version: 2.1.0
+    requiresBuild: true
     dev: true
 
   registry.npmmirror.com/fd-slicer/1.1.0:
@@ -2682,6 +2702,7 @@ packages:
     version: 1.1.7
     engines: {node: ^8.11.2 || >=10}
     os: [darwin]
+    requiresBuild: true
     dependencies:
       cli-truncate: registry.npmmirror.com/cli-truncate/2.1.0
       node-addon-api: registry.npmmirror.com/node-addon-api/1.7.2
@@ -2701,6 +2722,7 @@ packages:
     resolution: {integrity: sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/ieee754/-/ieee754-1.2.1.tgz}
     name: ieee754
     version: 1.2.1
+    requiresBuild: true
     dev: true
     optional: true
 
@@ -2946,6 +2968,7 @@ packages:
     resolution: {integrity: sha512-xbbCH5dCYU5T8LcEhhuh7HJ88HXuW3qsI3Y0zOZFKfZEHcpWiHU/Jxzk629Brsab/mMiHQti9wMP+845RPe3Vg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/json-schema-traverse/-/json-schema-traverse-0.4.1.tgz}
     name: json-schema-traverse
     version: 0.4.1
+    requiresBuild: true
     dev: true
 
   registry.npmmirror.com/json-stringify-safe/5.0.1:
@@ -3253,6 +3276,7 @@ packages:
     resolution: {integrity: sha512-ibPK3iA+vaY1eEjESkQkM0BbCqFOaZMiXRTtdB0u7b4djtY6JnsjvPdUHVMg6xQt3B8fpTTWHI9A+ADjM9frzg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/node-addon-api/-/node-addon-api-1.7.2.tgz}
     name: node-addon-api
     version: 1.7.2
+    requiresBuild: true
     dev: true
     optional: true
 
@@ -3459,6 +3483,7 @@ packages:
     name: punycode
     version: 2.1.1
     engines: {node: '>=6'}
+    requiresBuild: true
     dev: true
 
   registry.npmmirror.com/pupa/2.1.1:
@@ -3754,6 +3779,7 @@ packages:
     name: slice-ansi
     version: 3.0.0
     engines: {node: '>=8'}
+    requiresBuild: true
     dependencies:
       ansi-styles: registry.npmmirror.com/ansi-styles/4.3.0
       astral-regex: registry.npmmirror.com/astral-regex/2.0.0
@@ -3766,6 +3792,7 @@ packages:
     name: smart-buffer
     version: 4.2.0
     engines: {node: '>= 6.0.0', npm: '>= 3.0.0'}
+    requiresBuild: true
     dev: true
     optional: true
 
@@ -4109,6 +4136,7 @@ packages:
     resolution: {integrity: sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/uri-js/-/uri-js-4.4.1.tgz}
     name: uri-js
     version: 4.4.1
+    requiresBuild: true
     dependencies:
       punycode: registry.npmmirror.com/punycode/2.1.1
     dev: true
@@ -4139,6 +4167,7 @@ packages:
     name: verror
     version: 1.10.1
     engines: {node: '>=0.6.0'}
+    requiresBuild: true
     dependencies:
       assert-plus: registry.npmmirror.com/assert-plus/1.0.0
       core-util-is: registry.npmmirror.com/core-util-is/1.0.2
@@ -4431,6 +4460,7 @@ packages:
     name: xmlbuilder
     version: 15.1.1
     engines: {node: '>=8.0'}
+    requiresBuild: true
     dev: true
 
   registry.npmmirror.com/y18n/5.0.8:

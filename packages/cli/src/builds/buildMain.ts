@@ -23,6 +23,7 @@ export async function buildMain({
   await buildPlan({
     entryPoints: ctx.entryPoints,
     outdir: ctx.runPath,
+    bundle: true,
     format: isEMS ? "esm" : "cjs",
     define: {
       [IMPORT_META_ENV_VAR]: JSON.stringify({ ...ctx.env, ...ctx.eleAssets }),

@@ -1,7 +1,7 @@
 import { UseConfig } from "@zzhaon/create-electron-app";
 import { resolve } from "path";
 
-import { markdown } from "esbuild-plugin-markdown-import";
+import alias from "esbuild-plugin-alias";
 
 export default (): UseConfig => {
   return {
@@ -10,6 +10,10 @@ export default (): UseConfig => {
       preload: resolve("./main/preload.ts"),
     },
     vite: "./vite.config.ts",
-    plugins: [markdown({})],
+    plugins: [
+      alias({
+        "settings": resolve("./alias/env.ts"),
+      }),
+    ],
   };
 };
