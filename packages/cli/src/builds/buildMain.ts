@@ -9,6 +9,15 @@ export type buildMainOption = {
 
 const IMPORT_META_ENV_VAR = "import.meta.env";
 const EXTERNAL = ["electron"];
+const loader = {
+  ".ts": "ts",
+  ".js": "js",
+  ".json": "json",
+  ".png": "file",
+  ".jpeg": "file",
+  ".svg": "file",
+  ".jpg": "file",
+} as const;
 
 export async function buildMain({
   ctx,
@@ -37,7 +46,7 @@ export async function buildMain({
     target: "esnext",
     platform: "node",
     outExtension: { ".js": ext },
-    
+    loader: loader,
     allowOverwrite: true,
     bundle: true,
     metafile: true,
