@@ -32,7 +32,7 @@ export async function build(options: buildOptions) {
     config: useConfig,
     packageJson: pack_json,
     mode,
-    env
+    env,
   });
 
   ctx.envPath();
@@ -55,12 +55,11 @@ export async function build(options: buildOptions) {
   const target = await createTarget();
 
   try {
-    // await buildApp({
-    //   inputDir: ctx.runPath!,
-    //   targets: target.createTarget(),
-    //   config: pack_json.build,
-    // });
-
+    await buildApp({
+      inputDir: ctx.runPath!,
+      targets: target.createTarget(),
+      config: pack_json.build,
+    });
     const res = await printMetaFile(fileName.metafile);
     res && ctx.logLevel.info(res);
   } catch (err) {
