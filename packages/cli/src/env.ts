@@ -26,6 +26,7 @@ export async function fincEnvFile(root: string, mode: Mode): Promise<string[]> {
     findFiles(root, [".env.local"]),
     findFiles(root, [".env"]),
     findFiles(root, [`.env.${mode}`]),
+    findFiles(root, [`.env.${mode}.local`]),
   ]);
   res.forEach(({ exist, path }) => {
     if (exist) {
