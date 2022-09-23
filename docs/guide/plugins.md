@@ -1,11 +1,9 @@
 # 使用插件
 
-:::tip 警告
-当前功能还在开发中
-:::
+和 esbuild 插件一样[点这里](https://esbuild.docschina.org/plugins/#using-plugins)查看详情
 
-create-electron-app 可以使用 esbuild 和 vite 的插件 cea 使用最小的预配置 除构建 app 所必须的配置外 其他的都交给用户自己配置
+[社区插件列表](https://github.com/esbuild/community-plugins)
 
 ## Vite 使用配置
 
-[看这里](https://cn.vitejs.dev/guide/using-plugins.html)
+[点这里](https://cn.vitejs.dev/guide/using-plugins.html)

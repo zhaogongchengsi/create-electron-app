@@ -13,13 +13,13 @@ hero:
   #   alt: Vite
   actions:
     - theme: brand
-      text: Get Started
+      text: 快速开始
       link: /guide/index.md
     - theme: alt
-      text: Why cea?
+      text: 为什么选择 cea
       link: /guide/why
     - theme: alt
-      text: View on GitHub
+      text: GitHub
       link: https://github.com/zhaogongchengsi/create-electron-app
 
 features:
