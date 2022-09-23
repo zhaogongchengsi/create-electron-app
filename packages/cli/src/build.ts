@@ -32,6 +32,7 @@ export async function build(options: buildOptions) {
     config: useConfig,
     packageJson: pack_json,
     mode,
+    env
   });
 
   ctx.envPath();
