@@ -36,13 +36,13 @@ export async function buildMain({
 
   const define = {
     [IMPORT_META_ENV_VAR]: JSON.stringify({ ...ctx.env, ...ctx.eleAssets }),
-    [IMPORT_META_ENV_DEV_VAR]: mode === "development",
-    [IMPORT_META_ENV_PROD_VAR]: mode === "production",
+    [IMPORT_META_ENV_DEV_VAR]: `${mode === "development"}`,
+    [IMPORT_META_ENV_PROD_VAR]: `${mode === "production"}`,
     ...config.define,
   };
 
   const external = EXTERNAL.concat(config.external ?? []);
-  const sourcemap = config.sourcemap ? config.sourcemap : "both";
+  const sourcemap = config.sourcemap ? config.sourcemap : "linked";
 
   const result = await build({
     entryPoints: ctx.entryPoints,
