@@ -1,11 +1,10 @@
 import { ChildProcess, spawn, StdioOptions } from "node:child_process";
 import { _reauire } from "../utils";
 
-
 const isStdReadable = (stream: any) => stream === process.stdin;
-const isStdWritable = (stream:  any) =>
+const isStdWritable = (stream: any) =>
   stream === process.stdout || stream === process.stderr;
-  
+
 export default class ElectronMon {
   cwd: string = process.cwd();
   config: any;
