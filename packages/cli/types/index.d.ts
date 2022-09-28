@@ -50,6 +50,13 @@ export interface WindowsRenderer {
 export type Main = WindowsMain | string;
 export type Renderer = string;
 
+export interface Electron {
+  /**
+   * ELECTRON_DISABLE_SECURITY_WARNINGS=true
+   */
+  warnings?: boolean;
+}
+
 export interface UseConfig extends OutputOptions {
   /**
    * entry file path
@@ -71,8 +78,10 @@ export interface UseConfig extends OutputOptions {
    */
   html?: string;
 
+  electron?: Electron;
+
   // Let's configure esbuild
-  
+
   plugins?: Plugin[];
   external?: string[];
   define?: Record<string, string>;

@@ -65,7 +65,12 @@ export class CeaContext {
     this.build = packageJson.build ?? {};
     this.mode = mode ?? "development";
     this.logLevel = log;
-    this.env = env;
+
+    this.env = {
+      ELECTRON_DISABLE_SECURITY_WARNINGS: `${config.electron?.warnings ?? true}`,
+      ...env,
+    };
+    
     const { base, dir, root: r } = parse(this.config.html!);
     this._html = relative(join(this.root, r, dir), base);
 

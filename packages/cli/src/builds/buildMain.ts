@@ -43,7 +43,7 @@ export async function buildMain({
   };
 
   const external = EXTERNAL.concat(config.external ?? []);
-  const sourcemap = config.sourcemap ? config.sourcemap : "linked";
+  const sourcemap = config.sourcemap ? config.sourcemap : "inline";
 
   const result = await build({
     entryPoints: ctx.entryPoints,
