@@ -3,7 +3,6 @@ import { resolve } from "path";
 
 let win: BrowserWindow | undefined = undefined;
 
-
 const { loadUrl, mode, preload } = import.meta.env;
 
 const getPath = (path: string) => {
@@ -34,3 +33,6 @@ app
     mode === "development" && win?.webContents.openDevTools();
   })
   .catch(console.error);
+
+console.log(import.meta.env.PROD);
+console.log(import.meta.env.DEV);
