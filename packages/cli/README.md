@@ -92,10 +92,10 @@ app
   "name": "your app name",
   "private": true,
   "version": "0.0.0",
-+  "main": "./index.ts",
+  "main": "./index.ts",
   "script": {
-+   "dev": "cea",
-+   "build": "cea build"
+    "dev": "cea",
+    "build": "cea build"
   }
 }
 ```
@@ -160,11 +160,32 @@ Operate as directed
 
   The output directory of the application
 
-# About esbuild configuration merge
+## Environment variables and patterns
 
-| field      | operate                                                                                                         |
-| ---------- | --------------------------------------------------------------------------------------------------------------- |
-| `define`   | [Object.assign](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/assign) |
-| `external` | concat                                                                                                          |
+Environment variables are mounted on a `import.meta.env` object
+
+- `import.meta.env.loadUrl` 应用运行的渲染线程的路径
+  - production `index.html` 文件的路径
+  - development [vite.server](https://vitejs.cn/vite3-cn/config/server-options.html#server-port) 的 url 路径
+- `import.meta.env.mode` 应用运行的模式
+  - `development` 开发模式
+  - `production` 生产模式 (应用以打包)
+- `import.meta.preload` [Electron BrowserWindow.webPreferences.preload](https://www.electronjs.org/zh/docs/latest/api/context-bridge#exposing-node-global-symbols)
+- `import.meta.env.DEV`: `{boolean}` Is it running in development mode?
+- `import.meta.env.PROD`: `{boolean}` Is it running in production mode?
+
+## .env file
+
+As with Vite, use dotenv to load additional environment variables from the following files in your environment directory
+
+```sh
+.env                # Loaded in all cases
+.env.local          # Loaded in all cases
+.env.[mode]         # Load only in specified mode
+.env.[mode].local   # Load only in specified mode
+
+```
+
+The loaded environment variables will also be exposed to the client side source code in the form of strings through import.meta.env
 
 ### [Documentation](https://github.com/zhaogongchengsi/create-electron-app)
