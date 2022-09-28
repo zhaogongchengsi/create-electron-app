@@ -18,6 +18,8 @@ const createWindow = () => {
       nodeIntegrationInWorker: true,
       preload: preload && getPath(preload),
     },
+    titleBarStyle: "hidden",
+    titleBarOverlay: true,
   });
 
   if (mode === "production") {
@@ -34,3 +36,6 @@ app
     mode === "development" && win?.webContents.openDevTools();
   })
   .catch(console.error);
+
+// 禁用硬件加速
+app.disableHardwareAcceleration();
