@@ -7,6 +7,8 @@
     - `development` 开发模式
     - `production` 生产模式 (应用以打包)
 - `import.meta.preload` [Electron BrowserWindow.webPreferences.preload](https://www.electronjs.org/zh/docs/latest/api/context-bridge#exposing-node-global-symbols)
+- `import.meta.env.DEV`: `{boolean}` 是否运行在开发模式下 
+- `import.meta.env.PROD`: `{boolean}` 是否运行在生产模式下
 
 ## .env 文件
 

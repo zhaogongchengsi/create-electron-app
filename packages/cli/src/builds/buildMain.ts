@@ -8,8 +8,6 @@ export type buildMainOption = {
 };
 
 const IMPORT_META_ENV_VAR = "import.meta.env";
-const IMPORT_META_ENV_DEV_VAR = "import.meta.env.DEV";
-const IMPORT_META_ENV_PROD_VAR = "import.meta.env.PROD";
 
 const EXTERNAL = ["electron"];
 const loader = {
@@ -35,10 +33,13 @@ export async function buildMain({
   const { config } = ctx;
 
   const define = {
-    [IMPORT_META_ENV_VAR]: JSON.stringify({ ...ctx.env, ...ctx.eleAssets }),
-    [IMPORT_META_ENV_DEV_VAR]: `${mode === "development"}`,
-    [IMPORT_META_ENV_PROD_VAR]: `${mode === "production"}`,
     ...config.define,
+    [IMPORT_META_ENV_VAR]: JSON.stringify({
+      ...ctx.env,
+      ...ctx.eleAssets,
+      PROD: mode === "production",
+      DEV: mode === "development",
+    }),
   };
 
   const external = EXTERNAL.concat(config.external ?? []);
