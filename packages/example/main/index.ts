@@ -15,6 +15,7 @@ const createWindow = () => {
     height: 800,
     webPreferences: {
       nodeIntegration: true,
+      nodeIntegrationInWorker: true,
       preload: preload && getPath(preload),
     },
   });
@@ -33,6 +34,3 @@ app
     mode === "development" && win?.webContents.openDevTools();
   })
   .catch(console.error);
-
-console.log(import.meta.env.PROD);
-console.log(import.meta.env.DEV);
