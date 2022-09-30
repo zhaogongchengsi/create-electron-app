@@ -50,7 +50,10 @@ export class CeaContext {
    */
   logLevel: log;
 
-  env: Record<string, string>;
+  env: Record<string, string> = {};
+
+  resources: string | undefined;
+  resourcesPrefix: string = "#";
 
   constructor({
     root,
@@ -66,13 +69,9 @@ export class CeaContext {
     this.mode = mode ?? "development";
     this.logLevel = log;
 
-    this.env = {
-      ELECTRON_DISABLE_SECURITY_WARNINGS: `${config.electron?.warnings ?? true}`,
-      ...env,
-    };
-    
-    const { base, dir, root: r } = parse(this.config.html!);
-    this._html = relative(join(this.root, r, dir), base);
+    this.initResources(config);
+    this.initEnv(env);
+    this.initHtml();
 
     const entries = identifyMainType(config.main);
 
@@ -84,9 +83,7 @@ export class CeaContext {
       root,
       ext: "cjs",
     });
-
     this._eleAssets = { main: assEntries[0], preload: assEntries[1] };
-
     this._isEms = false;
     // if (mode === "production") {
     //   this._isEms = false;
@@ -102,6 +99,33 @@ export class CeaContext {
     //     this._isEms = false;
     //   }
     // }
+  }
+
+  private initResources(config: UseConfig) {
+    const resourcesPath =
+      typeof config.staticResource === "object"
+        ? config.staticResource.path
+        : config.staticResource;
+    this.resourcesPrefix =
+      typeof config.staticResource === "object"
+        ? config.staticResource.prefix
+        : "#";
+
+    this.resources = join(this.root, resourcesPath!);
+  }
+
+  private initEnv(env: any) {
+    this.env = {
+      ELECTRON_DISABLE_SECURITY_WARNINGS: `${
+        this.config.electron?.warnings ?? true
+      }`,
+      ...env,
+    };
+  }
+
+  private initHtml() {
+    const { base, dir, root: r } = parse(this.config.html!);
+    this._html = relative(join(this.root, r, dir), base);
   }
 
   runPath: string | undefined;

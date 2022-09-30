@@ -1,7 +1,8 @@
 import { PluginBuild } from "esbuild";
 import { readFile } from "fs/promises";
-import { dirname, isAbsolute, relative, resolve } from "path";
+import { dirname, isAbsolute, join, relative, resolve } from "path";
 import { pathToFileURL } from "url";
+import { CeaContext } from "../context";
 import { lookupFile } from "../utils";
 
 export const esbuildPlugingExternalizeDeps = (
@@ -56,6 +57,32 @@ export const esbuildPlugingInjectFileScopeVariables = () => {
           loader: args.path.endsWith("ts") ? "ts" : "js",
           contents: injectValues + contents,
         };
+      });
+    },
+  };
+};
+
+export const exbuildPluginStaticResource = (ctx: CeaContext) => {
+  return {
+    name: "static-resource",
+    setup(build: PluginBuild) {
+      const pre = new RegExp(`^${ctx.resourcesPrefix}`);
+      build.onResolve({ filter: /.*/ }, ({ path: id }) => {
+        if (pre.test(id)) {
+          return {
+            path: join(ctx.resources!, id.replace(pre, "")),
+            namespace: "resource",
+          };
+        }
+      });
+
+      build.onLoad({ namespace: "resource", filter: /.*/ }, ({ path: id }) => {
+        if (pre.test(id)) {
+          return {
+            path: join(ctx.resources!, id.replace(pre, "")),
+            namespace: "resource",
+          };
+        }
       });
     },
   };

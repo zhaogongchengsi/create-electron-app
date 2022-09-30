@@ -1,6 +1,7 @@
 import { parse } from "path";
 import { WatchMode, build } from "esbuild";
 import { CeaContext } from "../context";
+import { exbuildPluginStaticResource } from ".";
 
 export type buildMainOption = {
   ctx: CeaContext;
@@ -45,6 +46,8 @@ export async function buildMain({
   const external = EXTERNAL.concat(config.external ?? []);
   const sourcemap = config.sourcemap ? config.sourcemap : "inline";
 
+  const plugins = config.plugins;
+
   const result = await build({
     entryPoints: ctx.entryPoints,
     outdir: ctx.runPath,
@@ -57,7 +60,7 @@ export async function buildMain({
     allowOverwrite: true,
     bundle: true,
     metafile: true,
-    plugins: config.plugins,
+    plugins: plugins,
     sourcemap,
     define,
     external,

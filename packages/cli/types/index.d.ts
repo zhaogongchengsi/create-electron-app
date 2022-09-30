@@ -57,6 +57,11 @@ export interface Electron {
   warnings?: boolean;
 }
 
+export interface StaticResource {
+  prefix: string;
+  path: string;
+}
+
 export interface UseConfig extends OutputOptions {
   /**
    * entry file path
@@ -77,6 +82,11 @@ export interface UseConfig extends OutputOptions {
    * .html The default is index.html of the root directory
    */
   html?: string;
+
+  /**
+   * Static resource 静态资源
+   */
+  staticResource?: StaticResource | string;
 
   electron?: Electron;
 

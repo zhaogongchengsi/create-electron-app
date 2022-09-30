@@ -268,7 +268,8 @@ export function mergeConfig(...configs: (UseConfig | undefined)[]): UseConfig {
       tempDirName: ".app",
       outDir: "dist",
       appOutDir: "releases",
-      html: "index.html"
+      html: "index.html",
+      staticResource: "public",
     }
   );
 }
