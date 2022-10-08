@@ -1,7 +1,7 @@
-import { UseConfig } from "@zzhaon/create-electron-app";
+import { defineConfig } from "@zzhaon/create-electron-app";
 import { resolve } from "path";
 
-export default (): UseConfig => {
+export default defineConfig(() => {
   return {
     main: {
       input: resolve("./main/index.ts"),
@@ -10,4 +10,4 @@ export default (): UseConfig => {
     vite: "./vite.config.ts",
     plugins: [],
   };
-};
+});

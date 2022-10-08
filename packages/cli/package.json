@@ -10,6 +10,12 @@
     "url": "git+https://github.com/zhaogongchengsi/create-electron-app.git",
     "directory": "packages/cli"
   },
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.mjs"
+    }
+  },
   "bugs": {
     "url": "https://github.com/zhaogongchengsi/create-electron-app/issues"
   },
@@ -70,6 +76,7 @@
     "ts-node": "^10.9.1",
     "tslib": "^2.4.0",
     "typescript": "^4.8.2",
+    "unbuild": "^0.8.11",
     "vitepress": "^1.0.0-alpha.13",
     "vitest": "^0.22.1",
     "vue": "^3.2.37"

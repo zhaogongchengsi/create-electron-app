@@ -5,11 +5,6 @@ export default defineBuildConfig({
   entries: [
     // default
     "./packages/cli/src/index",
-    // {
-    //   builder: "mkdist",
-    //   input: "./packages/test/index",
-    //   outDir: "./dist/test",
-    // },
   ],
   declaration: true,
   clean: true,

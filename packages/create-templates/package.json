@@ -31,6 +31,7 @@
     "prompts": "^2.4.2"
   },
   "devDependencies": {
-    "@types/prompts": "^2.0.14"
+    "@types/prompts": "^2.0.14",
+    "unbuild": "^0.8.11"
   }
 }

@@ -56,7 +56,7 @@ export async function buildMain({
     platform: "node",
     outExtension: { ".js": ext },
     loader: loader,
-    write: false,
+    // write: false,
     allowOverwrite: true,
     bundle: true,
     metafile: true,
@@ -65,8 +65,6 @@ export async function buildMain({
     define,
     external,
   });
-
-  console.log(result);
 
   const { name } = parse(ctx.entryPoints[0]);
 

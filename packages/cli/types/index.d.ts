@@ -131,3 +131,5 @@ export type BuildAppOptions = {
 };
 
 export type Mode = "development" | "production";
+
+export type ExportConfig = () => UseConfig | UseConfig;

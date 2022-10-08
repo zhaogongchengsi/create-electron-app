@@ -28,26 +28,32 @@ export default async function () {
     }),
   ];
 
-  const indexConfig = {
-    input: resolvePath("./src/index.ts"),
-    output: {
-      dir: resolvePath("dist"),
-      entryFileNames: `index.js`,
-      format: "es",
-    },
-    sourceMap: process.env.NODE_ENV === "development",
-    external: [
-      "cac",
-      "electron",
-      "esbuild",
-      "vite",
-      "@vitejs/plugin-legacy",
-      "electron-builder",
-      "electronmon",
-      "chokidar",
-    ],
-    plugins: plugins,
+  const external = [
+    "cac",
+    "electron",
+    "esbuild",
+    "vite",
+    "@vitejs/plugin-legacy",
+    "electron-builder",
+    "electronmon",
+    "chokidar",
+  ];
+
+  const input = resolvePath("./src/index.ts");
+
+  const config = (format = "esm") => {
+    return {
+      input,
+      output: {
+        dir: resolvePath("dist"),
+        entryFileNames: format === "esm" ? `index.mjs` : "index.cjs",
+        format: format,
+      },
+      sourceMap: process.env.NODE_ENV === "development",
+      external: external,
+      plugins: plugins,
+    };
   };
 
-  return [indexConfig];
+  return [config("esm"), config("cjs")];
 }

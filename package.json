@@ -24,6 +24,7 @@
     "appId": "123123"
   },
   "devDependencies": {
+    "unbuild": "^0.8.11",
     "vitepress": "^1.0.0-alpha.19",
     "vue": "^3.2.40"
   }

@@ -2,6 +2,7 @@ import { join, resolve, parse } from "path";
 import {
   CommonOptions,
   esBuild,
+  ExportConfig,
   Main,
   OmitBuildField,
   UseConfig,
@@ -375,4 +376,8 @@ export function mergeEsBuild(
   }
 
   return target;
+}
+
+export function defineConfig(exportConfig: ExportConfig) {
+  return exportConfig;
 }

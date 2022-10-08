@@ -18,21 +18,24 @@ export async function createDevServer(options: ServeOptions) {
 
   if (!useConfig) return;
 
-  const mode = "development";
 
-  const env = await parseEnv(options.root, mode);
+  console.log(useConfig)
 
-  const ctx = new CeaContext({
-    root: options.root,
-    config: useConfig,
-    packageJson: pack_json,
-    mode: mode,
-    env,
-  });
+  // const mode = "development";
 
-  ctx.envPath();
+  // const env = await parseEnv(options.root, mode);
 
-  await startServer(ctx);
+  // const ctx = new CeaContext({
+  //   root: options.root,
+  //   config: useConfig,
+  //   packageJson: pack_json,
+  //   mode: mode,
+  //   env,
+  // });
+
+  // ctx.envPath();
+
+  // await startServer(ctx);
 }
 
 export async function startServer(ctx: CeaContext) {
@@ -58,8 +61,6 @@ export async function startServer(ctx: CeaContext) {
       },
     },
   });
-
-  console.log(ctx);
 
   // ctx.logLevel.info("app starts");
 
