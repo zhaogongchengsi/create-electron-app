@@ -3,6 +3,7 @@ import { UserConfig } from "vite";
 import { ElectronAssets, Mode, UseConfig } from "../../types";
 import { identifyMainType } from "../config";
 import LogLevel from "./log";
+import { fileURLToPath } from "url";
 
 type logfunc = (mag: string) => void;
 
@@ -72,6 +73,10 @@ export class CeaContext {
     this.initResources(config);
     this.initEnv(env);
     this.initHtml();
+
+    // const hookUrl = new URL(fileURLToPath(import.meta.url));
+
+    // const hooksFileUrl = resolve(hookUrl.pathname, "../hooks/index.ts");
 
     const entries = identifyMainType(config.main);
 

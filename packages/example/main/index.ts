@@ -1,6 +1,5 @@
 import { BrowserWindow, app } from "electron";
 import { resolve } from "path";
-import img from "#/vite.svg";
 
 let win: BrowserWindow | undefined = undefined;
 
@@ -37,8 +36,6 @@ app
     mode === "development" && win?.webContents.openDevTools();
   })
   .catch(console.error);
-
-console.log(img);
 
 // 禁用硬件加速
 app.disableHardwareAcceleration();

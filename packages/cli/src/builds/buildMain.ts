@@ -1,7 +1,6 @@
 import { parse } from "path";
 import { WatchMode, build } from "esbuild";
 import { CeaContext } from "../context";
-import { exbuildPluginStaticResource } from ".";
 
 export type buildMainOption = {
   ctx: CeaContext;
@@ -57,14 +56,17 @@ export async function buildMain({
     platform: "node",
     outExtension: { ".js": ext },
     loader: loader,
+    write: false,
     allowOverwrite: true,
     bundle: true,
     metafile: true,
-    plugins: plugins,
+    plugins,
     sourcemap,
     define,
     external,
   });
+
+  console.log(result);
 
   const { name } = parse(ctx.entryPoints[0]);
 
