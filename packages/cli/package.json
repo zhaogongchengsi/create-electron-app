@@ -54,8 +54,7 @@
   "files": [
     "bin",
     "dist",
-    "types",
-    "index.mjs"
+    "types"
   ],
   "engines": {
     "node": "^14.18.0 || >=16.0.0"
