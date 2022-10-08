@@ -11,7 +11,7 @@ const remarks = `
 `;
 
 export async function useRestart(file: string) {
-  const hook = resolve(fileURLToPath(import.meta.url), "../hooks/restare.js");
+  const hook = resolve(fileURLToPath(import.meta.url), "../../hooks/restare.js");
   const code = await readFile(hook);
   return await appendFile(file, `${remarks} \n ${code}`);
 }
