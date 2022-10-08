@@ -11,8 +11,8 @@ Using esbuild and vite
 - Build and launch fast
 - seamless vite
 
-
 ## Example
+
 [Basic use example](https://github.com/zhaogongchengsi/create-electron-app/tree/master/packages/example)
 [Development application example](https://github.com/zhaogongchengsi/picture-preview)
 
@@ -164,6 +164,12 @@ Operate as directed
   `string` default: 'releases'
 
   The output directory of the application
+
+- ### `staticResource`
+
+  `string` default: ''
+
+  static resource folder, For example, the image icon script
 
 ## Environment variables and patterns
 
