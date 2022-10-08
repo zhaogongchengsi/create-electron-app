@@ -1,9 +1,10 @@
 import { ServeOptions, UseConfig } from "../types";
 import { readConfigInfo, readPackJsonFile } from "./config";
 import { buildMain, createViteServer } from "./builds";
-import { electronStart } from "./electron";
+import { electronStart, useRestart } from "./electron";
 import { CeaContext } from "./context";
 import { parseEnv } from "./env";
+import { join } from "path";
 
 interface AddressInfo {
   address: string;
@@ -55,12 +56,16 @@ export async function startServer(
       onRebuild: (err, res) => {
         if (!electron) return;
         if (!ctx.config) return;
-        electron?.restart && electron.restart();
+        useRestart(join(outDir.outdir!, outDir.base)).then(() => {
+          electron?.restart && electron.restart();
+        });
       },
     },
   });
 
   await ctx.initResources();
+
+  await useRestart(join(outDir.outdir!, outDir.base));
 
   ctx.logLevel.info("app starts");
 

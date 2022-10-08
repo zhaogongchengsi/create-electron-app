@@ -13,13 +13,12 @@ const createWindow = () => {
   win = new BrowserWindow({
     width: 1200,
     height: 800,
+    icon: getPath("public/icon.png"),
     webPreferences: {
       nodeIntegration: true,
       nodeIntegrationInWorker: true,
       preload: preload && getPath(preload),
     },
-    titleBarStyle: "hidden",
-    titleBarOverlay: true,
   });
 
   if (mode === "production") {
@@ -39,3 +38,5 @@ app
 
 // 禁用硬件加速
 app.disableHardwareAcceleration();
+
+console.log("12311212331122s3");

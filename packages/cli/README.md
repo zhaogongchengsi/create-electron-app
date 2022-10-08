@@ -64,6 +64,7 @@ const createWindow = () => {
   win = new BrowserWindow({
     width: 1200,
     height: 800,
+    icon: getPath("public/icon.png"), // public The static resource folder you set up
     webPreferences: {
       nodeIntegration: true,
       preload: preload && getPath(preload),

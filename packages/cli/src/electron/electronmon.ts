@@ -55,9 +55,15 @@ export default class ElectronMon {
   async start(fileName: string) {
     this.fileName = fileName;
     await this.createElectronProcess(fileName);
+    this._process?.on("message", (msg: string) => {
+      if (msg === "app-close") {
+        process.exit(0);
+      }
+    });
   }
 
   private killElectronProcess() {
+    this._process?.removeAllListeners();
     return new Promise((resolve) => {
       this._process?.on("exit", () => {
         this._process = null;
@@ -72,6 +78,7 @@ export default class ElectronMon {
   }
 
   async restart() {
+    this._process?.send("cea:restart");
     await this.close();
     await this.start(this.fileName!);
   }
