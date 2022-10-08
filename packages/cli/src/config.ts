@@ -13,6 +13,7 @@ import {
   createNodeModule,
   findFiles,
   importConfig,
+  isArray,
   isObject,
   isString,
   requireConfig,
@@ -36,6 +37,19 @@ export type ConfigFileInfo = {
   path: string;
   name: string;
   isEMS?: boolean;
+};
+
+export const defaultConfig = {
+  vite: "",
+  main: {
+    input: "",
+  },
+  watch: true,
+  tempDirName: ".app",
+  outDir: "dist",
+  appOutDir: "releases",
+  html: "index.html",
+  staticResource: "public",
 };
 
 const configNames = [
@@ -174,7 +188,8 @@ export async function readConfigInfo(opt: CommonOptions, packJson: any) {
         // do something here
       }
     }
-    return mergeConfig(finalConf);
+
+    return finalConf;
   } else {
     const viteFileinfo = await findFiles(root, viteFileNamas);
     if (viteFileinfo.exist) {
@@ -253,26 +268,12 @@ export function mergeConfig(...configs: (UseConfig | undefined)[]): UseConfig {
     return pre;
   }
 
-  return configs.reduce<UseConfig>(
-    (pre, cun) => {
-      if (cun) {
-        return merge(pre, cun);
-      }
-      return pre;
-    },
-    {
-      vite: "",
-      main: {
-        input: "",
-      },
-      watch: true,
-      tempDirName: ".app",
-      outDir: "dist",
-      appOutDir: "releases",
-      html: "index.html",
-      staticResource: "public",
+  return configs.reduce<UseConfig>((pre, cun) => {
+    if (cun) {
+      return merge(pre, cun);
     }
-  );
+    return pre;
+  }, defaultConfig);
 }
 
 export type MainOption = {

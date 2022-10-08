@@ -1,7 +1,7 @@
 import { join, parse, relative, resolve } from "path";
 import { UserConfig } from "vite";
 import { ElectronAssets, Mode, UseConfig } from "../../types";
-import { identifyMainType } from "../config";
+import { identifyMainType, defaultConfig } from "../config";
 import LogLevel from "./log";
 import { fileURLToPath } from "url";
 
@@ -70,7 +70,7 @@ export class CeaContext {
     this.mode = mode ?? "development";
     this.logLevel = log;
 
-    this.initResources(config);
+    // this.initResources(config);
     this.initEnv(env);
     this.initHtml();
 
@@ -116,7 +116,10 @@ export class CeaContext {
         ? config.staticResource.prefix
         : "#";
 
-    this.resources = join(this.root, resourcesPath!);
+    this.resources = join(
+      this.root,
+      resourcesPath ?? defaultConfig.staticResource
+    );
   }
 
   private initEnv(env: any) {
@@ -129,7 +132,11 @@ export class CeaContext {
   }
 
   private initHtml() {
-    const { base, dir, root: r } = parse(this.config.html!);
+    const {
+      base,
+      dir,
+      root: r,
+    } = parse(this.config.html ?? defaultConfig.html);
     this._html = relative(join(this.root, r, dir), base);
   }
 
@@ -145,9 +152,9 @@ export class CeaContext {
     let path: string | undefined = "";
 
     if (this.mode === "development") {
-      path = tempDirName;
+      path = tempDirName ?? defaultConfig.tempDirName;
     } else if (this.mode === "production") {
-      path = outDir;
+      path = outDir ?? defaultConfig.outDir;
     }
 
     this.runPath = resolve(this.root, path!);
@@ -207,6 +214,9 @@ export class CeaContext {
     if (!this.runPath) {
       throw new Error(`outdir has not been set`);
     }
-    return relative(this.runPath, join(this.root, this.config.appOutDir!));
+    return relative(
+      this.runPath,
+      join(this.root, this.config.appOutDir ?? defaultConfig.appOutDir)
+    );
   }
 }

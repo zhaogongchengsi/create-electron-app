@@ -1,7 +1,7 @@
 import { defineConfig } from "@zzhaon/create-electron-app";
 import { resolve } from "path";
 
-export default defineConfig(() => {
+export default defineConfig(async () => {
   return {
     main: {
       input: resolve("./main/index.ts"),

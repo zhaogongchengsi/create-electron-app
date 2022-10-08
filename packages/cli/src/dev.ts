@@ -1,7 +1,6 @@
-import { ServeOptions } from "../types";
+import { ServeOptions, UseConfig } from "../types";
 import { readConfigInfo, readPackJsonFile } from "./config";
 import { buildMain, createViteServer } from "./builds";
-import { log } from "./utils/log";
 import { electronStart } from "./electron";
 import { CeaContext } from "./context";
 import { parseEnv } from "./env";
@@ -18,27 +17,28 @@ export async function createDevServer(options: ServeOptions) {
 
   if (!useConfig) return;
 
-
-  console.log(useConfig)
-
-  // const mode = "development";
-
-  // const env = await parseEnv(options.root, mode);
-
-  // const ctx = new CeaContext({
-  //   root: options.root,
-  //   config: useConfig,
-  //   packageJson: pack_json,
-  //   mode: mode,
-  //   env,
-  // });
-
-  // ctx.envPath();
-
-  // await startServer(ctx);
+  await startServer(options, useConfig, pack_json);
 }
 
-export async function startServer(ctx: CeaContext) {
+export async function startServer(
+  options: ServeOptions,
+  useConfig: UseConfig,
+  pack_json: any
+) {
+  const mode = "development";
+
+  const env = await parseEnv(options.root, mode);
+
+  const ctx = new CeaContext({
+    root: options.root,
+    config: useConfig,
+    packageJson: pack_json,
+    mode: mode,
+    env,
+  });
+
+  ctx.envPath();
+
   const server = await createViteServer(ctx.root, ctx.config);
   await server.listen();
   server.printUrls();
@@ -62,11 +62,11 @@ export async function startServer(ctx: CeaContext) {
     },
   });
 
-  // ctx.logLevel.info("app starts");
+  ctx.logLevel.info("app starts");
 
-  // electron = new electronStart(outDir.outdir!, {
-  //   env: ctx.env,
-  // });
+  electron = new electronStart(outDir.outdir!, {
+    env: ctx.env,
+  });
 
-  // await electron.start(outDir.base);
+  await electron.start(outDir.base);
 }
