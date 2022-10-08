@@ -39,4 +39,3 @@ app
 // 禁用硬件加速
 app.disableHardwareAcceleration();
 
-console.log("12311212331122s3");
