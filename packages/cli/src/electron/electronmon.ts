@@ -56,7 +56,7 @@ export default class ElectronMon {
     this.fileName = fileName;
     await this.createElectronProcess(fileName);
     this._process?.on("message", (msg: string) => {
-      if (msg === "app-close") {
+      if (msg === "_cea_:app-windows-all_close") {
         process.exit(0);
       }
     });
