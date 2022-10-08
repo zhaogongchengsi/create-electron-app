@@ -37,8 +37,6 @@ export async function startServer(
     env,
   });
 
-  ctx.envPath();
-
   const server = await createViteServer(ctx.root, ctx.config);
   await server.listen();
   server.printUrls();
@@ -61,6 +59,8 @@ export async function startServer(
       },
     },
   });
+
+  await ctx.initResources();
 
   ctx.logLevel.info("app starts");
 

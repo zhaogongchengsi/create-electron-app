@@ -3,7 +3,8 @@ import { UserConfig } from "vite";
 import { ElectronAssets, Mode, UseConfig } from "../../types";
 import { identifyMainType, defaultConfig } from "../config";
 import LogLevel from "./log";
-import { fileURLToPath } from "url";
+import { createSystemLink, pathExist } from "../utils";
+import { cp, unlink } from "fs/promises";
 
 type logfunc = (mag: string) => void;
 
@@ -53,7 +54,7 @@ export class CeaContext {
 
   env: Record<string, string> = {};
 
-  resources: string | undefined;
+  resources: string = "public";
   resourcesPrefix: string = "#";
 
   constructor({
@@ -70,16 +71,11 @@ export class CeaContext {
     this.mode = mode ?? "development";
     this.logLevel = log;
 
-    // this.initResources(config);
+    this.envPath();
     this.initEnv(env);
     this.initHtml();
 
-    // const hookUrl = new URL(fileURLToPath(import.meta.url));
-
-    // const hooksFileUrl = resolve(hookUrl.pathname, "../hooks/index.ts");
-
     const entries = identifyMainType(config.main);
-
     this.entryPoints = entries;
     this._mian = entries[0];
     this._preload = entries.slice(1);
@@ -88,38 +84,29 @@ export class CeaContext {
       root,
       ext: "cjs",
     });
+
     this._eleAssets = { main: assEntries[0], preload: assEntries[1] };
     this._isEms = false;
-    // if (mode === "production") {
-    //   this._isEms = false;
-    // } else {
-    //   if (packageJson.type === "module") {
-    //     this._isEms = true;
-    //   } else {
-    //     this._isEms = false;
-    //   }
-    //   if (/\.m[jt]s$/.test(this._mian)) {
-    //     this._isEms = true;
-    //   } else if (/\.c[jt]s$/.test(this._mian)) {
-    //     this._isEms = false;
-    //   }
-    // }
   }
 
-  private initResources(config: UseConfig) {
-    const resourcesPath =
-      typeof config.staticResource === "object"
-        ? config.staticResource.path
-        : config.staticResource;
-    this.resourcesPrefix =
-      typeof config.staticResource === "object"
-        ? config.staticResource.prefix
-        : "#";
-
-    this.resources = join(
-      this.root,
-      resourcesPath ?? defaultConfig.staticResource
-    );
+  async initResources() {
+    if (!this.config.staticResource) {
+      return;
+    }
+    const resources = join(this.root, this.resources);
+    const runres = join(this.runPath!, this.resources);
+    if (this.mode === "development") {
+      if (await pathExist(runres)) {
+        await unlink(runres);
+      }
+      createSystemLink(runres, resources);
+    } else {
+      cp(resources, runres, {
+        force: true,
+        recursive: true,
+        verbatimSymlinks: false,
+      });
+    }
   }
 
   private initEnv(env: any) {
@@ -147,7 +134,7 @@ export class CeaContext {
    * @param type 路径
    * @returns 运行的环境目录 开发时是运行的临时目录 打包时是构建的静态资源目录
    */
-  envPath() {
+  private envPath() {
     const { outDir, tempDirName } = this.config;
     let path: string | undefined = "";
 

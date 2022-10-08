@@ -35,8 +35,6 @@ export async function build(options: buildOptions) {
     env,
   });
 
-  ctx.envPath();
-
   pack_json.build = settingBuildOptions({ output: ctx.exePath });
 
   const fileName = await buildCode(ctx);
@@ -49,6 +47,8 @@ export async function build(options: buildOptions) {
     },
     pack_json
   );
+
+  await ctx.initResources();
 
   ctx.logLevel.info("start building the app");
 

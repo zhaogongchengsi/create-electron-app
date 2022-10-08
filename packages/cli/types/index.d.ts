@@ -86,7 +86,7 @@ export interface UseConfig extends OutputOptions {
   /**
    * Static resource 静态资源
    */
-  staticResource?: StaticResource | string;
+  staticResource?: string;
 
   electron?: Electron;
 
