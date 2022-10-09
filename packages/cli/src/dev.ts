@@ -45,7 +45,7 @@ export async function startServer(
   const { port } = server.httpServer?.address() as AddressInfo;
 
   ctx.createElectronAssets(
-    server.resolvedUrls?.local[0] ?? `http:localhost://${port}`
+    server.resolvedUrls?.local[0] ?? `http://localhost:${port}`
   );
 
   let electron: electronStart | undefined;
