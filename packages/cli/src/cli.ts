@@ -46,8 +46,8 @@ export const createCli = ({ build, createDevServer }: cliMethod) => {
   cli
     .command("preview <config>", "Preview your app")
     .action((config, options) => {
-      const currentPath = process.cwd();
-      console.log(config, currentPath);
+      // const currentPath = process.cwd();
+      console.log(`Under development`);
     });
 
   cli.help();
