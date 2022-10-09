@@ -58,6 +58,7 @@ export async function startServer(
         if (!ctx.config) return;
         useRestart(join(outDir.outdir!, outDir.base)).then(() => {
           electron?.restart && electron.restart();
+          electron?.debugPrint();
         });
       },
     },
@@ -67,11 +68,13 @@ export async function startServer(
 
   await useRestart(join(outDir.outdir!, outDir.base));
 
-  ctx.logLevel.info("app starts");
-
   electron = new electronStart(outDir.outdir!, {
     env: ctx.env,
+    debugConfig: useConfig.debug,
   });
 
   await electron.start(outDir.base);
+  await electron.debugPrint();
+
+  // ctx.logLevel.info("app starts");
 }

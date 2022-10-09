@@ -62,6 +62,11 @@ export interface StaticResource {
   path: string;
 }
 
+export interface DebugConfig {
+  port?: number;
+  host?: number;
+}
+
 export interface UseConfig extends OutputOptions {
   /**
    * entry file path
@@ -87,7 +92,7 @@ export interface UseConfig extends OutputOptions {
    * Static resource 静态资源
    */
   staticResource?: string;
-
+  debug?: DebugConfig;
   electron?: Electron;
 
   // Let's configure esbuild

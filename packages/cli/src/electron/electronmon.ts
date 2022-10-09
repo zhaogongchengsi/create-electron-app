@@ -1,5 +1,7 @@
-import { ChildProcess, spawn, StdioOptions } from "node:child_process";
+import { ChildProcess, spawn, StdioOptions, exec } from "node:child_process";
+import { DebugConfig } from "../../types";
 import { _reauire } from "../utils";
+import pc from "picocolors";
 
 const isStdReadable = (stream: any) => stream === process.stdin;
 const isStdWritable = (stream: any) =>
@@ -14,10 +16,15 @@ export default class ElectronMon {
 
   env: Record<string, string> = {};
 
+  debugConfig: DebugConfig | undefined = undefined;
+
   constructor(root: string, config?: any) {
     this.cwd = root;
     this.config = config;
     this.env = config.env;
+    if (config.debugConfig) {
+      this.debugConfig = config.debugConfig;
+    }
   }
 
   private _process: ChildProcess | null = null;
@@ -40,9 +47,11 @@ export default class ElectronMon {
       "ipc",
     ];
 
-    const _args = typeof args != "string" ? args : [args];
+    const _args = [
+      this.debugConfig ? `--inspect=${this.debugConfig.port}` : "",
+    ].concat(typeof args != "string" ? args : [args]);
 
-    const ls = spawn(this.electronModule, _args, {
+    const ls = spawn(this.electronModule, _args.filter(Boolean), {
       cwd: this.cwd,
       env: this.env ?? {},
       stdio: stdioArg,
@@ -81,5 +90,23 @@ export default class ElectronMon {
     this._process?.send("cea:restart");
     await this.close();
     await this.start(this.fileName!);
+  }
+
+  async debugPrint() {
+    if (!this.debugConfig) {
+      return;
+    }
+    const { port, host } = this.debugConfig;
+    if (!port) {
+      return;
+    }
+
+    const url = (port: string | number) =>
+      pc.blue(`http://${host ?? "localhost"}:${port}/json/list`);
+
+    console.log(`
+  🟢 ${url(port)}
+  🟢 ${pc.dim(pc.green("devtoolsFrontendUrl"))} Is the debug path
+    `);
   }
 }

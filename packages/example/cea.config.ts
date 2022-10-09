@@ -10,5 +10,8 @@ export default defineConfig(async () => {
     vite: "./vite.config.ts",
     plugins: [],
     staticResource: "./public",
+    debug: {
+      port: 5678,
+    },
   };
 });

@@ -1,4 +1,4 @@
-import { BrowserWindow, app } from "electron";
+import { BrowserWindow, app, ipcMain } from "electron";
 import { resolve } from "path";
 
 let win: BrowserWindow | undefined = undefined;
@@ -36,6 +36,10 @@ app
   })
   .catch(console.error);
 
+ipcMain.on("0101", (e: Electron.IpcMainEvent, message: string) => {
+  console.log("message", message);
+  e.reply("received" + message);
+});
+
 // 禁用硬件加速
 app.disableHardwareAcceleration();
-
