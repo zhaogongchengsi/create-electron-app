@@ -18,6 +18,8 @@ export default class ElectronMon {
 
   debugConfig: DebugConfig | undefined = undefined;
 
+  debugArgs: string[] = [];
+
   constructor(root: string, config?: any) {
     this.cwd = root;
     this.config = config;

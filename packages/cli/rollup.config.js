@@ -46,7 +46,7 @@ export default async function () {
       input,
       output: {
         dir: resolvePath("dist"),
-        entryFileNames: format === "esm" ? `index.mjs` : "index.cjs",
+        entryFileNames: format === "esm" ? `index.js` : "index.cjs",
         format: format,
       },
       sourceMap: process.env.NODE_ENV === "development",

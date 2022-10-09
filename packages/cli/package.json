@@ -2,7 +2,7 @@
   "name": "@zzhaon/create-electron-app",
   "version": "0.2.6",
   "description": "Create a cli for electron app",
-  "main": "index.js",
+  "main": "dist/index.js",
   "author": "zhaozunhong",
   "homepage": "https://github.com/zhaogongchengsi/create-electron-app/tree/master/packages/cli#readme",
   "repository": {
@@ -13,7 +13,7 @@
   "exports": {
     ".": {
       "require": "./dist/index.cjs",
-      "import": "./dist/index.mjs"
+      "import": "./dist/index.js"
     }
   },
   "bugs": {

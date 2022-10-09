@@ -37,6 +37,10 @@ export default defineConfig({
               text: "使用插件",
               link: "/guide/plugins",
             },
+            {
+              text: "调试",
+              link: "/guide/debug",
+            },
           ],
         },
       ],
