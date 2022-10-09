@@ -56,7 +56,6 @@ export class CeaContext {
 
   resources: string = "public";
   resourcesPrefix: string = "#";
-  extensions: Extensions | undefined;
 
   constructor({
     root,
@@ -75,8 +74,7 @@ export class CeaContext {
     this.envPath();
     this.initEnv(env);
     this.initHtml();
-    this.initExtensions();
-    
+
     const entries = identifyMainType(config.main);
     this.entryPoints = entries;
     this._mian = entries[0];
@@ -127,13 +125,6 @@ export class CeaContext {
       root: r,
     } = parse(this.config.html ?? defaultConfig.html);
     this._html = relative(join(this.root, r, dir), base);
-  }
-
-  private initExtensions() {
-    if (!this.config.extensions || this.config.extensions.length < 0) {
-      return;
-    }
-    this.extensions = this.config.extensions;
   }
 
   runPath: string | undefined;

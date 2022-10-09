@@ -13,6 +13,5 @@ export default defineConfig(async () => {
     debug: {
       port: 5678,
     },
-    extensions: ["vue", "react"],
   };
 });

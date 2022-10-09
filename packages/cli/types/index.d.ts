@@ -95,7 +95,7 @@ export interface UseConfig extends OutputOptions {
    */
   staticResource?: string;
   debug?: DebugConfig;
-  extensions?: Extensions;
+  // extensions?: Extensions;
   electron?: Electron;
 
   // Let's configure esbuild
