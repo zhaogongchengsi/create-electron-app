@@ -1,7 +1,9 @@
 import { ChildProcess, spawn, StdioOptions, exec } from "node:child_process";
-import { DebugConfig } from "../../types";
+import { DebugConfig, Extensions } from "../../types";
 import { _reauire } from "../utils";
 import pc from "picocolors";
+import { resolve } from "node:path";
+import { fileURLToPath } from "url";
 
 const isStdReadable = (stream: any) => stream === process.stdin;
 const isStdWritable = (stream: any) =>
@@ -49,11 +51,19 @@ export default class ElectronMon {
       "ipc",
     ];
 
-    const _args = [
-      this.debugConfig ? `--inspect=${this.debugConfig.port}` : "",
-    ].concat(typeof args != "string" ? args : [args]);
+    const hook = resolve(
+      fileURLToPath(import.meta.url),
+      "../../hooks/index.js"
+    );
 
-    const ls = spawn(this.electronModule, _args.filter(Boolean), {
+    const _args = [
+      `--require ${hook}`,
+      this.debugConfig ? `--inspect=${this.debugConfig.port}` : "",
+    ]
+      .concat(typeof args != "string" ? args : [args])
+      .filter(Boolean);
+
+    const ls = spawn(this.electronModule, _args, {
       cwd: this.cwd,
       env: this.env ?? {},
       stdio: stdioArg,
@@ -92,6 +102,7 @@ export default class ElectronMon {
     this._process?.send("cea:restart");
     await this.close();
     await this.start(this.fileName!);
+    await this.debugPrint();
   }
 
   async debugPrint() {
@@ -110,5 +121,16 @@ export default class ElectronMon {
   🟢 ${url(port)}
   🟢 ${pc.dim(pc.green("devtoolsFrontendUrl"))} Is the debug path
     `);
+  }
+
+  async installExtension(extensions?: Extensions) {
+    if (!extensions || extensions.length < 1) {
+      return;
+    }
+    console.log(this._process);
+    this._process?.send({
+      type: "_cea_:app-windows-install_plugins",
+      extensions: ["vue-dev-tools"],
+    });
   }
 }

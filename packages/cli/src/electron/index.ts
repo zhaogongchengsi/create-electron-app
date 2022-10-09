@@ -1,4 +1,4 @@
 import electronStart from "./electronmon";
 export { buildApp, createTarget } from "./buildApp";
-export { useRestart } from './hooks'
+export { useHooks } from "./hooks";
 export { electronStart };

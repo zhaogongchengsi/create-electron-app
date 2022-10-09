@@ -67,6 +67,8 @@ export interface DebugConfig {
   host?: number;
 }
 
+export type Extensions = [];
+
 export interface UseConfig extends OutputOptions {
   /**
    * entry file path
@@ -93,6 +95,7 @@ export interface UseConfig extends OutputOptions {
    */
   staticResource?: string;
   debug?: DebugConfig;
+  extensions?: Extensions;
   electron?: Electron;
 
   // Let's configure esbuild

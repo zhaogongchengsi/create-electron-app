@@ -1,7 +1,7 @@
 import { ServeOptions, UseConfig } from "../types";
 import { readConfigInfo, readPackJsonFile } from "./config";
 import { buildMain, createViteServer } from "./builds";
-import { electronStart, useRestart } from "./electron";
+import { electronStart, useHooks } from "./electron";
 import { CeaContext } from "./context";
 import { parseEnv } from "./env";
 import { join } from "path";
@@ -56,9 +56,8 @@ export async function startServer(
       onRebuild: (err, res) => {
         if (!electron) return;
         if (!ctx.config) return;
-        useRestart(join(outDir.outdir!, outDir.base)).then(() => {
+        useHooks(join(outDir.outdir!, outDir.base), ctx).then(() => {
           electron?.restart && electron.restart();
-          electron?.debugPrint();
         });
       },
     },
@@ -66,7 +65,7 @@ export async function startServer(
 
   await ctx.initResources();
 
-  await useRestart(join(outDir.outdir!, outDir.base));
+  await useHooks(join(outDir.outdir!, outDir.base), ctx);
 
   electron = new electronStart(outDir.outdir!, {
     env: ctx.env,
@@ -75,6 +74,4 @@ export async function startServer(
 
   await electron.start(outDir.base);
   await electron.debugPrint();
-
-  // ctx.logLevel.info("app starts");
 }

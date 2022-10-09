@@ -1,6 +1,6 @@
 import { join, parse, relative, resolve } from "path";
 import { UserConfig } from "vite";
-import { ElectronAssets, Mode, UseConfig } from "../../types";
+import { ElectronAssets, Extensions, Mode, UseConfig } from "../../types";
 import { identifyMainType, defaultConfig } from "../config";
 import LogLevel from "./log";
 import { createSystemLink, pathExist } from "../utils";
@@ -56,6 +56,7 @@ export class CeaContext {
 
   resources: string = "public";
   resourcesPrefix: string = "#";
+  extensions: Extensions | undefined;
 
   constructor({
     root,
@@ -74,7 +75,8 @@ export class CeaContext {
     this.envPath();
     this.initEnv(env);
     this.initHtml();
-
+    this.initExtensions();
+    
     const entries = identifyMainType(config.main);
     this.entryPoints = entries;
     this._mian = entries[0];
@@ -125,6 +127,13 @@ export class CeaContext {
       root: r,
     } = parse(this.config.html ?? defaultConfig.html);
     this._html = relative(join(this.root, r, dir), base);
+  }
+
+  private initExtensions() {
+    if (!this.config.extensions || this.config.extensions.length < 0) {
+      return;
+    }
+    this.extensions = this.config.extensions;
   }
 
   runPath: string | undefined;
