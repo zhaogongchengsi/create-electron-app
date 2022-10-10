@@ -1,6 +1,7 @@
 import { parse } from "path";
 import { WatchMode, build } from "esbuild";
 import { CeaContext } from "../context";
+import { esbuildPlugingAlias } from "./plugins";
 
 export type buildMainOption = {
   ctx: CeaContext;
@@ -45,7 +46,10 @@ export async function buildMain({
   const external = EXTERNAL.concat(config.external ?? []);
   const sourcemap = config.sourcemap ? config.sourcemap : "inline";
 
-  const plugins = config.plugins;
+  const plugins = [esbuildPlugingAlias(config.alias)];
+  if (config.plugins && config.plugins.length > 0) {
+    plugins.concat(config.plugins);
+  }
 
   const result = await build({
     entryPoints: ctx.entryPoints,
@@ -56,7 +60,6 @@ export async function buildMain({
     platform: "node",
     outExtension: { ".js": ext },
     loader: loader,
-    // write: false,
     allowOverwrite: true,
     bundle: true,
     metafile: true,

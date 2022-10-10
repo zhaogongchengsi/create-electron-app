@@ -98,6 +98,8 @@ export interface UseConfig extends OutputOptions {
   // extensions?: Extensions;
   electron?: Electron;
 
+  alias?: Record<string, string>;
+
   // Let's configure esbuild
 
   plugins?: Plugin[];
@@ -144,7 +146,9 @@ export type ExportConfig = () => UseConfig | Promise<UseConfig> | UseConfig;
 
 export declare function build(options: buildOptions): Promise<void>;
 export declare function createDevServer(options: ServeOptions): Promise<void>;
-export declare function mergeConfig(...configs: (UseConfig | undefined)[]): UseConfig;
+export declare function mergeConfig(
+  ...configs: (UseConfig | undefined)[]
+): UseConfig;
 
 export declare function defineConfig(
   cofnig: ExportConfig

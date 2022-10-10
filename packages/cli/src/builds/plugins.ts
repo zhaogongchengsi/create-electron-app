@@ -2,7 +2,6 @@ import { PluginBuild } from "esbuild";
 import { readFile } from "fs/promises";
 import { dirname, isAbsolute, join, relative, resolve } from "path";
 import { pathToFileURL } from "url";
-import { CeaContext } from "../context";
 import { lookupFile } from "../utils";
 
 export const esbuildPlugingExternalizeDeps = (
@@ -62,3 +61,33 @@ export const esbuildPlugingInjectFileScopeVariables = () => {
   };
 };
 
+function escapeRegExp(string: string) {
+  // $& means the whole matched string
+  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+export function esbuildPlugingAlias(alias: Record<string, string> = {}) {
+  const aliases = Object.keys(alias);
+  const re = new RegExp(
+    `^(${aliases.map((x) => escapeRegExp(x)).join("|")})(\/.*)`
+  );
+
+  return {
+    name: "esbuild-pluging-alias",
+    setup(build: PluginBuild) {
+      build.onResolve({ filter: re }, ({ path }) => {
+
+        const resMatch = path.match(re);
+
+        
+        const basePath = resMatch![1];
+
+        const p = join(alias[basePath], resMatch![2] ?? "");
+
+        return {
+          path: p,
+        };
+      });
+    },
+  };
+}
