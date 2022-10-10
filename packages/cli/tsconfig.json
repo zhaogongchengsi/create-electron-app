@@ -5,14 +5,15 @@
     "rootDir": ".",
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "declaration": true,
-    "declarationDir": "./dist",
+    // "declaration": false,
+    // "declarationDir": "./dist/types",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "useUnknownInCatchVariables": true,
     "noImplicitOverride": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "noEmit": true
   },
-  "exclude": ["dist"]
+  "exclude": ["dist/**/*", "**/test", ]
 }

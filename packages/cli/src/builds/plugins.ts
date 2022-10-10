@@ -62,28 +62,3 @@ export const esbuildPlugingInjectFileScopeVariables = () => {
   };
 };
 
-export const exbuildPluginStaticResource = (ctx: CeaContext) => {
-  return {
-    name: "static-resource",
-    setup(build: PluginBuild) {
-      const pre = new RegExp(`^${ctx.resourcesPrefix}`);
-      build.onResolve({ filter: /.*/ }, ({ path: id }) => {
-        if (pre.test(id)) {
-          return {
-            path: join(ctx.resources!, id.replace(pre, "")),
-            namespace: "resource",
-          };
-        }
-      });
-
-      build.onLoad({ namespace: "resource", filter: /.*/ }, ({ path: id }) => {
-        if (pre.test(id)) {
-          return {
-            path: join(ctx.resources!, id.replace(pre, "")),
-            namespace: "resource",
-          };
-        }
-      });
-    },
-  };
-};

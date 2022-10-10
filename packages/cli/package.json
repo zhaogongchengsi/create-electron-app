@@ -13,12 +13,14 @@
   "exports": {
     ".": {
       "require": "./dist/index.cjs",
-      "import": "./dist/index.js"
+      "import": "./dist/index.js",
+      "types": "./types/index.d.ts"
     }
   },
   "bugs": {
     "url": "https://github.com/zhaogongchengsi/create-electron-app/issues"
   },
+  "types": "./types",
   "type": "module",
   "keywords": [
     "electron",
@@ -26,7 +28,6 @@
     "esbuild",
     "vite"
   ],
-  "types": "./types",
   "scripts": {
     "dev": "cross-env NODE_ENV=development rollup --config rollup.config.js -w",
     "build": "cross-env NODE_ENV=production rollup --config rollup.config.js",

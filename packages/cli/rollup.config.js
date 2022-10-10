@@ -1,42 +1,28 @@
 import { join, resolve } from "path";
-import esbuild from "rollup-plugin-esbuild";
 import typescript from "@rollup/plugin-typescript";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 import json from "@rollup/plugin-json";
+import pkg from "./package.json";
 
 const resolvePath = (path) => resolve(join(process.cwd(), path));
+
+const isProduction = process.env.NODE_ENV === "production";
 
 export default async function () {
   const plugins = [
     nodeResolve(),
     commonjs(),
     json(),
-    esbuild({
-      // All options are optional
-      include: /\.[jt]sx?$/, // default, inferred from `loaders` option
-      exclude: /node_modules/, // default
-      sourceMap: true, // default
-      minify: process.env.NODE_ENV === "production",
-      target: "esnext", // default, or 'es20XX', 'esnext'
-      tsconfig: "tsconfig.json", // default
-      loaders: {
-        ".json": "json",
-        ".ts": "ts",
-        ".js": "js",
-      },
+    typescript({
+      tsconfig: resolve(__dirname, "./tsconfig.json"),
+      sourceMap: isProduction,
     }),
   ];
 
   const external = [
-    "cac",
-    "electron",
-    "esbuild",
-    "vite",
-    "@vitejs/plugin-legacy",
-    "electron-builder",
-    "electronmon",
-    "chokidar",
+    ...Object.keys(pkg.dependencies),
+    ...(isProduction ? [] : Object.keys(pkg.devDependencies)),
   ];
 
   const input = resolvePath("./src/index.ts");

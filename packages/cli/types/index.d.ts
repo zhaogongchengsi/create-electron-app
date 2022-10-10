@@ -140,4 +140,12 @@ export type BuildAppOptions = {
 
 export type Mode = "development" | "production";
 
-export type ExportConfig = () => UseConfig | UseConfig;
+export type ExportConfig = () => UseConfig | Promise<UseConfig> | UseConfig;
+
+export declare function build(options: buildOptions): Promise<void>;
+export declare function createDevServer(options: ServeOptions): Promise<void>;
+export declare function mergeConfig(...configs: (UseConfig | undefined)[]): UseConfig;
+
+export declare function defineConfig(
+  cofnig: ExportConfig
+): UseConfig | Promise<UseConfig>;

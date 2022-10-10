@@ -56,7 +56,7 @@ export async function startServer(
       onRebuild: (err, res) => {
         if (!electron) return;
         if (!ctx.config) return;
-        useHooks(join(outDir.outdir!, outDir.base), ctx).then(() => {
+        useHooks(join(outDir.outdir!, outDir.base)).then(() => {
           electron?.restart && electron.restart();
         });
       },
@@ -65,7 +65,7 @@ export async function startServer(
 
   await ctx.initResources();
 
-  await useHooks(join(outDir.outdir!, outDir.base), ctx);
+  await useHooks(join(outDir.outdir!, outDir.base));
 
   electron = new electronStart(outDir.outdir!, {
     env: ctx.env,

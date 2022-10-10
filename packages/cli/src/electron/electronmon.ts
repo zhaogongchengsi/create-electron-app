@@ -51,15 +51,7 @@ export default class ElectronMon {
       "ipc",
     ];
 
-    const hook = resolve(
-      fileURLToPath(import.meta.url),
-      "../../hooks/index.js"
-    );
-
-    const _args = [
-      `--require ${hook}`,
-      this.debugConfig ? `--inspect=${this.debugConfig.port}` : "",
-    ]
+    const _args = [this.debugConfig ? `--inspect=${this.debugConfig.port}` : ""]
       .concat(typeof args != "string" ? args : [args])
       .filter(Boolean);
 

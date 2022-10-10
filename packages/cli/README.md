@@ -172,6 +172,12 @@ Operate as directed
 
   static resource folder, For example, the image icon script
 
+- ### debug
+
+  `{port: number}` default: `undefined`
+
+  Debug the configuration of the main thread
+
 ## Environment variables and patterns
 
 Environment variables are mounted on a `import.meta.env` object

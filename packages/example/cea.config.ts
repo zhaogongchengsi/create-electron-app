@@ -8,7 +8,6 @@ export default defineConfig(async () => {
       preload: resolve("./main/preload.ts"),
     },
     vite: "./vite.config.ts",
-    plugins: [],
     staticResource: "./public",
     debug: {
       port: 5678,
