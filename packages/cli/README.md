@@ -178,6 +178,12 @@ Operate as directed
 
   Debug the configuration of the main thread
 
+- ### alias
+
+  `{string: string}` default: `{}`
+
+  Folder Alias, For example, #/index requires the full suffix #/index If js is #/src/index, it is unnecessary
+
 ## Environment variables and patterns
 
 Environment variables are mounted on a `import.meta.env` object

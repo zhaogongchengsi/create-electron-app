@@ -13,9 +13,7 @@ export default defineConfig(async () => {
       port: 5678,
     },
     alias: {
-      "#": resolve("./src"),
-      "@": resolve("./channls"),
-      abc: resolve("./abc"),
+      "@": resolve("./abc"),
     },
   };
 });

@@ -46,7 +46,7 @@ export async function buildMain({
   const external = EXTERNAL.concat(config.external ?? []);
   const sourcemap = config.sourcemap ? config.sourcemap : "inline";
 
-  const plugins = [esbuildPlugingAlias(config.alias)];
+  const plugins = [esbuildPlugingAlias(config.alias, ctx.root)];
   if (config.plugins && config.plugins.length > 0) {
     plugins.concat(config.plugins);
   }

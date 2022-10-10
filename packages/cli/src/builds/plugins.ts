@@ -66,7 +66,10 @@ function escapeRegExp(string: string) {
   return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-export function esbuildPlugingAlias(alias: Record<string, string> = {}) {
+export function esbuildPlugingAlias(
+  alias: Record<string, string> = {},
+  root: string
+) {
   const aliases = Object.keys(alias);
   const re = new RegExp(
     `^(${aliases.map((x) => escapeRegExp(x)).join("|")})(\/.*)`
@@ -76,16 +79,14 @@ export function esbuildPlugingAlias(alias: Record<string, string> = {}) {
     name: "esbuild-pluging-alias",
     setup(build: PluginBuild) {
       build.onResolve({ filter: re }, ({ path }) => {
-
         const resMatch = path.match(re);
 
-        
-        const basePath = resMatch![1];
-
-        const p = join(alias[basePath], resMatch![2] ?? "");
+        const prefix = alias[resMatch![1]];
+        const suffix = resMatch![2] ?? "";
+        const newPath = join(prefix, suffix);
 
         return {
-          path: p,
+          path: resolve(root, newPath),
         };
       });
     },

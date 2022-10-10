@@ -18,8 +18,9 @@
     "src/**/*.d.ts",
     "src/**/*.tsx",
     "src/**/*.vue",
-    "main"
-, "alias/env.ts"  ],
+    "main",
+    "alias/env.ts",
+  ],
   "exclude": ["dist/**/*.js"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
