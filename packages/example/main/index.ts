@@ -1,7 +1,16 @@
 import { BrowserWindow, app, ipcMain } from "electron";
 import { resolve } from "path";
+import { devtoolsInstall } from "@zzhaon/devtools-install";
 
 let win: BrowserWindow | undefined = undefined;
+
+devtoolsInstall([
+  {
+    name: "vue",
+    type: "edge",
+    id: "khampijcelfojpjcmmiibmhfkhacjhhj",
+  },
+]);
 
 const { loadUrl, mode, preload } = import.meta.env;
 

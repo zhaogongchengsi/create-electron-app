@@ -1,7 +1,13 @@
 import { parse } from "path";
 import { WatchMode, build } from "esbuild";
 import { CeaContext } from "../context";
-import { esbuildPlugingAlias } from "./plugins";
+import {
+  DIR_NAME_VAR,
+  esbuildPlugingAlias,
+  esbuildPlugingInjectFileScopeVariables,
+  FILE_NAME_VAR,
+  IMPORT_META_URE_VAR,
+} from "./plugins";
 
 export type buildMainOption = {
   ctx: CeaContext;
@@ -41,12 +47,18 @@ export async function buildMain({
       PROD: mode === "production",
       DEV: mode === "development",
     }),
+    __dirname: DIR_NAME_VAR,
+    __filename: FILE_NAME_VAR,
+    "import.meta.url": IMPORT_META_URE_VAR,
   };
 
   const external = EXTERNAL.concat(config.external ?? []);
   const sourcemap = config.sourcemap ? config.sourcemap : "inline";
 
-  const plugins = [esbuildPlugingAlias(config.alias, ctx.root)];
+  const plugins = [
+    esbuildPlugingAlias(config.alias, ctx.root),
+    esbuildPlugingInjectFileScopeVariables(),
+  ];
   if (config.plugins && config.plugins.length > 0) {
     plugins.concat(config.plugins);
   }
