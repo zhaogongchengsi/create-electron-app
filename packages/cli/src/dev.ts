@@ -61,6 +61,7 @@ export async function startServer(
         });
       },
     },
+    pkg: pack_json,
   });
 
   await ctx.initResources();

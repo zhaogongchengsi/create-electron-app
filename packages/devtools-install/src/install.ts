@@ -1,7 +1,7 @@
 import { devtool } from "../types";
 import { getExtensionDirPath, searchExtension } from "./extensionsPath";
 import { createRequire } from "module";
-const _require = createRequire(import.meta.url);
+const _require = createRequire(__dirname);
 
 function getElectron() {
   const electron = _require("electron");

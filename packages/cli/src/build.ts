@@ -37,7 +37,7 @@ export async function build(options: buildOptions) {
 
   pack_json.build = settingBuildOptions({ output: ctx.exePath });
 
-  const fileName = await buildCode(ctx);
+  const fileName = await buildCode(ctx, pack_json);
 
   await prepareBuildEnvironment(
     ctx.runPath!,
@@ -69,7 +69,7 @@ export async function build(options: buildOptions) {
   ctx.logLevel.info("app build complete");
 }
 
-export async function buildCode(ctx: CeaContext) {
+export async function buildCode(ctx: CeaContext, pack_json: any = {}) {
   const root = ctx.root;
   const config = ctx.config;
 
@@ -83,6 +83,7 @@ export async function buildCode(ctx: CeaContext) {
 
   const fineInfo = await buildMain({
     ctx: ctx,
+    pkg: pack_json,
   });
 
   return fineInfo;

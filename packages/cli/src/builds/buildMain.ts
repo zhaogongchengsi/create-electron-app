@@ -2,21 +2,19 @@ import { parse } from "path";
 import { WatchMode, build } from "esbuild";
 import { CeaContext } from "../context";
 import {
-  DIR_NAME_VAR,
   esbuildPlugingAlias,
   esbuildPlugingInjectFileScopeVariables,
-  FILE_NAME_VAR,
   IMPORT_META_URE_VAR,
 } from "./plugins";
 
 export type buildMainOption = {
   ctx: CeaContext;
   watch?: WatchMode;
+  pkg: any;
 };
 
 const IMPORT_META_ENV_VAR = "import.meta.env";
 
-const EXTERNAL = ["electron"];
 const loader = {
   ".ts": "ts",
   ".js": "js",
@@ -29,6 +27,7 @@ const loader = {
 
 export async function buildMain({
   ctx,
+  pkg = {},
   watch = {
     onRebuild: (err: any, res: any) => {},
   },
@@ -36,7 +35,7 @@ export async function buildMain({
   const isEMS = ctx._isEms;
   const mode = ctx.mode;
   const ext = isEMS ? ".js" : ".cjs";
-
+  const isProduction = mode === "development";
   const { config } = ctx;
 
   const define = {
@@ -46,29 +45,33 @@ export async function buildMain({
       ...ctx.eleAssets,
       PROD: mode === "production",
       DEV: mode === "development",
-    }),
-    __dirname: DIR_NAME_VAR,
-    __filename: FILE_NAME_VAR,
-    "import.meta.url": IMPORT_META_URE_VAR,
+    })
   };
 
-  const external = EXTERNAL.concat(config.external ?? []);
-  const sourcemap = config.sourcemap ? config.sourcemap : "inline";
+  const external = [
+    "electron",
+    ...Object.keys(pkg.dependencies),
+    ...(isProduction ? [] : Object.keys(pkg.devDependencies)),
+  ].concat(config.external ?? []);
+
+  const sourcemap = config.sourcemap ? config.sourcemap : "both";
 
   const plugins = [
     esbuildPlugingAlias(config.alias, ctx.root),
-    esbuildPlugingInjectFileScopeVariables(),
+    // esbuildPlugingInjectFileScopeVariables(),
   ];
   if (config.plugins && config.plugins.length > 0) {
     plugins.concat(config.plugins);
   }
+
+  const target = ["node16", "chrome105"];
 
   const result = await build({
     entryPoints: ctx.entryPoints,
     outdir: ctx.runPath,
     format: isEMS ? "esm" : "cjs",
     watch: mode === "development" ? watch : false,
-    target: "esnext",
+    target,
     platform: "node",
     outExtension: { ".js": ext },
     loader: loader,

@@ -18,5 +18,3 @@ devtoolsInstall([
   },
 ]);
 ```
-
-![extensions id](./imags/extensions.png)
