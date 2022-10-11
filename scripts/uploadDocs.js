@@ -3,17 +3,15 @@ import COS from "cos-nodejs-sdk-v5";
 import { readdir, stat } from "fs/promises";
 import { createReadStream, statSync } from "node:fs";
 
-const [secretId, secretKey] = process.argv.slice(2);
-const doscDistPath = resolve(process.cwd(), "./docs/.vitepress/dist");
-const docket = "cea-docs-1301735126";
-const region = "ap-nanjing";
+const [secretId, secretKey, docket, region, distPath] = process.argv.slice(2);
+const doscDistPath = resolve(process.cwd(), distPath ?? "./docs/.vitepress/dist");
 const cosDucket = {
   Bucket: docket,
   Region: region,
 };
 
-if (!secretId || !secretKey) {
-  throw new Error(`secretId 或者 secretKey 不存在`);
+if ((!secretId || !secretKey || !docket || !region)) {
+  throw new Error(`secretId | secretKey | region | docket 不存在`);
 }
 
 (async function () {

@@ -89,7 +89,7 @@ Source map 可以使调试代码更容易。它们编码从生成的输出文件
 
 ## debug
 
-- **类型:** `{port: number}`
+- **类型:** `{port: number} | boolean`
 - **默认值:** `undefined`
 
 调试 主线程 的有关配置

@@ -2,7 +2,8 @@
 
 ## 调试渲染线程
 
-调试渲染线程可以使用 `win?.webContents.openDevTools();` 打开浏览器的开发者调试工具
+1. 调试渲染线程可以使用 `win?.webContents.openDevTools();` 打开浏览器的开发者调试工具
+2. [将本地下载好的谷歌浏览器插件安装到electron内](/devtools_install/)
 
 ![web debug](/webdebug.png)
 

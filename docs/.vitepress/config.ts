@@ -9,6 +9,11 @@ export default defineConfig({
     nav: [
       { text: "快速开始", link: "/guide/", activeMatch: "/guide/" },
       { text: "配置", link: "/configs/", activeMatch: "/configs/" },
+      {
+        text: "devtool-install",
+        link: "/devtools_install/",
+        activeMatch: "/devtools_install/",
+      },
     ],
 
     localeLinks: {
