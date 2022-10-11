@@ -25,7 +25,7 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm install vue vitepress
-    - run: npm docs-build
-    - run: cd docs/.vitepress/dist
+        cache: 'pnpm'
+    - run: pnpm install vue vitepress cos-nodejs-sdk-v5
+    - run: pnpm docs-build
+    - run: node scripts/uploadDocs.js ${{secrets.secretId}} ${{secrets.secretKey}}

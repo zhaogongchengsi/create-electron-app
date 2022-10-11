@@ -3,12 +3,14 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "docs": "vitepress dev docs",
     "docs-build": "vitepress build docs",
     "docs-serve": "vitepress serve docs",
     "build": "unbuild",
-    "dev": "unbuild --stub"
+    "dev": "unbuild --stub",
+    "docs-upload": "node scripts/uploadDocs.js"
   },
   "keywords": [],
   "author": "",
@@ -25,5 +27,8 @@
     "unbuild": "^0.8.11",
     "vitepress": "^1.0.0-alpha.19",
     "vue": "^3.2.40"
+  },
+  "dependencies": {
+    "cos-nodejs-sdk-v5": "^2.11.12"
   }
 }
