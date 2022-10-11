@@ -111,14 +111,4 @@ export default class ElectronMon {
     `);
   }
 
-  async installExtension(extensions?: Extensions) {
-    if (!extensions || extensions.length < 1) {
-      return;
-    }
-    console.log(this._process);
-    this._process?.send({
-      type: "_cea_:app-windows-install_plugins",
-      extensions: ["vue-dev-tools"],
-    });
-  }
 }
