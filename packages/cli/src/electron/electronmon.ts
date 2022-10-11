@@ -1,9 +1,8 @@
-import { ChildProcess, spawn, StdioOptions, exec } from "node:child_process";
+import { ChildProcess, spawn, StdioOptions } from "node:child_process";
 import { DebugConfig, Extensions } from "../../types";
 import { _reauire } from "../utils";
 import pc from "picocolors";
-import { resolve } from "node:path";
-import { fileURLToPath } from "url";
+import { CeaContext } from "../context";
 
 const isStdReadable = (stream: any) => stream === process.stdin;
 const isStdWritable = (stream: any) =>
@@ -11,7 +10,7 @@ const isStdWritable = (stream: any) =>
 
 export default class ElectronMon {
   cwd: string = process.cwd();
-  config: any;
+
   private readonly ELECTRON = "electron";
 
   stdio = [process.stdin, process.stdout, process.stderr];
@@ -22,13 +21,10 @@ export default class ElectronMon {
 
   debugArgs: string[] = [];
 
-  constructor(root: string, config?: any) {
+  constructor(root: string, ctx: CeaContext) {
     this.cwd = root;
-    this.config = config;
-    this.env = config.env;
-    if (config.debugConfig) {
-      this.debugConfig = config.debugConfig;
-    }
+    this.env = ctx.env;
+    this.debugConfig = ctx.debugConfig;
   }
 
   private _process: ChildProcess | null = null;

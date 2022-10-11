@@ -68,10 +68,7 @@ export async function startServer(
 
   await useHooks(join(outDir.outdir!, outDir.base));
 
-  electron = new electronStart(outDir.outdir!, {
-    env: ctx.env,
-    debugConfig: useConfig.debug,
-  });
+  electron = new electronStart(outDir.outdir!, ctx);
 
   await electron.start(outDir.base);
   await electron.debugPrint();

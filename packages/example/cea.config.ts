@@ -9,9 +9,7 @@ export default defineConfig(async () => {
     },
     vite: "./vite.config.ts",
     staticResource: "./public",
-    debug: {
-      port: 5678,
-    },
+    debug: true,
     alias: {
       "@": resolve("./abc"),
     },

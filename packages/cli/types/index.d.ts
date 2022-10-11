@@ -64,7 +64,7 @@ export interface StaticResource {
 
 export interface DebugConfig {
   port?: number;
-  host?: number;
+  host?: string;
 }
 
 export type Extensions = [];
@@ -94,7 +94,7 @@ export interface UseConfig extends OutputOptions {
    * Static resource 静态资源
    */
   staticResource?: string;
-  debug?: DebugConfig;
+  debug?: DebugConfig | boolean;
   // extensions?: Extensions;
   electron?: Electron;
 

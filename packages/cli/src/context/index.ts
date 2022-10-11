@@ -1,6 +1,12 @@
 import { join, parse, relative, resolve } from "path";
 import { UserConfig } from "vite";
-import { ElectronAssets, Extensions, Mode, UseConfig } from "../../types";
+import {
+  DebugConfig,
+  ElectronAssets,
+  Extensions,
+  Mode,
+  UseConfig,
+} from "../../types";
 import { identifyMainType, defaultConfig } from "../config";
 import LogLevel from "./log";
 import { createSystemLink, pathExist } from "../utils";
@@ -57,6 +63,8 @@ export class CeaContext {
   resources: string = "public";
   resourcesPrefix: string = "#";
 
+  debugConfig: DebugConfig;
+
   constructor({
     root,
     config,
@@ -70,6 +78,15 @@ export class CeaContext {
     this.build = packageJson.build ?? {};
     this.mode = mode ?? "development";
     this.logLevel = log;
+
+    if (config.debug && config.debug === true) {
+      this.debugConfig = {
+        port: 9917,
+        host: "localhost",
+      };
+    } else {
+      this.debugConfig = config.debug as DebugConfig;
+    }
 
     this.envPath();
     this.initEnv(env);
