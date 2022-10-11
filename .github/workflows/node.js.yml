@@ -26,5 +26,5 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm install vue vitepress cos-nodejs-sdk-v5
-    - run: npm docs-build
+    - run: npm run docs-build
     - run: node scripts/uploadDocs.js ${{secrets.secretId}} ${{secrets.secretKey}}
