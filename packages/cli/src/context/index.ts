@@ -1,12 +1,6 @@
 import { join, parse, relative, resolve } from "path";
 import { UserConfig } from "vite";
-import {
-  DebugConfig,
-  ElectronAssets,
-  Extensions,
-  Mode,
-  UseConfig,
-} from "../../types";
+import { DebugConfig, ElectronAssets, Mode, UseConfig } from "../../types";
 import { identifyMainType, defaultConfig } from "../config";
 import LogLevel from "./log";
 import { createSystemLink, pathExist } from "../utils";

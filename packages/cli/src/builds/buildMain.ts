@@ -58,9 +58,9 @@ export async function buildMain(
     [IMPORT_META_ENV_VAR]: JSON.stringify({
       ...ctx.env,
       ...ctx.eleAssets,
-      PROD: mode === "production",
-      DEV: mode === "development",
     }),
+    [IMPORT_META_ENV_VAR + ".PROD"]: JSON.stringify(mode === "production"),
+    [IMPORT_META_ENV_VAR + ".DEV"]: JSON.stringify(mode === "development"),
   };
 
   const external = [
@@ -99,15 +99,20 @@ export async function buildMain(
   const result = await build({
     entryPoints: ctx.entryPoints,
     outdir: ctx.runPath,
+
     format: isEMS ? "esm" : "cjs",
-    watch,
-    target,
+    drop: isProduction ? ["debugger", "console"] : undefined,
     platform: "node",
     outExtension: { ".js": ext },
-    loader: loader,
+
     allowOverwrite: true,
     bundle: true,
     metafile: true,
+    treeShaking: true,
+
+    watch,
+    target,
+    loader,
     plugins,
     sourcemap,
     define,

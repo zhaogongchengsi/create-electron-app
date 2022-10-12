@@ -1,20 +1,19 @@
 import { BrowserWindow, app, ipcMain } from "electron";
 import { resolve } from "path";
+
 let win: BrowserWindow | undefined = undefined;
 
-const { loadUrl, mode, preload, DEV } = import.meta.env;
+const { loadUrl, mode, preload } = import.meta.env;
 
-if (DEV) {
-  (function () {
-    const install = require("@zzhaon/devtools-install");
-    install.devtoolsInstall([
-      {
-        name: "vue",
-        type: "edge",
-        id: "khampijcelfojpjcmmiibmhfkhacjhhj",
-      },
-    ]);
-  })();
+if (import.meta.env.DEV) {
+  const install = require("@zzhaon/devtools-install");
+  install.devtoolsInstall([
+    {
+      name: "vue",
+      type: "edge",
+      id: "khampijcelfojpjcmmiibmhfkhacjhhj",
+    },
+  ]);
 }
 
 const getPath = (path: string) => {
@@ -53,7 +52,8 @@ ipcMain.on("0101", (e: Electron.IpcMainEvent, message: string) => {
   e.reply("received" + message);
 });
 
-console.log("1121212333123");
+console.log(import.meta.env.PROD);
+console.log(import.meta.env.DEV);
 
 // 禁用硬件加速
 app.disableHardwareAcceleration();
