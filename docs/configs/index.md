@@ -90,7 +90,7 @@ Source map 可以使调试代码更容易。它们编码从生成的输出文件
 ## debug
 
 - **类型:** `{port: number} | boolean`
-- **默认值:** `undefined`
+- **默认值:** `true`
 
 调试 主线程 的有关配置
 
@@ -100,3 +100,20 @@ Source map 可以使调试代码更容易。它们编码从生成的输出文件
 - **默认值:** `{}`
 
 设置文件夹别名 在使用时 若是 `#/index` 则需要补全后缀 `#/index.js` 若是 `#/index/index` 则不需要
+
+## electron
+
+- **类型:** `{warning: boolean, flags: string[]}`
+- **默认值:** `{warning: true, flags: []}`
+
+  - warning
+
+    忽略 electron 的警告 `true` 为不忽略警告
+
+  - flags
+
+    [electron cli](https://www.electronjs.org/zh/docs/latest/api/command-line-switches) 的一些自定义标志
+
+    :::warning 注意
+    flags 里面所携带的参数必须是里面存在的 放入不存在的字符串可能会引起开发环境下启动异常
+    :::

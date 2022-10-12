@@ -174,7 +174,7 @@ Operate as directed
 
 - ### debug
 
-  `{port: number}` default: `undefined`
+  `{port: number} | boolean` default: `true`
 
   Debug the configuration of the main thread
 
@@ -183,6 +183,14 @@ Operate as directed
   `{string: string}` default: `{}`
 
   Folder Alias, For example, #/index requires the full suffix #/index If js is #/src/index, it is unnecessary
+
+- ### electron
+  - #### warning
+    `boolean` defalut: `true`
+    Ignore the warning message of electron
+  - #### flags
+    `string[]` default: []
+    Customize some parameters of the [electric cli](https://www.electronjs.org/zh/docs/latest/api/command-line-switches)
 
 ## Environment variables and patterns
 
