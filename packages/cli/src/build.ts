@@ -37,12 +37,12 @@ export async function build(options: buildOptions) {
 
   pack_json.build = settingBuildOptions({ output: ctx.exePath });
 
-  const fileName = await buildCode(ctx, pack_json);
+  const { main } = await buildCode(ctx, pack_json);
 
   await prepareBuildEnvironment(
     ctx.runPath!,
     {
-      main: fileName.base,
+      main: main.fileName,
       root: options.root,
     },
     pack_json
@@ -60,7 +60,8 @@ export async function build(options: buildOptions) {
       targets: target.createTarget(),
       config: pack_json.build,
     });
-    const res = await printMetaFile(fileName.metafile);
+
+    const res = await printMetaFile();
     res && ctx.logLevel.info(res);
   } catch (err) {
     ctx.logLevel.error(err as Error);

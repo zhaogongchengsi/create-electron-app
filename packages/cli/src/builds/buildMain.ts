@@ -42,9 +42,16 @@ export async function buildMain(
   const mode = ctx.mode;
   const ext = isEMS ? ".js" : ".cjs";
   const isProduction = mode === "production";
-  const { config } = ctx;
+  const { config, runPath } = ctx;
 
   const { name } = parse(ctx.entryPoints[0]);
+  const fileName = name + ext;
+
+  const main = {
+    outDir: runPath!,
+    fileName,
+    path: join(runPath!, fileName),
+  };
 
   const define = {
     ...config.define,
@@ -69,7 +76,7 @@ export async function buildMain(
     plugins.concat(config.plugins);
   }
 
-  const target = ["node16", "chrome105"];
+  const target = ["node14", "node16", "chrome105"];
 
   const watch =
     !isProduction && config.watch
@@ -79,16 +86,11 @@ export async function buildMain(
             result: BuildResult | null
           ) => {
             seria++;
-            
             callback &&
               callback({
                 seria,
-                main: {
-                  outDir: ctx.runPath!,
-                  fileName: name + ext,
-                  path: join(ctx.runPath!, name + ext),
-                },
-                result: result,
+                main,
+                result,
               });
           },
         }
@@ -115,20 +117,13 @@ export async function buildMain(
   callback &&
     callback({
       seria,
-      main: {
-        outDir: ctx.runPath!,
-        fileName: name + ext,
-        path: join(ctx.runPath!, name + ext),
-      },
-      result: result,
+      main,
+      result,
     });
 
   return {
-    outdir: ctx.runPath,
-    ext: ext,
-    name,
-    base: name + ext,
-    metafile: result.metafile,
+    main,
+    result,
   };
 }
 

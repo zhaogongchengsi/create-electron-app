@@ -53,7 +53,7 @@ ipcMain.on("0101", (e: Electron.IpcMainEvent, message: string) => {
   e.reply("received" + message);
 });
 
-console.log("1121233123");
+console.log("1121212333123");
 
 // 禁用硬件加速
 app.disableHardwareAcceleration();
