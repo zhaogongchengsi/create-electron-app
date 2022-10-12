@@ -78,6 +78,10 @@ export async function buildMain(
 
   const target = ["node14", "node16", "chrome105"];
 
+  if (config.watch === undefined) {
+    config.watch = true;
+  }
+
   const watch =
     !isProduction && config.watch
       ? {
