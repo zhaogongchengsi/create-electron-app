@@ -13,5 +13,6 @@ export default defineConfig(async () => {
     alias: {
       "@": resolve("./abc"),
     },
+    watch: true
   };
 });

@@ -50,26 +50,21 @@ export async function startServer(
 
   let electron: electronStart | undefined;
 
-  const outDir = await buildMain({
-    ctx: ctx,
-    watch: {
-      onRebuild: (err, res) => {
-        if (!electron) return;
-        if (!ctx.config) return;
-        useHooks(join(outDir.outdir!, outDir.base)).then(() => {
-          electron?.restart && electron.restart();
-        });
-      },
+  await buildMain(
+    {
+      ctx: ctx,
+      pkg: pack_json,
     },
-    pkg: pack_json,
-  });
-
-  await ctx.initResources();
-
-  await useHooks(join(outDir.outdir!, outDir.base));
-
-  electron = new electronStart(outDir.outdir!, ctx);
-
-  await electron.start(outDir.base);
-  await electron.debugPrint();
+    async ({ seria, main }) => {
+      if (seria === 1) {
+        electron = new electronStart(main.outDir, ctx);
+        await ctx.initResources();
+        await electron.start(main.fileName);
+      } else {
+        electron?.restart();
+      }
+      await useHooks(main.path);
+      await electron?.debugPrint();
+    }
+  );
 }

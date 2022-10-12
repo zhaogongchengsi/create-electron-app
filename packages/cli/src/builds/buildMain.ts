@@ -1,17 +1,24 @@
-import { parse } from "path";
-import { WatchMode, build } from "esbuild";
+import { join, parse } from "path";
+import { build, BuildFailure, BuildResult } from "esbuild";
 import { CeaContext } from "../context";
-import {
-  esbuildPlugingAlias,
-  esbuildPlugingInjectFileScopeVariables,
-  IMPORT_META_URE_VAR,
-} from "./plugins";
+import { esbuildPlugingAlias } from "./plugins";
 
 export type buildMainOption = {
   ctx: CeaContext;
-  watch?: WatchMode;
   pkg: any;
 };
+
+export type Main = {
+  outDir: string;
+  fileName: string;
+  path: string;
+};
+
+export interface buildInfo {
+  seria: number;
+  main: Main;
+  result: BuildResult | null | undefined;
+}
 
 const IMPORT_META_ENV_VAR = "import.meta.env";
 
@@ -25,18 +32,19 @@ const loader = {
   ".jpg": "file",
 } as const;
 
-export async function buildMain({
-  ctx,
-  pkg = {},
-  watch = {
-    onRebuild: (err: any, res: any) => {},
-  },
-}: buildMainOption) {
+let seria = 1;
+
+export async function buildMain(
+  { ctx, pkg = {} }: buildMainOption,
+  callback?: (info: buildInfo) => void
+) {
   const isEMS = ctx._isEms;
   const mode = ctx.mode;
   const ext = isEMS ? ".js" : ".cjs";
-  const isProduction = mode === "development";
+  const isProduction = mode === "production";
   const { config } = ctx;
+
+  const { name } = parse(ctx.entryPoints[0]);
 
   const define = {
     ...config.define,
@@ -45,7 +53,7 @@ export async function buildMain({
       ...ctx.eleAssets,
       PROD: mode === "production",
       DEV: mode === "development",
-    })
+    }),
   };
 
   const external = [
@@ -56,21 +64,41 @@ export async function buildMain({
 
   const sourcemap = config.sourcemap ? config.sourcemap : "both";
 
-  const plugins = [
-    esbuildPlugingAlias(config.alias, ctx.root),
-    // esbuildPlugingInjectFileScopeVariables(),
-  ];
+  const plugins = [esbuildPlugingAlias(config.alias, ctx.root)];
   if (config.plugins && config.plugins.length > 0) {
     plugins.concat(config.plugins);
   }
 
   const target = ["node16", "chrome105"];
 
+  const watch =
+    !isProduction && config.watch
+      ? {
+          onRebuild: (
+            error: BuildFailure | null,
+            result: BuildResult | null
+          ) => {
+            seria++;
+            
+            callback &&
+              callback({
+                seria,
+                main: {
+                  outDir: ctx.runPath!,
+                  fileName: name + ext,
+                  path: join(ctx.runPath!, name + ext),
+                },
+                result: result,
+              });
+          },
+        }
+      : undefined;
+
   const result = await build({
     entryPoints: ctx.entryPoints,
     outdir: ctx.runPath,
     format: isEMS ? "esm" : "cjs",
-    watch: mode === "development" ? watch : false,
+    watch,
     target,
     platform: "node",
     outExtension: { ".js": ext },
@@ -84,7 +112,16 @@ export async function buildMain({
     external,
   });
 
-  const { name } = parse(ctx.entryPoints[0]);
+  callback &&
+    callback({
+      seria,
+      main: {
+        outDir: ctx.runPath!,
+        fileName: name + ext,
+        path: join(ctx.runPath!, name + ext),
+      },
+      result: result,
+    });
 
   return {
     outdir: ctx.runPath,
@@ -94,3 +131,5 @@ export async function buildMain({
     metafile: result.metafile,
   };
 }
+
+function watchHandler() {}

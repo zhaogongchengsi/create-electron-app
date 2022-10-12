@@ -1,12 +1,10 @@
 import {
   build,
-  BuildOptions,
   transform,
   Metafile,
   analyzeMetafile,
 } from "esbuild";
 import { Mode } from "../../types";
-import { mergeEsBuild } from "../config";
 
 export type Format = "iife" | "cjs" | "esm";
 
@@ -50,20 +48,6 @@ export async function esbuild({
     platform: "node",
     external: ["electron"],
   });
-}
-
-/**
- *
- * @param baseOptions 构建主线程代码所需要的基础配置 该配置优先级最高
- * @param userOpt 用户定义的配置
- * @returns Promise<BuildResult>
- */
-export async function buildPlan(
-  baseOptions: BuildOptions,
-  userOpt?: BuildOptions
-) {
-  const cop = mergeEsBuild(baseOptions, userOpt ?? {});
-  return build(cop);
 }
 
 export async function transformWithEsbuild(
