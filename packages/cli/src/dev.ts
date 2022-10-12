@@ -56,6 +56,7 @@ export async function startServer(
       pkg: pack_json,
     },
     async ({ seria, main }) => {
+      await useHooks(main.path);
       if (seria === 1) {
         electron = new electronStart(main.outDir, ctx);
         await ctx.initResources();
@@ -63,7 +64,6 @@ export async function startServer(
       } else {
         electron?.restart();
       }
-      await useHooks(main.path);
       await electron?.debugPrint();
     }
   );

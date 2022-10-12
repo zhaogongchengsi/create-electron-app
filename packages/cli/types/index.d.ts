@@ -54,7 +54,8 @@ export interface Electron {
   /**
    * ELECTRON_DISABLE_SECURITY_WARNINGS=true
    */
-  warnings?: boolean;
+  warning?: boolean;
+  flags?: string[];
 }
 
 export interface StaticResource {

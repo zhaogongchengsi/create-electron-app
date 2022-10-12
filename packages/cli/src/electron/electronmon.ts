@@ -17,14 +17,34 @@ export default class ElectronMon {
 
   env: Record<string, string> = {};
 
-  debugConfig: DebugConfig | undefined = undefined;
-
+  debugConfig: DebugConfig | undefined;
   debugArgs: string[] = [];
+  flags: string[] = [];
 
   constructor(root: string, ctx: CeaContext) {
     this.cwd = root;
     this.env = ctx.env;
     this.debugConfig = ctx.debugConfig;
+    this.initArgs(ctx);
+  }
+
+  private initArgs(ctx: CeaContext) {
+    const { debugConfig } = this;
+
+    const { flags, warning } = ctx.electron ?? { flags: [], warning: true };
+    if (flags) {
+      this.flags = this.flags.concat(flags ?? []);
+    }
+
+    if (warning != undefined && warning === false) {
+      this.flags.push("--trace-warnings");
+    }
+
+    if (debugConfig) {
+      this.flags.push(`--inspect=${debugConfig.port}`);
+    }
+
+    return this;
   }
 
   private _process: ChildProcess | null = null;
@@ -47,7 +67,7 @@ export default class ElectronMon {
       "ipc",
     ];
 
-    const _args = [this.debugConfig ? `--inspect=${this.debugConfig.port}` : ""]
+    const _args = this.flags
       .concat(typeof args != "string" ? args : [args])
       .filter(Boolean);
 
@@ -110,5 +130,4 @@ export default class ElectronMon {
   🟢 ${pc.dim(pc.green("devtoolsFrontendUrl"))} Is the debug path
     `);
   }
-
 }

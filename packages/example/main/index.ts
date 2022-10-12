@@ -28,6 +28,7 @@ const createWindow = () => {
     webPreferences: {
       nodeIntegration: true,
       nodeIntegrationInWorker: true,
+      sandbox: true,
       preload: preload && getPath(preload),
     },
   });

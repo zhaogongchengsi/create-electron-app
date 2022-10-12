@@ -1,6 +1,12 @@
 import { join, parse, relative, resolve } from "path";
 import { UserConfig } from "vite";
-import { DebugConfig, ElectronAssets, Mode, UseConfig } from "../../types";
+import {
+  DebugConfig,
+  Electron,
+  ElectronAssets,
+  Mode,
+  UseConfig,
+} from "../../types";
 import { identifyMainType, defaultConfig } from "../config";
 import LogLevel from "./log";
 import { createSystemLink, pathExist } from "../utils";
@@ -51,13 +57,10 @@ export class CeaContext {
    * 日志
    */
   logLevel: log;
-
   env: Record<string, string> = {};
-
   resources: string = "public";
-  resourcesPrefix: string = "#";
-
-  debugConfig: DebugConfig;
+  debugConfig: DebugConfig |  undefined;
+  electron: Electron | undefined;
 
   constructor({
     root,
@@ -72,13 +75,14 @@ export class CeaContext {
     this.build = packageJson.build ?? {};
     this.mode = mode ?? "development";
     this.logLevel = log;
+    this.electron = config.electron;
 
     if (config.debug && config.debug === true) {
       this.debugConfig = {
         port: 9917,
         host: "localhost",
       };
-    } else {
+    } else if (config.debug && typeof config === "object") {
       this.debugConfig = config.debug as DebugConfig;
     }
 
@@ -123,7 +127,7 @@ export class CeaContext {
   private initEnv(env: any) {
     this.env = {
       ELECTRON_DISABLE_SECURITY_WARNINGS: `${
-        this.config.electron?.warnings ?? true
+        this.config.electron?.warning ?? true
       }`,
       ...env,
     };
