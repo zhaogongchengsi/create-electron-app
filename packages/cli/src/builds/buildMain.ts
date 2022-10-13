@@ -69,8 +69,6 @@ export async function buildMain(
     ...(isProduction ? [] : Object.keys(pkg.devDependencies)),
   ].concat(config.external ?? []);
 
-  const sourcemap = config.sourcemap ? config.sourcemap : "both";
-
   const plugins = [esbuildPlugingAlias(config.alias, ctx.root)];
   if (config.plugins && config.plugins.length > 0) {
     plugins.concat(config.plugins);
@@ -106,6 +104,7 @@ export async function buildMain(
 
     format: isEMS ? "esm" : "cjs",
     drop: isProduction ? ["debugger", "console"] : undefined,
+    sourcemap: isProduction ? config.sourcemap : "both",
     platform: "node",
     outExtension: { ".js": ext },
 
@@ -118,7 +117,6 @@ export async function buildMain(
     target,
     loader,
     plugins,
-    sourcemap,
     define,
     external,
   });

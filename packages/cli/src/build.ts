@@ -38,17 +38,21 @@ export async function build(options: buildOptions) {
   try {
     await buildViteBundle(ctx);
     mainRes = await buildMain(ctx);
-    await WriteBuildAppConfig(ctx);
   } catch (err) {
     console.error(err);
   }
+
+  if (options.notBuildApp) {
+    return;
+  }
+
+  await WriteBuildAppConfig(ctx, mainRes?.main.fileName);
 }
 
-export async function WriteBuildAppConfig({
-  runPath,
-  pkg,
-  appOutDir,
-}: CeaContext) {
+export async function WriteBuildAppConfig(
+  { runPath, pkg, appOutDir }: CeaContext,
+  main?: string
+) {
   const PACKAGE_JSON = "package.json";
   const outDir = relative(runPath!, appOutDir);
 
@@ -56,6 +60,7 @@ export async function WriteBuildAppConfig({
   delete pkg.devDependencies;
   delete pkg.scripts;
 
+  pkg.main = main;
   pkg.build.directories.outdir = outDir;
 
   const packAgeStr = JSON.stringify(pkg);
