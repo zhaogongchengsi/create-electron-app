@@ -126,8 +126,8 @@ export default class ElectronMon {
       pc.blue(`http://${host ?? "localhost"}:${port}/json/list`);
 
     console.log(`
-  🟢 ${url(port)}
-  🟢 ${pc.dim(pc.green("devtoolsFrontendUrl"))} Is the debug path
+  -> ${url(port)}
+  -> ${pc.dim(pc.green("devtoolsFrontendUrl"))} Is the debug path
     `);
   }
 }
