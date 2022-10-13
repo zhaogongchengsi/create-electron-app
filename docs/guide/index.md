@@ -4,7 +4,7 @@
 
 :::tip 兼容性说明
 
-Vite 需要 Node.js 版本 14.18+，16+， 所以我们也需要兼容 vite 的 node 版本需求， 当你的包管理器发出警告时，请注意升级你的 Node 版本。
+Vite 需要 Node.js 版本 14.18+，16+， 所以`create-electron-app`也需要兼容 vite 的 node 版本需求， 当你的包管理器发出警告时，请注意升级你的 Node 版本。
 
 :::
 

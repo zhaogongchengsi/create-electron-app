@@ -35,6 +35,10 @@ export default defineConfig({
               link: "/guide/why",
             },
             {
+              text: "CLI",
+              link: "/guide/cli",
+            },
+            {
               text: "环境变量与模式",
               link: "/guide/env",
             },
