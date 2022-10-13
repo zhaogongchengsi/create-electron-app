@@ -31,23 +31,20 @@ export const createCli = ({ build, createDevServer }: cliMethod) => {
       }
     });
 
-  cli.command("build [root]", "Build your app").action((config, options) => {
-    try {
-      build({
-        root: process.cwd(),
-        configFilePath: config,
-      });
-    } catch (err) {
-      console.error(err);
-      process.exit(1);
-    }
-  });
-
   cli
-    .command("preview <config>", "Preview your app")
+    .command("build [root]", "Build your app")
+    .option("--not-build-app", `[string] specify hostname`)
     .action((config, options) => {
-      // const currentPath = process.cwd();
-      console.log(`Under development`);
+      try {
+        build({
+          root: process.cwd(),
+          configFilePath: config,
+          notBuildApp: options.notBuildApp ?? false,
+        });
+      } catch (err) {
+        console.error(err);
+        process.exit(1);
+      }
     });
 
   cli.help();

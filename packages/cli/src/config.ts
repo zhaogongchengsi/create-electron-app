@@ -152,7 +152,10 @@ export async function prepareEnvironment(root: string, conf: ConfigFileInfo) {
   };
 }
 
-export async function readConfigInfo(opt: CommonOptions, packJson: any) {
+export async function readConfigInfo(
+  opt: CommonOptions,
+  packJson: any
+): Promise<UseConfig> {
   const { root, configFilePath } = opt;
 
   const pathinfo = await findConfigFile(root, configFilePath);
@@ -201,7 +204,10 @@ export async function readConfigInfo(opt: CommonOptions, packJson: any) {
       });
     }
   }
-  return undefined;
+  
+  throw new Error(
+    `Configuration file not found and default configuration cannot be set`
+  );
 }
 
 export async function readPackJsonFile({ root }: CommonOptions) {

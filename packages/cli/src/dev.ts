@@ -4,7 +4,6 @@ import { buildMain, createViteServer } from "./builds";
 import { electronStart, useHooks } from "./electron";
 import { CeaContext } from "./context";
 import { parseEnv } from "./env";
-import { join } from "path";
 
 interface AddressInfo {
   address: string;
@@ -15,8 +14,6 @@ interface AddressInfo {
 export async function createDevServer(options: ServeOptions) {
   const pack_json = await readPackJsonFile(options);
   const useConfig = await readConfigInfo(options, pack_json);
-
-  if (!useConfig) return;
 
   await startServer(options, useConfig, pack_json);
 }

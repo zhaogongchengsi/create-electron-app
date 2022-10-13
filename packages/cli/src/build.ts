@@ -18,12 +18,8 @@ export const settingBuildOptions = (options: any) => {
 
 export async function build(options: buildOptions) {
   const pack_json = await readPackJsonFile(options);
-
   const useConfig = await readConfigInfo(options, pack_json);
-
   const mode = "production";
-
-  if (!useConfig) return;
 
   const env = await parseEnv(options.root, mode);
 
@@ -35,39 +31,8 @@ export async function build(options: buildOptions) {
     env,
   });
 
-  pack_json.build = settingBuildOptions({ output: ctx.exePath });
-
-  const { main } = await buildCode(ctx, pack_json);
-
-  await prepareBuildEnvironment(
-    ctx.runPath!,
-    {
-      main: main.fileName,
-      root: options.root,
-    },
-    pack_json
-  );
-
-  await ctx.initResources();
-
-  ctx.logLevel.info("start building the app");
-
-  const target = await createTarget();
-
-  try {
-    await buildApp({
-      inputDir: ctx.runPath!,
-      targets: target.createTarget(),
-      config: pack_json.build,
-    });
-
-    const res = await printMetaFile();
-    res && ctx.logLevel.info(res);
-  } catch (err) {
-    ctx.logLevel.error(err as Error);
-  }
-
-  ctx.logLevel.info("app build complete");
+  console.log(options);
+  console.log(ctx);
 }
 
 export async function buildCode(ctx: CeaContext, pack_json: any = {}) {

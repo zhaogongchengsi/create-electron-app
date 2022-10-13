@@ -36,7 +36,9 @@ export interface ServeOptions extends CommonOptions {
   open?: boolean;
 }
 
-export interface buildOptions extends CommonOptions {}
+export interface buildOptions extends CommonOptions {
+  notBuildApp?: boolean;
+}
 
 export interface WindowsMain {
   input: string;
@@ -66,6 +68,11 @@ export interface StaticResource {
 export interface DebugConfig {
   port?: number;
   host?: string;
+}
+
+export interface Builder {
+  appName?: string;
+  appId?: string;
 }
 
 export type Extensions = [];
@@ -98,9 +105,9 @@ export interface UseConfig extends OutputOptions {
   debug?: DebugConfig | boolean;
   // extensions?: Extensions;
   electron?: Electron;
+  buider?: Builder;
 
   alias?: Record<string, string>;
-
   // Let's configure esbuild
 
   plugins?: Plugin[];
