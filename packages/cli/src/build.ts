@@ -2,10 +2,11 @@ import { buildOptions } from "../types";
 import { buildViteBundle } from "./builds/vite";
 import { readConfigInfo, readPackJsonFile } from "./config";
 import { buildApp, createTarget } from "./electron";
-import { clearPackJson, createFile, createNodeModule } from "./utils";
+import { createFile, createNodeModule } from "./utils";
 import { buildMain, printMetaFile } from "./builds";
 import { CeaContext } from "./context";
 import { parseEnv } from "./env";
+import { join, relative, resolve } from "path";
 
 export const settingBuildOptions = (options: any) => {
   return {
@@ -31,40 +32,32 @@ export async function build(options: buildOptions) {
     env,
   });
 
-  let res;
-
-  try {
-    res = await Promise.all([buildViteBundle(ctx)]);
-  } catch (err) {}
-}
-
-export async function buildCode(ctx: CeaContext, pack_json: any = {}) {
   ctx.createElectronAssets();
 
-  const fineInfo = await buildMain({
-    ctx: ctx,
-    pkg: pack_json,
-  });
-
-  return fineInfo;
+  let mainRes;
+  try {
+    await buildViteBundle(ctx);
+    mainRes = await buildMain(ctx);
+    await WriteBuildAppConfig(ctx);
+  } catch (err) {
+    console.error(err);
+  }
 }
 
-export async function prepareBuildEnvironment(
-  envPath: string,
-  opt: {
-    main: string;
-    root: string;
-  },
-  json: any = {}
-) {
+export async function WriteBuildAppConfig({
+  runPath,
+  pkg,
+  appOutDir,
+}: CeaContext) {
   const PACKAGE_JSON = "package.json";
-  json.main = opt.main;
-  const packAgeStr = clearPackJson(json);
-  const rmFile = await createFile(envPath, packAgeStr, PACKAGE_JSON);
-  const unLink = await createNodeModule(envPath, opt.root);
+  const outDir = relative(runPath!, appOutDir);
 
-  return async () => {
-    await rmFile();
-    await unLink();
-  };
+  delete pkg.dependencies;
+  delete pkg.devDependencies;
+  delete pkg.scripts;
+
+  pkg.build.directories.outdir = outDir;
+
+  const packAgeStr = JSON.stringify(pkg);
+  return await createFile(runPath!, packAgeStr, PACKAGE_JSON);
 }

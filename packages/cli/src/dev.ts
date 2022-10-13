@@ -47,21 +47,14 @@ export async function startServer(
 
   let electron: electronStart | undefined;
 
-  await buildMain(
-    {
-      ctx: ctx,
-      pkg: pack_json,
-    },
-    async ({ seria, main }) => {
-      await useHooks(main.path);
-      if (seria === 1) {
-        electron = new electronStart(main.outDir, ctx);
-        await ctx.initResources();
-        await electron.start(main.fileName);
-      } else {
-        electron?.restart();
-      }
-      await electron?.debugPrint();
+  await buildMain(ctx, async ({ seria, main }) => {
+    await useHooks(main.path);
+    if (seria === 1) {
+      electron = new electronStart(main.outDir, ctx);
+      await electron.start(main.fileName);
+    } else {
+      electron?.restart();
     }
-  );
+    await electron?.debugPrint();
+  });
 }

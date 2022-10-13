@@ -35,14 +35,14 @@ const loader = {
 let seria = 1;
 
 export async function buildMain(
-  { ctx, pkg = {} }: buildMainOption,
+  ctx: CeaContext,
   callback?: (info: buildInfo) => void
 ) {
   const isEMS = ctx._isEms;
   const mode = ctx.mode;
   const ext = isEMS ? ".js" : ".cjs";
   const isProduction = mode === "production";
-  const { config, runPath } = ctx;
+  const { config, runPath, pkg } = ctx;
 
   const { name } = parse(ctx.entryPoints[0]);
   const fileName = name + ext;
@@ -122,6 +122,8 @@ export async function buildMain(
     define,
     external,
   });
+
+  ctx.initResources();
 
   callback &&
     callback({

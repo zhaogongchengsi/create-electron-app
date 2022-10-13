@@ -62,6 +62,8 @@ export class CeaContext {
   debugConfig: DebugConfig | undefined;
   electron: Electron | undefined;
   vite: string;
+  appOutDir: string;
+  private packageJson: Record<string, any>;
   constructor({
     root,
     config,
@@ -77,6 +79,8 @@ export class CeaContext {
     this.logLevel = log;
     this.electron = config.electron;
     this.vite = config.vite;
+    this.packageJson = packageJson;
+    this.appOutDir = resolve(root, config.appOutDir ?? "releases");
 
     if (config.debug && config.debug === true) {
       this.debugConfig = {
@@ -221,5 +225,13 @@ export class CeaContext {
       this.runPath,
       join(this.root, this.config.appOutDir ?? defaultConfig.appOutDir)
     );
+  }
+
+  set pkg(value: any) {
+    this.packageJson = value;
+  }
+
+  get pkg() {
+    return JSON.parse(JSON.stringify(this.packageJson));
   }
 }

@@ -50,13 +50,14 @@ export async function buildViteBundle({ root, vite, runPath }: CeaContext) {
       root,
       mode: "production",
       base: "./",
+      ...viteConfig,
       build: {
         ...viteConfig.build,
         outDir: runPath!,
       },
     });
 
-    console.log(res);
+    return res;
   } catch (err) {
     throw err;
   }
