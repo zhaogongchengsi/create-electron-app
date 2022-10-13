@@ -31,20 +31,14 @@ export async function build(options: buildOptions) {
     env,
   });
 
-  console.log(options);
-  console.log(ctx);
+  let res;
+
+  try {
+    res = await Promise.all([buildViteBundle(ctx)]);
+  } catch (err) {}
 }
 
 export async function buildCode(ctx: CeaContext, pack_json: any = {}) {
-  const root = ctx.root;
-  const config = ctx.config;
-
-  const res = await buildViteBundle(root, config);
-
-  if (res !== true) {
-    throw new Error(`vite Build failed please try again`);
-  }
-
   ctx.createElectronAssets();
 
   const fineInfo = await buildMain({

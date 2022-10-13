@@ -7,6 +7,7 @@ import {
   mergeConfig,
 } from "vite";
 import { UseConfig } from "../../types";
+import { CeaContext } from "../context";
 
 export type MergeOption = {
   root: string;
@@ -31,19 +32,15 @@ export async function createViteServer(root: string, { vite }: UseConfig) {
   return server;
 }
 
-export async function buildViteBundle(
-  root: string,
-  { vite, outDir }: UseConfig
-) {
+export async function buildViteBundle({ root, vite, runPath }: CeaContext) {
   const viteConfigFile = resolve(root, vite);
-  const outdir = resolve(root, outDir ?? "dist");
   const { dir } = parse(viteConfigFile);
 
   process.chdir(root);
 
   const viteConfig = await mergeViteConfig({
     root,
-    outDir: outdir,
+    outDir: runPath!,
     configFile: viteConfigFile,
     configRoot: dir,
   });
@@ -54,10 +51,12 @@ export async function buildViteBundle(
       mode: "production",
       base: "./",
       build: {
-        outDir,
         ...viteConfig.build,
+        outDir: runPath!,
       },
     });
+
+    console.log(res);
   } catch (err) {
     throw err;
   }

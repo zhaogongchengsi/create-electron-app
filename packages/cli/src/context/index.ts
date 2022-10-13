@@ -59,9 +59,9 @@ export class CeaContext {
   logLevel: log;
   env: Record<string, string> = {};
   resources: string = "public";
-  debugConfig: DebugConfig |  undefined;
+  debugConfig: DebugConfig | undefined;
   electron: Electron | undefined;
-
+  vite: string;
   constructor({
     root,
     config,
@@ -76,6 +76,7 @@ export class CeaContext {
     this.mode = mode ?? "development";
     this.logLevel = log;
     this.electron = config.electron;
+    this.vite = config.vite;
 
     if (config.debug && config.debug === true) {
       this.debugConfig = {
