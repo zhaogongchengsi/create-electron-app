@@ -8,9 +8,9 @@ hero:
   name: create electron app
   text: Quickly create an electron app
   tagline: 基于esbuild和vite，开发和构建都非常快
-  # image:
-  #   src: /logo-with-shadow.png
-  #   alt: Vite
+  image:
+    src: /img2.png
+    alt: Vite
   actions:
     - theme: brand
       text: 快速开始

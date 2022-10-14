@@ -3,8 +3,28 @@ import { defineConfig } from "vitepress";
 export default defineConfig({
   title: `create electron app`,
   description: "Next Generation Frontend Tooling",
+
+  head: [
+    ["link", { rel: "icon", type: "image/png", href: "/logo.png" }],
+    ["meta", { property: "og:type", content: "website" }],
+    ["meta", { property: "og:title", content: "create-electron-app" }],
+    [
+      "meta",
+      {
+        property: "og:description",
+        content: "Next Generation Frontend Tooling",
+      },
+    ],
+  ],
+
   themeConfig: {
-    // logo: "/logo.svg",
+    logo: "/logo.png",
+
+    editLink: {
+      pattern:
+        "https://github.com/zhaogongchengsi/create-electron-app/tree/master/docs/:path",
+      text: "纠错",
+    },
 
     nav: [
       { text: "快速开始", link: "/guide/", activeMatch: "/guide/" },
