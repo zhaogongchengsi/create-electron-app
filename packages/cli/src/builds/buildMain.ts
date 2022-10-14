@@ -59,8 +59,8 @@ export async function buildMain(
       ...ctx.env,
       ...ctx.eleAssets,
     }),
-    [IMPORT_META_ENV_VAR + ".PROD"]: JSON.stringify(mode === "production"),
-    [IMPORT_META_ENV_VAR + ".DEV"]: JSON.stringify(mode === "development"),
+    [IMPORT_META_ENV_VAR + ".PROD"]: String(mode === "production"),
+    [IMPORT_META_ENV_VAR + ".DEV"]: String(mode === "development"),
   };
 
   const external = [
@@ -108,6 +108,10 @@ export async function buildMain(
     platform: "node",
     outExtension: { ".js": ext },
 
+    supported: {
+      "dynamic-import": true,
+    },
+
     allowOverwrite: true,
     bundle: true,
     metafile: true,
@@ -135,5 +139,3 @@ export async function buildMain(
     result,
   };
 }
-
-function watchHandler() {}

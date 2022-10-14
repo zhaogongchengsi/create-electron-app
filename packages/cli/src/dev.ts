@@ -1,7 +1,7 @@
 import { ServeOptions, UseConfig } from "../types";
 import { readConfigInfo, readPackJsonFile } from "./config";
 import { buildMain, createViteServer } from "./builds";
-import { electronStart, useHooks } from "./electron";
+import { electronStart, jnjectHookCode } from "./electron";
 import { CeaContext } from "./context";
 import { parseEnv } from "./env";
 
@@ -48,7 +48,7 @@ export async function startServer(
   let electron: electronStart | undefined;
 
   await buildMain(ctx, async ({ seria, main }) => {
-    await useHooks(main.path);
+    await jnjectHookCode(main.path);
     if (seria === 1) {
       electron = new electronStart(main.outDir, ctx);
       await electron.start(main.fileName);
