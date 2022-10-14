@@ -6,6 +6,7 @@ importers:
     specifiers:
       '@rollup/plugin-commonjs': ^22.0.2
       '@rollup/plugin-node-resolve': ^13.3.0
+      app-builder-lib: 23.6.0
       cos-nodejs-sdk-v5: ^2.11.12
       cross-env: ^7.0.3
       rollup: ^2.78.1
@@ -18,6 +19,7 @@ importers:
     devDependencies:
       '@rollup/plugin-commonjs': registry.npmmirror.com/@rollup/plugin-commonjs/22.0.2_rollup@2.79.1
       '@rollup/plugin-node-resolve': registry.npmmirror.com/@rollup/plugin-node-resolve/13.3.0_rollup@2.79.1
+      app-builder-lib: registry.npmmirror.com/app-builder-lib/23.6.0
       cross-env: registry.npmmirror.com/cross-env/7.0.3
       rollup: registry.npmmirror.com/rollup/2.79.1
       rollup-plugin-typescript2: registry.npmmirror.com/rollup-plugin-typescript2/0.34.1_rollup@2.79.1
@@ -131,7 +133,7 @@ importers:
       '@rollup/plugin-commonjs': ^22.0.2
       '@rollup/plugin-node-resolve': ^13.3.0
       '@vitejs/plugin-vue': ^3.1.2
-      '@zzhaon/create-electron-app': workspace:^0.2.6
+      '@zzhaon/create-electron-app': workspace:^0.2.7
       '@zzhaon/devtools-install': workspace:^0.0.1
       cross-env: ^7.0.3
       electron: ^20.3.1

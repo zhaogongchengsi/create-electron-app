@@ -1,12 +1,12 @@
 import { buildOptions } from "../types";
 import { buildViteBundle } from "./builds/vite";
 import { readConfigInfo, readPackJsonFile } from "./config";
-import { buildApp, createTarget } from "./electron";
+import { buildApp } from "./electron";
 import { createFile, createNodeModule } from "./utils";
-import { buildMain, printMetaFile } from "./builds";
+import { buildMain } from "./builds";
 import { CeaContext } from "./context";
 import { parseEnv } from "./env";
-import { join, relative, resolve } from "path";
+import { relative } from "path";
 
 export const settingBuildOptions = (options: any) => {
   return {
@@ -47,6 +47,15 @@ export async function build(options: buildOptions) {
   }
 
   await WriteBuildAppConfig(ctx, mainRes?.main.fileName);
+  const unlink = await createNodeModule(ctx.runPath!, ctx.root);
+  try {
+    await buildApp(ctx.runPath!);
+  } catch (e) {
+    console.error(e);
+  }
+
+  await unlink();
+  
 }
 
 export async function WriteBuildAppConfig(
@@ -56,13 +65,46 @@ export async function WriteBuildAppConfig(
   const PACKAGE_JSON = "package.json";
   const outDir = relative(runPath!, appOutDir);
 
+  const ELECTRON_MODULE_NAME = "electron";
+  const BUILER_MODULE_MAMA = "electron-builder";
+
+  const searchDep = (pkg: any, name: string) => {
+    let value: string;
+    if (pkg.dependencies[name]) {
+      value = pkg.dependencies[name];
+    } else {
+      value = pkg.devDependencies[name];
+    }
+
+    if (!value) {
+      throw new Error(`${name} depends on ${pkg} and does not exist`);
+    }
+
+    return value;
+  };
+
+  let electron: string = searchDep(pkg, ELECTRON_MODULE_NAME);
+  let electronBuilder: string = searchDep(pkg, BUILER_MODULE_MAMA);
+
   delete pkg.dependencies;
   delete pkg.devDependencies;
   delete pkg.scripts;
 
+  pkg.devDependencies = {
+    // 锁定 electron 版本号
+    [ELECTRON_MODULE_NAME]: electron.replace(/^\^/, ""),
+    [BUILER_MODULE_MAMA]: electronBuilder,
+  };
+
   pkg.main = main;
-  pkg.build.directories.outdir = outDir;
+  pkg.build = {
+    ...pkg.build,
+    directories: {
+      output: outDir,
+    },
+  };
 
   const packAgeStr = JSON.stringify(pkg);
+
   return await createFile(runPath!, packAgeStr, PACKAGE_JSON);
 }

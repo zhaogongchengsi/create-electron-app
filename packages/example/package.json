@@ -2,18 +2,19 @@
   "name": "exp",
   "private": true,
   "version": "0.0.0",
-  "main": "./main/index.ts",
+  "main": "./dist/index.cjs",
   "type": "module",
   "scripts": {
     "dev": "cea",
-    "package": "cea build",
-    "build": "cea build --not-build-app",
+    "preview": "cea preview",
+    "build": "cea build",
     "dev:vite": "vite",
     "build:vite": "vue-tsc --noEmit && vite build",
-    "preview:vite": "vite preview"
+    "preview:vite": "vite preview",
+    "package": "electron-builder build -w"
   },
   "dependencies": {
-    "@zzhaon/create-electron-app": "workspace:^0.2.6",
+    "@zzhaon/create-electron-app": "workspace:^0.2.7",
     "cross-env": "^7.0.3",
     "vue": "^3.2.40"
   },
@@ -37,9 +38,9 @@
   "build": {
     "appId": "exp.example.app",
     "productName": "exp app",
-    "copyright": "Copyright © year ${haon}",
+    "copyright": "Copyright © year haon",
     "directories": {
-      "outdir": "./releases"
+      "output": "./releases"
     }
   }
 }

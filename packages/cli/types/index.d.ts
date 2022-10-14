@@ -70,11 +70,6 @@ export interface DebugConfig {
   host?: string;
 }
 
-export interface Builder {
-  appName?: string;
-  appId?: string;
-}
-
 export type Extensions = [];
 
 export interface UseConfig extends OutputOptions {
@@ -105,7 +100,6 @@ export interface UseConfig extends OutputOptions {
   debug?: DebugConfig | boolean;
   // extensions?: Extensions;
   electron?: Electron;
-  buider?: Builder;
 
   alias?: Record<string, string>;
   // Let's configure esbuild
@@ -142,11 +136,6 @@ export type Callbacks = {
 
 export type Platforms = "win" | "mac" | "lin" | "all";
 export type targets = Map<Platform, Map<Arch, Array<string>>>;
-export type BuildAppOptions = {
-  inputDir: string;
-  config: string | Configuration | null;
-  targets: targets;
-};
 
 export type Mode = "development" | "production";
 
