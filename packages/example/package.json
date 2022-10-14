@@ -6,8 +6,8 @@
   "type": "module",
   "scripts": {
     "dev": "cea",
-    "preview": "cea preview",
-    "build": "cea build",
+    "build": "cea build --not-build-app",
+    "build:app": "cea build",
     "dev:vite": "vite",
     "build:vite": "vue-tsc --noEmit && vite build",
     "preview:vite": "vite preview",

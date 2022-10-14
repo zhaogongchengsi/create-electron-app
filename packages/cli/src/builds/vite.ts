@@ -59,7 +59,6 @@ export async function buildViteBundle({ root, vite, runPath }: CeaContext) {
   } catch (err) {
     throw err;
   }
-  return true;
 }
 
 export async function mergeViteConfig({

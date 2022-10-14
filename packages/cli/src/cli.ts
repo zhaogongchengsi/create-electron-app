@@ -31,18 +31,21 @@ export const createCli = ({ build, createDevServer }: cliMethod) => {
       }
     });
 
-  cli.command("build [config]", "Build your app").action((config, options) => {
-    try {
-      build({
-        root: process.cwd(),
-        configFilePath: config,
-        notBuildApp: true,
-      });
-    } catch (err) {
-      console.error(err);
-      process.exit(1);
-    }
-  });
+  cli
+    .command("build [config]", "Build your app")
+    .option("--not-build-app", `[boolean] Do not build app`)
+    .action((config, options) => {
+      try {
+        build({
+          root: process.cwd(),
+          configFilePath: config,
+          notBuildApp: options.notBuildApp ?? false,
+        });
+      } catch (err) {
+        console.error(err);
+        process.exit(1);
+      }
+    });
 
   cli
     .command("preview [config]", "preview your app")
