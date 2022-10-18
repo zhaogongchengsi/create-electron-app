@@ -4,6 +4,7 @@ const path = require("path");
 const { createDir, copyDir, createFile, getPackageVersion } = require("./util");
 const creafgePackage = require("./templates/package.js");
 const createReadme = require("./templates/readme.js");
+const createGitIgnore = require("./templates/gitignore.js");
 
 const tempPath = (name = "vue", isTs = false) =>
   path.resolve(__dirname, `./templates/${name}${isTs ? "-ts" : ""}`);
@@ -13,6 +14,8 @@ const tempMainPath = (isTs = false) => {
 };
 
 const prompts = require("prompts");
+const { join } = require("path");
+const { statSync } = require("fs");
 
 (async () => {
   const root = process.cwd();
@@ -27,8 +30,8 @@ const prompts = require("prompts");
       name: "language",
       type: "select",
       choices: [
-        { title: "Javascript", value: "js" },
         { title: "Typescript", value: "ts" },
+        { title: "Javascript", value: "js" },
       ],
       message: "Choose the language to use",
     },
@@ -36,24 +39,39 @@ const prompts = require("prompts");
       name: "frame",
       type: "select",
       choices: [
-        { title: "React", value: "react" },
         { title: "Vue", value: "vue" },
+        { title: "React", value: "react" },
         { title: "Vanilla", value: "vanilla" },
       ],
       message: "choose frame",
     },
   ]);
 
-  const dep = await getDepVersion();
+  // const dep = await getDepVersion();
+
+  const dep = {
+    "@zzhaon/create-electron-app": "0.2.7",
+    vite: "3.1.8",
+    electron: "21.1.1",
+    "electron-builder": "23.6.0",
+  };
 
   const isTs = () => language === "ts";
 
   const { projectName, language, frame } = result;
 
-  const projectNamePath = await createDir(projectName, root);
+  const ppath = join(root, projectName);
+
+  let proName = "";
+  if (statSync(ppath)) {
+    proName = "-app";
+  }
+
+  const projectNamePath = await createDir(projectName + proName, root);
   const mainPath = await createDir("main", projectNamePath);
 
   const templatePaht = tempPath(frame, isTs());
+  console.log(projectNamePath);
   await copyDir(projectNamePath, templatePaht);
   await copyDir(mainPath, tempMainPath(isTs()));
 
@@ -72,9 +90,14 @@ const prompts = require("prompts");
   await createFile(
     "README",
     projectNamePath,
-    createReadme({ appName: projectName, description: "1231" }),
+    createReadme({
+      appName: projectName,
+      description: "Electron vite esbuild app",
+    }),
     ".md"
   );
+
+  await createFile(".gitignore", projectNamePath, createGitIgnore(), "");
 
   console.log(
     `
@@ -96,13 +119,11 @@ const DEP_NAME = [
   "electron-builder",
 ];
 
-async function getDepVersion() {
+async function getDepVersion(depNames = DEP_NAME) {
   const res = await Promise.all(
-    DEP_NAME.map((name) => getPackageVersion(name))
+    depNames.map((name) => getPackageVersion(name))
   );
-
   const dep = {};
-
   DEP_NAME.forEach((name, index) => {
     dep[name] = res[index];
   });

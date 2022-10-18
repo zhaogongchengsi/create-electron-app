@@ -19,7 +19,7 @@ module.exports = function creafgePackage({ name, author, main, dep }) {
     "version": "1.0.0",
     "description": "${name} description of the software",
     "main": "${main ?? ""}",
-    "author": "${author} ?? The author doesn't know who",
+    "author": "${author ?? "The author doesn't know who"}",
     "devDependencies":  ${formatDep(dep)}
 }
     `.trim();

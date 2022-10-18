@@ -1,3 +1,5 @@
+module.exports = function createGitIgnore() {
+  return `
 # Logs
 logs
 *.log
@@ -22,3 +24,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+.app/**/*
+dist/**/*
+releases/**/*
+`.trim();
+};

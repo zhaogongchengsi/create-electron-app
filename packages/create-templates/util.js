@@ -2,11 +2,12 @@ const fs = require("fs");
 const path = require("path");
 const https = require("https");
 
-const { cp } = require("fs/promises");
+const { cp, access, constants } = require("fs/promises");
 
 const createDir = async (name, dirPath = process.cwd()) => {
+  const p = path.resolve(dirPath, name);
   return new Promise((res, rej) => {
-    fs.mkdir(path.resolve(dirPath, name), { recursive: true }, (err, path) => {
+    fs.mkdir(p, { recursive: true }, (err, path) => {
       if (err) {
         rej(err);
       }
@@ -52,6 +53,7 @@ const createTab = (length = 2) => {
 
 function getPackageVersion(name) {
   // 从 npmjs 中获取版本号
+
   return new Promise((resolve, reject) => {
     https
       .get(`https://registry.npmjs.org/${name}`, (res) => {
@@ -76,5 +78,5 @@ module.exports = {
   readFile,
   copyDir,
   createTab,
-  getPackageVersion,
+  getPackageVersion
 };
