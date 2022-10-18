@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 
 const path = require("path");
-const { createDir, copyDir } = require("./util");
+const { createDir, copyDir, createFile } = require("./util");
+const creafgePackage = require("./templates/package.js");
 
 const tempPath = (name = "vue", isTs = false) =>
   path.resolve(__dirname, `./templates/${name}${isTs ? "-ts" : ""}`);
@@ -48,10 +49,20 @@ const prompts = require("prompts");
   const projectNamePath = await createDir(projectName, root);
   const mainPath = await createDir("main", projectNamePath);
 
-  const templatePaht = tempPath(frame, isTs);
-
+  const templatePaht = tempPath(frame, isTs());
   await copyDir(projectNamePath, templatePaht);
-  await copyDir(mainPath, tempMainPath(isTs));
+  await copyDir(mainPath, tempMainPath(isTs()));
+
+  await createFile(
+    "package",
+    projectNamePath,
+    creafgePackage({
+      name: projectName,
+      author: "zzh",
+      devDependencies: { a: 1 },
+    }),
+    ".json"
+  );
 
   console.log(
     `

@@ -45,9 +45,14 @@ const copyDir = async (targetPath, originPath) => {
   });
 };
 
+const createTab = (length = 2) => {
+  return Array(length).fill(" ").join("");
+};
+
 module.exports = {
   createDir,
   createFile,
   readFile,
   copyDir,
+  createTab,
 };

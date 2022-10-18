@@ -1,12 +1,12 @@
 {
-  "name": "create-cea",
-  "version": "0.0.7",
+  "name": "create-cea-app",
+  "version": "0.1.0",
   "description": "Create a basic electron app",
   "main": "index.js",
   "typs": "module",
   "bin": {
-    "create-base-electron": "index.js",
-    "cea": "index.js"
+    "ca": "index.js",
+    "cea-app": "index.js"
   },
   "scripts": {
     "update": "npm publish"
