@@ -1,5 +1,6 @@
 const fs = require("fs");
 const path = require("path");
+const https = require("https");
 
 const { cp } = require("fs/promises");
 
@@ -49,10 +50,31 @@ const createTab = (length = 2) => {
   return Array(length).fill(" ").join("");
 };
 
+function getPackageVersion(name) {
+  // 从 npmjs 中获取版本号
+  return new Promise((resolve, reject) => {
+    https
+      .get(`https://registry.npmjs.org/${name}`, (res) => {
+        let data = "";
+        res.on("data", (chunk) => {
+          data += chunk;
+        });
+        res.on("end", () => {
+          const latest = (JSON.parse(data)[`dist-tags`] || {}).latest; // 获取最新版本
+          resolve(latest);
+        });
+      })
+      .on(`error`, (err) => {
+        throw new Error(err.message);
+      });
+  });
+}
+
 module.exports = {
   createDir,
   createFile,
   readFile,
   copyDir,
   createTab,
+  getPackageVersion,
 };

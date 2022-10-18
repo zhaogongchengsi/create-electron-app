@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 
 const path = require("path");
-const { createDir, copyDir, createFile } = require("./util");
+const { createDir, copyDir, createFile, getPackageVersion } = require("./util");
 const creafgePackage = require("./templates/package.js");
+const createReadme = require("./templates/readme.js");
 
 const tempPath = (name = "vue", isTs = false) =>
   path.resolve(__dirname, `./templates/${name}${isTs ? "-ts" : ""}`);
@@ -43,9 +44,12 @@ const prompts = require("prompts");
     },
   ]);
 
+  const dep = await getDepVersion();
+
   const isTs = () => language === "ts";
 
   const { projectName, language, frame } = result;
+
   const projectNamePath = await createDir(projectName, root);
   const mainPath = await createDir("main", projectNamePath);
 
@@ -59,9 +63,17 @@ const prompts = require("prompts");
     creafgePackage({
       name: projectName,
       author: "zzh",
-      devDependencies: { a: 1 },
+      main: "",
+      dep,
     }),
     ".json"
+  );
+
+  await createFile(
+    "README",
+    projectNamePath,
+    createReadme({ appName: projectName, description: "1231" }),
+    ".md"
   );
 
   console.log(
@@ -76,3 +88,24 @@ const prompts = require("prompts");
     `
   );
 })();
+
+const DEP_NAME = [
+  "electron",
+  "vite",
+  "@zzhaon/create-electron-app",
+  "electron-builder",
+];
+
+async function getDepVersion() {
+  const res = await Promise.all(
+    DEP_NAME.map((name) => getPackageVersion(name))
+  );
+
+  const dep = {};
+
+  DEP_NAME.forEach((name, index) => {
+    dep[name] = res[index];
+  });
+
+  return dep;
+}

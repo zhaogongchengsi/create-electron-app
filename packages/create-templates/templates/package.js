@@ -9,18 +9,18 @@ function formatDep(dep = {}) {
     }
   }
 
-  return "{\n" + _dep.join("\n") + `\n${createTab(4)}}`;
+  return "{\n" + _dep.join(",\n") + `\n${createTab(4)}}`;
 }
 
-module.exports = function creafgePackage({ name, author, devDependencies }) {
+module.exports = function creafgePackage({ name, author, main, dep }) {
   return `
     {
     "name": "${name ?? "An app without a name"}",
     "version": "1.0.0",
     "description": "${name} description of the software",
-    "main": "./main/index.ts",
+    "main": "${main ?? ""}",
     "author": "${author} ?? The author doesn't know who",
-    "devDependencies":  ${formatDep(devDependencies)}
+    "devDependencies":  ${formatDep(dep)}
 }
     `.trim();
 };
