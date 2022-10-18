@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const https = require("https");
 
-const { cp, access, constants } = require("fs/promises");
+const { cp, access, constants, stat } = require("fs/promises");
 
 const createDir = async (name, dirPath = process.cwd()) => {
   const p = path.resolve(dirPath, name);
@@ -72,11 +72,21 @@ function getPackageVersion(name) {
   });
 }
 
+async function pathExist(path) {
+  try {
+    await stat(path);
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+
 module.exports = {
   createDir,
   createFile,
   readFile,
   copyDir,
   createTab,
-  getPackageVersion
+  getPackageVersion,
+  pathExist,
 };

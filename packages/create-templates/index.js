@@ -1,7 +1,13 @@
 #!/usr/bin/env node
 
 const path = require("path");
-const { createDir, copyDir, createFile, getPackageVersion } = require("./util");
+const {
+  createDir,
+  copyDir,
+  createFile,
+  getPackageVersion,
+  pathExist,
+} = require("./util");
 const creafgePackage = require("./templates/package.js");
 const createReadme = require("./templates/readme.js");
 const createGitIgnore = require("./templates/gitignore.js");
@@ -63,7 +69,7 @@ const { statSync } = require("fs");
   const ppath = join(root, projectName);
 
   let proName = "";
-  if (statSync(ppath)) {
+  if (await pathExist(ppath)) {
     proName = "-app";
   }
 
