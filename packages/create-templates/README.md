@@ -5,6 +5,6 @@ Responsible for creating templates
 ## Usage
 
 ```sh
-npm create cea
+npm create cea-app
 ```
 follow the prompts
