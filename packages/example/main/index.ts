@@ -2,6 +2,7 @@ import { BrowserWindow, app, ipcMain } from "electron";
 import { resolve } from "path";
 
 let win: BrowserWindow | undefined = undefined;
+let subWin: BrowserWindow | undefined = undefined;
 
 const { loadUrl, mode, preload } = import.meta.env;
 
@@ -40,6 +41,27 @@ const createWindow = () => {
   }
 };
 
+const createSubWindow = () => {
+  subWin = new BrowserWindow({
+    width: 600,
+    height: 400,
+
+    icon: getPath("public/icon.png"),
+    webPreferences: {
+      nodeIntegration: true,
+      nodeIntegrationInWorker: true,
+      sandbox: true,
+      preload: preload && getPath(preload),
+    },
+  });
+
+  if (mode === "production") {
+    subWin.loadFile(`${loadUrl}/nested/index.html`);
+  } else {
+    subWin.loadURL(`${loadUrl}/nested/index.html`);
+  }
+};
+
 app
   .whenReady()
   .then(() => {
@@ -53,8 +75,9 @@ ipcMain.on("0101", (e: Electron.IpcMainEvent, message: string) => {
   e.reply("received" + message);
 });
 
-console.log(import.meta.env.PROD);
-console.log(import.meta.env.DEV);
+ipcMain.on("openSubPage", (e: Electron.IpcMainEvent) => {
+  createSubWindow();
+});
 
 // 禁用硬件加速
 app.disableHardwareAcceleration();
