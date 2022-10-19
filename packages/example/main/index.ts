@@ -56,9 +56,11 @@ const createSubWindow = () => {
   });
 
   if (mode === "production") {
-    subWin.loadFile(`${loadUrl}/nested/index.html`);
+    // subWin.loadFile(`${loadUrl}/nested/index.html`);
+    subWin.loadFile(`${loadUrl}/subpage.html`);
   } else {
-    subWin.loadURL(`${loadUrl}/nested/index.html`);
+    // subWin.loadURL(`${loadUrl}/nested/index.html`);
+    subWin.loadURL(`${loadUrl}/subpage.html`);
   }
 };
 
