@@ -12,14 +12,19 @@ function formatDep(dep = {}) {
   return "{\n" + _dep.join(",\n") + `\n${createTab(4)}}`;
 }
 
-module.exports = function creafgePackage({ name, author, main, dep }) {
+module.exports = function creafgePackage({ name, author = "The author doesn't know who", main = "", dep }) {
   return `
     {
     "name": "${name ?? "An app without a name"}",
     "version": "1.0.0",
     "description": "${name} description of the software",
-    "main": "${main ?? ""}",
-    "author": "${author ?? "The author doesn't know who"}",
+    "main": "${main}",
+    "scripts": {
+      "start": "cea",
+      "package": "cea build",
+      "build": "cea build --not-build-app"
+    },
+    "author": "${author}",
     "devDependencies":  ${formatDep(dep)}
 }
     `.trim();

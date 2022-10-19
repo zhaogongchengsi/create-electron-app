@@ -86,8 +86,7 @@ const { statSync } = require("fs");
     projectNamePath,
     creafgePackage({
       name: projectName,
-      author: "zzh",
-      main: "",
+      main: `./main/index${isTs() ? ".ts" : ".js"}`,
       dep,
     }),
     ".json"
@@ -113,7 +112,7 @@ const { statSync } = require("fs");
 
       npm install electron electron-builder
       
-      npm run dev
+      npm run start
     `
   );
 })();
