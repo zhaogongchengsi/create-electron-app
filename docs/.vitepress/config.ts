@@ -51,6 +51,10 @@ export default defineConfig({
               link: "/guide/index",
             },
             {
+              text: "功能",
+              link: "/guide/features",
+            },
+            {
               text: "为什么选择cea",
               link: "/guide/why",
             },

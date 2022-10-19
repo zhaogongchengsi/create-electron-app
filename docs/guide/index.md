@@ -97,7 +97,7 @@ npm run dev:app
 **使用 npm：**
 
 ```bash
-npm create cea
+npm create cea-app
 ```
 
 然后按照提示操作即可

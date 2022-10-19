@@ -14,6 +14,7 @@ Using esbuild and vite
 ## Example
 
 [Basic use example](https://github.com/zhaogongchengsi/create-electron-app/tree/master/packages/example)
+
 [Development application example](https://github.com/zhaogongchengsi/picture-preview)
 
 ## Install
@@ -121,7 +122,7 @@ npm run build
 Just follow the prompts
 
 ```sh
-npm create cea
+npm create cea-app
 ```
 
 Operate as directed
