@@ -137,16 +137,15 @@ export type Callbacks = {
 export type Platforms = "win" | "mac" | "lin" | "all";
 export type targets = Map<Platform, Map<Arch, Array<string>>>;
 
-export type Mode = "development" | "production";
+type Mode = "development" | "production";
+type ExportConfig = () => UseConfig | Promise<UseConfig> | UseConfig;
 
-export type ExportConfig = () => UseConfig | Promise<UseConfig> | UseConfig;
-
-export declare function build(options: buildOptions): Promise<void>;
-export declare function createDevServer(options: ServeOptions): Promise<void>;
-export declare function mergeConfig(
+declare function build(options: buildOptions): Promise<void>;
+declare function createDevServer(options: ServeOptions): Promise<void>;
+declare function mergeConfig(
   ...configs: (UseConfig | undefined)[]
 ): UseConfig;
 
-export declare function defineConfig(
+ function defineConfig(
   config: ExportConfig
 ): UseConfig | Promise<UseConfig>;

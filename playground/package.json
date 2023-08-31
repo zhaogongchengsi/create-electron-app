@@ -1,0 +1,15 @@
+{
+  "name": "cea-playground",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "cea dev",
+    "build": "cea dev"
+  },
+  "devDependencies": {
+    "@zzhaon/create-electron-app": "workspace:^"
+  },
+  "dependencies": {
+    "electron": "^26.1.0"
+  }
+}

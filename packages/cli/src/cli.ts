@@ -1,70 +1,19 @@
-import { cac } from "cac";
-import pack from "../package.json";
-import type { ServeOptions, buildOptions } from "../types";
+#!/usr/bin/env node
 
-export type cliMethod = {
-  build: (options: buildOptions) => void;
-  createDevServer: (serveOptions: ServeOptions) => void;
-};
+import { defineCommand, runMain } from "citty";
+import dev from './commands/dev'
+import build from './commands/build'
 
-export const createCli = ({ build, createDevServer }: cliMethod) => {
-  const cli = cac("cea");
+const main = defineCommand({
+  meta: {
+    name: "cea",
+    version: "0.2.8",
+    description: "My Awesome CLI App",
+  },
+  subCommands: {
+    dev,
+    build
+  },
+});
 
-  cli
-    .command("[configPath]", "start dev server")
-    .alias("serve") // the command is called 'serve' in Vite's API
-    .alias("dev") // alias to align with the script name
-    .option("--host [host]", `[string] specify hostname`)
-    .option("--port <port>", `[number] specify port`)
-    .action(async (configPath: string, options: any) => {
-      const { port, host } = options;
-      try {
-        createDevServer({
-          root: process.cwd(),
-          configFilePath: configPath,
-          port,
-          host,
-        });
-      } catch (err) {
-        console.error(err);
-        process.exit(1);
-      }
-    });
-
-  cli
-    .command("build [config]", "Build your app")
-    .option("--not-build-app", `[boolean] Do not build app`)
-    .action((config, options) => {
-      try {
-        build({
-          root: process.cwd(),
-          configFilePath: config,
-          notBuildApp: options.notBuildApp ?? false,
-        });
-      } catch (err) {
-        console.error(err);
-        process.exit(1);
-      }
-    });
-
-  cli
-    .command("preview [config]", "preview your app")
-    .action((config, options) => {
-      try {
-        build({
-          root: process.cwd(),
-          configFilePath: config,
-          notBuildApp: false,
-        });
-      } catch (err) {
-        console.error(err);
-        process.exit(1);
-      }
-    });
-
-  cli.help();
-  cli.version(pack.version);
-  cli.parse();
-
-  return cli;
-};
+runMain(main);
