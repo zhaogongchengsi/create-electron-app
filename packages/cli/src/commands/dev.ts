@@ -1,27 +1,35 @@
-
-import { defineCommand } from "citty";
+import {defineCommand} from "citty";
 import {CeaConfig, loadConfig} from '../config'
-import { createMultiCompilerOptions } from '../options'
-import { createMultiCompiler } from "@rspack/core";
+import {createMultiCompilerOptions} from '../options'
+import {createMultiCompiler} from "@rspack/core";
 import consola from 'consola'
+import { resolve, parse } from 'pathe'
 
 export default defineCommand({
-	meta: {
-		name: "dev",
-	},
-	async run() { 
+    meta: {
+        name: "dev",
+    },
+    async run() {
 
-		const { config } = await loadConfig()
-		const opt = createMultiCompilerOptions(config as Required<CeaConfig>)
-		const compilers = createMultiCompiler(opt)
+        const {config} = await loadConfig()
+        const _config = config as Required<CeaConfig>
 
-		compilers.run((error, state) => {
-			if (error) {
-				consola.error(error)
-				return
-			}
+        const opt = createMultiCompilerOptions(_config)
+        const compilers = createMultiCompiler(opt)
+        const { root, output, main } = _config
 
-			consola.success(`成功`)
-		})
-	}
+        compilers.watch({ignored: /node_modules/}, (err, stats) => {
+            if (err) {
+                consola.error(err)
+                return
+            }
+
+            const mainFile = resolve(root, output, `${parse(main).name}.js`)
+
+            console.log(mainFile)
+
+           // const main = stats!.stats.find(st => st.compilation.options.target === Target.main)
+        })
+
+    }
 });

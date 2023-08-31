@@ -2,7 +2,7 @@ import {CeaConfig} from "./config";
 import { parse } from 'path'
 import {RspackOptions} from "@rspack/core";
 
-enum Target {
+export enum Target {
     main= 'electron-main',
     preload = 'electron-preload'
 }
@@ -27,6 +27,7 @@ function createInputAndOutput (config: Required<CeaConfig>, t: Target) :RspackOp
 
     const { output: path, main, preload, mode  } = config
     const watch = mode === "development"
+    // const watch = true
 
     let entry = main
 
