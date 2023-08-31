@@ -45,7 +45,6 @@ const createSubWindow = () => {
   subWin = new BrowserWindow({
     width: 600,
     height: 400,
-
     icon: getPath("public/icon.png"),
     webPreferences: {
       nodeIntegration: true,
