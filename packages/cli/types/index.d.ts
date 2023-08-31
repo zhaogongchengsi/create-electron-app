@@ -147,5 +147,5 @@ declare function mergeConfig(
 ): UseConfig;
 
  function defineConfig(
-  config: ExportConfig
-): UseConfig | Promise<UseConfig>;
+     config: { main: string; preload: string }
+ ): UseConfig | Promise<UseConfig>;

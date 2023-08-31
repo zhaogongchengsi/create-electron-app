@@ -1,6 +1,9 @@
 
 import { defineCommand } from "citty";
-import { loadConfig } from '../config'
+import {CeaConfig, loadConfig} from '../config'
+import { createMultiCompilerOptions } from '../options'
+import { createMultiCompiler } from "@rspack/core";
+import consola from 'consola'
 
 export default defineCommand({
 	meta: {
@@ -8,8 +11,17 @@ export default defineCommand({
 	},
 	async run() { 
 
-		const conf = await loadConfig()
+		const { config } = await loadConfig()
+		const opt = createMultiCompilerOptions(config as Required<CeaConfig>)
+		const compilers = createMultiCompiler(opt)
 
-		console.log('dev', conf)
+		compilers.run((error, state) => {
+			if (error) {
+				consola.error(error)
+				return
+			}
+
+			consola.success(`成功`)
+		})
 	}
 });
