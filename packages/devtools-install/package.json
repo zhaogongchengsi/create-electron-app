@@ -2,37 +2,37 @@
   "name": "@zzhaon/devtools-install",
   "version": "0.0.1",
   "description": "",
-  "main": "dist/index.js",
+  "author": "",
+  "license": "ISC",
+  "keywords": [],
   "exports": {
     ".": {
       "types": "./types/index.d.ts",
-      "require": "./dist/index.cjs",
-      "import": "./dist/index.js"
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     }
   },
+  "main": "dist/index.js",
   "types": "./types",
-  "scripts": {
-    "dev": "cross-env NODE_ENV=development rollup --config rollup.config.js -w",
-    "build": "cross-env NODE_ENV=production rollup --config rollup.config.js"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "@rollup/plugin-commonjs": "^22.0.2",
-    "@rollup/plugin-json": "^4.1.0",
-    "@rollup/plugin-node-resolve": "^13.3.0",
-    "rollup": "^2.78.1",
-    "rollup-plugin-typescript2": "^0.34.1"
-  },
-  "dependencies": {
-    "cross-env": "^7.0.3"
-  },
   "files": [
     "dist",
     "types"
   ],
   "engines": {
     "node": "^14.18.0 || >=16.0.0"
+  },
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development rollup --config rollup.config.js -w",
+    "build": "cross-env NODE_ENV=production rollup --config rollup.config.js"
+  },
+  "dependencies": {
+    "cross-env": "^7.0.3"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^22.0.2",
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^13.3.0",
+    "rollup": "^2.78.1",
+    "rollup-plugin-typescript2": "^0.34.1"
   }
 }

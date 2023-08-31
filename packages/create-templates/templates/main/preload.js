@@ -1,29 +1,30 @@
-import { contextBridge, ipcRenderer } from "electron";
-const send = (channel, ...params) => {
-  ipcRenderer.send(channel, ...params);
-};
+import { contextBridge, ipcRenderer } from 'electron'
 
-const on = (channel, func) => {
+function send(channel, ...params) {
+  ipcRenderer.send(channel, ...params)
+}
+
+function on(channel, func) {
   const listener = (_, ...params) => {
-    func(...params);
-  };
-  ipcRenderer.on(channel, listener);
+    func(...params)
+  }
+  ipcRenderer.on(channel, listener)
   return () => {
-    ipcRenderer.removeListener(channel, listener);
-  };
-};
+    ipcRenderer.removeListener(channel, listener)
+  }
+}
 
-const once = (channel, func) => {
-  return ipcRenderer.once(channel, func);
-};
+function once(channel, func) {
+  return ipcRenderer.once(channel, func)
+}
 
-const removeEventListener = (channel, listener) => {
-  ipcRenderer.removeListener(channel, listener);
-};
+function removeEventListener(channel, listener) {
+  ipcRenderer.removeListener(channel, listener)
+}
 
-contextBridge.exposeInMainWorld("electron", {
+contextBridge.exposeInMainWorld('electron', {
   app: {
-    close: () => ipcRenderer.send("close"),
+    close: () => ipcRenderer.send('close'),
   },
   ipcRenderer: {
     send,
@@ -31,4 +32,4 @@ contextBridge.exposeInMainWorld("electron", {
     once,
     removeEventListener,
   },
-});
+})

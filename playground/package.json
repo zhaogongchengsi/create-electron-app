@@ -6,10 +6,10 @@
     "dev": "cea dev",
     "build": "cea dev"
   },
-  "devDependencies": {
-    "@zzhaon/create-electron-app": "workspace:^"
-  },
   "dependencies": {
     "electron": "^26.1.0"
+  },
+  "devDependencies": {
+    "@zzhaon/create-electron-app": "workspace:^"
   }
 }

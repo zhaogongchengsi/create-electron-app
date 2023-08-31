@@ -27,5 +27,5 @@ dist-ssr
 .app/**/*
 dist/**/*
 releases/**/*
-`.trim();
-};
+`.trim()
+}

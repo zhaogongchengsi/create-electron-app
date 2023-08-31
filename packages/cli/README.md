@@ -50,44 +50,44 @@ npm create vite@latest
 ```ts
 // index.ts  You can freely choose ts or js
 
-import { BrowserWindow, app } from "electron";
-import { resolve } from "path";
+import { resolve } from 'node:path'
+import { BrowserWindow, app } from 'electron'
 
-let win: BrowserWindow | undefined = undefined;
+let win: BrowserWindow | undefined
 
-const { loadUrl, mode, preload } = import.meta.env; // Get data from environment variables
+const { loadUrl, mode, preload } = import.meta.env // Get data from environment variables
 
-const getPath = (path: string) => {
-  return resolve(__dirname, path);
-};
+function getPath(path: string) {
+  return resolve(__dirname, path)
+}
 
-const createWindow = () => {
+function createWindow() {
   win = new BrowserWindow({
     width: 1200,
     height: 800,
-    icon: getPath("public/icon.png"), // public The static resource folder you set up
+    icon: getPath('public/icon.png'), // public The static resource folder you set up
     webPreferences: {
       nodeIntegration: true,
       preload: preload && getPath(preload),
     },
-  });
+  })
 
-  if (mode === "production") {
-    win.loadFile(loadUrl); // index.html
-  } else {
-    win.loadURL(loadUrl); // http:localhost:3000  vite server url
-  }
-};
+  if (mode === 'production')
+    win.loadFile(loadUrl) // index.html
+  else
+    win.loadURL(loadUrl) // http:localhost:3000  vite server url
+
+}
 
 app
   .whenReady()
   .then(() => {
-    createWindow();
+    createWindow()
 
     // current environment
-    mode === "development" && win?.webContents.openDevTools();
+    mode === 'development' && win?.webContents.openDevTools()
   })
-  .catch(console.error);
+  .catch(console.error)
 ```
 
 3. modify the package.json file

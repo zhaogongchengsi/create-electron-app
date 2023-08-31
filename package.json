@@ -1,34 +1,32 @@
 {
   "name": "create-electron-app",
+  "type": "module",
   "version": "1.0.0",
   "description": "",
+  "author": "",
+  "license": "ISC",
+  "keywords": [],
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "docs": "vitepress dev docs",
     "docs-build": "vitepress build docs",
     "docs-serve": "vitepress serve docs",
     "build": "unbuild",
-    "dev": "unbuild --stub"
+    "dev": "unbuild --stub",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "build": {
     "appId": "123123"
   },
   "devDependencies": {
+    "@antfu/eslint-config": "^0.41.0",
     "@rollup/plugin-commonjs": "^22.0.2",
     "@rollup/plugin-node-resolve": "^13.3.0",
     "app-builder-lib": "23.6.0",
-    "cross-env": "^7.0.3",
-    "rollup": "^2.78.1",
-    "rollup-plugin-typescript2": "^0.34.1",
+    "eslint": "^8.48.0",
     "unbuild": "^0.8.11",
     "vitepress": "^1.0.0-alpha.19",
     "vue": "^3.2.40"
-  },
-  "dependencies": {
-    "cos-nodejs-sdk-v5": "^2.11.12"
   }
 }

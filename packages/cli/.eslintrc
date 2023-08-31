@@ -1,0 +1,7 @@
+{
+  "ignorePatterns": [
+    "dist/",
+    "hooks/",
+  ],
+  "extends": "@antfu"
+}

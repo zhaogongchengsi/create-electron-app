@@ -1,15 +1,15 @@
-import { BrowserWindow, app } from "electron";
-import { resolve } from "path";
+import { resolve } from 'node:path'
+import { BrowserWindow, app } from 'electron'
 
-let win: BrowserWindow | undefined = undefined;
+let win: BrowserWindow | undefined
 
-const { loadUrl, mode, preload } = import.meta.env;
+const { loadUrl, mode, preload } = import.meta.env
 
-const getPath = (path: string) => {
-  return resolve(__dirname, path);
-};
+function getPath(path: string) {
+  return resolve(__dirname, path)
+}
 
-const createWindow = () => {
+function createWindow() {
   win = new BrowserWindow({
     width: 1200,
     height: 800,
@@ -17,19 +17,18 @@ const createWindow = () => {
       nodeIntegration: true,
       preload: preload && getPath(preload),
     },
-  });
+  })
 
-  if (mode === "production") {
-    win.loadFile(loadUrl);
-  } else {
-    win.loadURL(loadUrl);
-  }
-};
+  if (mode === 'production')
+    win.loadFile(loadUrl)
+  else
+    win.loadURL(loadUrl)
+}
 
 app
   .whenReady()
   .then(() => {
-    createWindow();
-    mode === "development" && win?.webContents.openDevTools();
+    createWindow()
+    mode === 'development' && win?.webContents.openDevTools()
   })
-  .catch(console.error);
+  .catch(console.error)

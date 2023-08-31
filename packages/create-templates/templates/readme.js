@@ -1,9 +1,9 @@
-module.exports = function createReadme({ appName = "", description = "" }) {
+module.exports = function createReadme({ appName = '', description = '' }) {
   return `
 # ${appName}
 
 ## description
 
 ${description}
-`.trim();
-};
+`.trim()
+}

@@ -15,7 +15,7 @@ interface ElectronAssets {
 **使用示例:**
 
 ```js
-const createWindow = () => {
+function createWindow() {
   win = new BrowserWindow({
     width: 1200,
     height: 800,
@@ -24,14 +24,14 @@ const createWindow = () => {
       preload:
         electronAssets.preload && resolve(__dirname, electronAssets.preload),
     },
-  });
+  })
 
-  if (electronAssets.mode === "production") {
-    win.loadFile(electronAssets.loadUrl);
-  } else {
-    win.loadURL(electronAssets.loadUrl);
-  }
-};
+  if (electronAssets.mode === 'production')
+    win.loadFile(electronAssets.loadUrl)
+  else
+    win.loadURL(electronAssets.loadUrl)
+
+}
 ```
 
 ## mode

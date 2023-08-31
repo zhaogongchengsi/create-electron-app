@@ -4,5 +4,5 @@
     "strict": false,
     "declaration": false,
     "resolveJsonModule": true
-  },
+  }
 }

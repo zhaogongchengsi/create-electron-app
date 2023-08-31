@@ -2,31 +2,31 @@
   "name": "create-cea-app",
   "version": "0.2.0",
   "description": "Create a basic electron app",
+  "author": "zhaozunhong",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zhaogongchengsi/create-electron-app.git",
+    "directory": "packages/create-templates"
+  },
+  "keywords": [
+    "electron",
+    "create-electron-app"
+  ],
   "main": "index.js",
   "typs": "module",
   "bin": {
     "ca": "index.js",
     "cea-app": "index.js"
   },
-  "scripts": {
-    "update": "npm publish"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/zhaogongchengsi/create-electron-app.git",
-    "directory": "packages/create-templates"
-  },
   "files": [
     "index.js",
     "templates/*",
     "util.js"
   ],
-  "keywords": [
-    "electron",
-    "create-electron-app"
-  ],
-  "author": "zhaozunhong",
-  "license": "ISC",
+  "scripts": {
+    "update": "npm publish"
+  },
   "dependencies": {
     "cross-env": "^7.0.3",
     "prompts": "^2.4.2"

@@ -33,16 +33,16 @@ npm create vite@latest
 ```js
 // index.js
 
-import { BrowserWindow, app } from "electron";
-import { resolve } from "path";
+import { resolve } from 'node:path'
+import { BrowserWindow, app } from 'electron'
 
-let win = undefined;
+let win
 
-const getPath = (path: string) => {
-  return resolve(__dirname, path);
-};
+function getPath(path: string) {
+  return resolve(__dirname, path)
+}
 
-const createWindow = () => {
+function createWindow() {
   win = new BrowserWindow({
     width: 1200,
     height: 800,
@@ -50,22 +50,22 @@ const createWindow = () => {
       nodeIntegration: true,
       preload: electronAssets.preload && getPath(electronAssets.preload),
     },
-  });
+  })
 
-  if (electronAssets.mode === "production") {
-    win.loadFile(electronAssets.loadUrl);
-  } else {
-    win.loadURL(electronAssets.loadUrl);
-  }
-};
+  if (electronAssets.mode === 'production')
+    win.loadFile(electronAssets.loadUrl)
+  else
+    win.loadURL(electronAssets.loadUrl)
+
+}
 
 app
   .whenReady()
   .then(() => {
-    createWindow();
-    win?.webContents.openDevTools();
+    createWindow()
+    win?.webContents.openDevTools()
   })
-  .catch(console.error);
+  .catch(console.error)
 ```
 
 ### 3. 修改 package.json

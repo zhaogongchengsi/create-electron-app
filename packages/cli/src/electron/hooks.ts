@@ -1,14 +1,14 @@
-import { appendFile } from "fs/promises";
-import { resolve } from "path";
-import { fileURLToPath } from "url";
+import { appendFile } from 'node:fs/promises'
+import { resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
-const getHookFilePath = (name: string) => {
-  return resolve(fileURLToPath(import.meta.url), `../../hooks/${name}`);
-};
+function getHookFilePath(name: string) {
+  return resolve(fileURLToPath(import.meta.url), `../../hooks/${name}`)
+}
 
-const division = (length: number = 20) => {
-  return Array(length).fill("\n").join("");
-};
+function division(length: number = 20) {
+  return Array(length).fill('\n').join('')
+}
 
 const code = `
   const electron = require("electron");
@@ -16,13 +16,13 @@ const code = `
   electron.app.on("will-quit", () => {
     process.send(closeId);
   });
-`;
+`
 
 export async function jnjectHookCode(file: string) {
   // const hook = getHookFilePath("restare.js");
   // const indexCode = await readFile(hook);
   return await appendFile(
     file,
-    `${division()};(async function () { ${code} })();`
-  );
+    `${division()};(async function () { ${code} })();`,
+  )
 }

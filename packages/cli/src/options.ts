@@ -1,78 +1,74 @@
-import {CeaConfig} from "./config";
-import { parse } from 'path'
-import {RspackOptions} from "@rspack/core";
+import { parse } from 'node:path'
+import type { RspackOptions } from '@rspack/core'
+import type { CeaConfig } from './config'
 
 export enum Target {
-    main= 'electron-main',
-    preload = 'electron-preload'
+  main = 'electron-main',
+  preload = 'electron-preload',
 }
 
-function createCommonOption (config: Required<CeaConfig>) :RspackOptions {
-    const { mode, root } = config
-    const devtool = "source-map"
+function createCommonOption(config: Required<CeaConfig>): RspackOptions {
+  const { mode, root } = config
+  const devtool = 'source-map'
 
-    return {
-        mode,
-        context: root,
-        builtins: {
-            emotion: {
-                sourceMap: true
-            }
-        },
-        devtool
-    }
+  return {
+    mode,
+    context: root,
+    builtins: {
+      emotion: {
+        sourceMap: true,
+      },
+    },
+    devtool,
+  }
 }
 
-function createInputAndOutput (config: Required<CeaConfig>, t: Target) :RspackOptions {
+function createInputAndOutput(config: Required<CeaConfig>, t: Target): RspackOptions {
+  const { output: path, main, preload, mode } = config
+  const watch = mode === 'development'
+  // const watch = true
 
-    const { output: path, main, preload, mode  } = config
-    const watch = mode === "development"
-    // const watch = true
+  let entry = main
 
-    let entry = main
+  if (t === Target.main)
+    entry = main
+  else
+    entry = preload
 
-    if (t === Target.main) {
-        entry = main
-    } else {
-        entry = preload
-    }
+  const { name } = parse(entry)
 
-    const { name } = parse(entry)
-
-    return {
-        entry,
-        output: {
-            filename: `${name}.js`,
-            path
-        },
-        watch,
-        target: t,
-    }
+  return {
+    entry,
+    output: {
+      filename: `${name}.js`,
+      path,
+    },
+    watch,
+    target: t,
+  }
 }
 
-export function createMultiCompilerOptions (config: Required<CeaConfig>) :RspackOptions[] {
+export function createMultiCompilerOptions(config: Required<CeaConfig>): RspackOptions[] {
+  if (!config.main)
+    throw new Error('Electron main thread file is required')
 
-    if (!config.main) {
-        throw new Error(`Electron main thread file is required`)
-    }
+  const commonOptions = createCommonOption(config)
+  const mainOptions = createInputAndOutput(config, Target.main)
 
-    const commonOptions = createCommonOption(config)
-    const mainOptions = createInputAndOutput(config, Target.main)
+  const multiOptions: RspackOptions[] = [
+    {
+      ...commonOptions,
+      ...mainOptions,
+    },
+  ]
 
-    const multiOptions :RspackOptions[] = [
-        {
-            ...commonOptions,
-            ...mainOptions
-        }
-    ]
+  if (config.preload) {
+    const preloadOptions = createInputAndOutput(config, Target.preload)
+    multiOptions.push({
+      ...commonOptions,
+      ...preloadOptions,
+    })
+  }
 
-    if (config.preload) {
-        const preloadOptions = createInputAndOutput(config, Target.preload)
-        multiOptions.push({
-            ...commonOptions,
-            ...preloadOptions
-        })
-    }
-
-    return multiOptions
+  return multiOptions
 }

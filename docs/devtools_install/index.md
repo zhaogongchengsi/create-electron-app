@@ -23,15 +23,15 @@ npm install @zzhaon/devtools-install
 
 ```ts
 // index.ts
-import { devtoolsInstall } from "@zzhaon/devtools-install";
+import { devtoolsInstall } from '@zzhaon/devtools-install'
 
 devtoolsInstall([
   {
-    name: "vue",
-    type: "edge",
-    id: "sadfijoaigoerigerwgergi", // id
+    name: 'vue',
+    type: 'edge',
+    id: 'sadfijoaigoerigerwgergi', // id
   },
-]);
+])
 ```
 
 ![extensions id 示意图](/extensions.png)
