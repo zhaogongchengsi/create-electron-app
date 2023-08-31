@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "cea dev",
-    "build": "cea dev"
+    "build": "cea build"
   },
   "dependencies": {
     "electron": "^26.1.0"

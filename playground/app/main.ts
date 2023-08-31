@@ -1,5 +1,11 @@
 import { BrowserWindow, app } from 'electron'
 
+const a = import.meta.env
+
+const b = abc
+
+console.log(a, b)
+
 function createWindow() {
   const win = new BrowserWindow({
     width: 800,

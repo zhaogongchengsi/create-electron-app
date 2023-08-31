@@ -62,6 +62,9 @@ importers:
       pathe:
         specifier: ^1.1.1
         version: registry.npmmirror.com/pathe@1.1.1
+      rspack-plugin-virtual-module:
+        specifier: ^0.1.11
+        version: registry.npmmirror.com/rspack-plugin-virtual-module@0.1.11
       user:
         specifier: ^0.0.0
         version: registry.npmmirror.com/user@0.0.0
@@ -5572,6 +5575,17 @@ packages:
       universalify: registry.npmmirror.com/universalify@2.0.0
     dev: true
 
+  registry.npmmirror.com/fs-extra@11.1.1:
+    resolution: {integrity: sha512-MGIE4HOvQCeUCzmlHs0vXpih4ysz4wg9qiSAu6cd42lVwPbTM1TjV7RusoyQqMmk/95gdQZX72u+YW+c3eEpFQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/fs-extra/-/fs-extra-11.1.1.tgz}
+    name: fs-extra
+    version: 11.1.1
+    engines: {node: '>=14.14'}
+    dependencies:
+      graceful-fs: registry.npmmirror.com/graceful-fs@4.2.10
+      jsonfile: registry.npmmirror.com/jsonfile@6.1.0
+      universalify: registry.npmmirror.com/universalify@2.0.0
+    dev: false
+
   registry.npmmirror.com/fs-extra@8.1.0:
     resolution: {integrity: sha512-yhlQgA6mnOJUKOsRUFsgJdQCvkKhcz8tlZG5HBQfReYZy46OwLcY+Zia0mtdHsOo9y/hP+CxMN0TU9QxoOtG4g==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/fs-extra/-/fs-extra-8.1.0.tgz}
     name: fs-extra
@@ -6438,7 +6452,6 @@ packages:
       universalify: registry.npmmirror.com/universalify@2.0.0
     optionalDependencies:
       graceful-fs: registry.npmmirror.com/graceful-fs@4.2.10
-    dev: true
 
   registry.npmmirror.com/keyv@3.1.0:
     resolution: {integrity: sha512-9ykJ/46SN/9KPM/sichzQ7OvXyGDYKGTaDlKMGCAlg2UK8KRy4jb0d8sFc+0Tt0YYnThq8X2RZgCg74RPxgcVA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/keyv/-/keyv-3.1.0.tgz}
@@ -7674,6 +7687,14 @@ packages:
       fsevents: registry.npmmirror.com/fsevents@2.3.2
     dev: true
 
+  registry.npmmirror.com/rspack-plugin-virtual-module@0.1.11:
+    resolution: {integrity: sha512-dD7vo8PY3sG7nM1JAuytJ4XTXqALKUDjISFaxFyIHcSvUBKu8nmJf9TaRq1htS+bsXujqkKhKR859k0/zTHwxQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/rspack-plugin-virtual-module/-/rspack-plugin-virtual-module-0.1.11.tgz}
+    name: rspack-plugin-virtual-module
+    version: 0.1.11
+    dependencies:
+      fs-extra: registry.npmmirror.com/fs-extra@11.1.1
+    dev: false
+
   registry.npmmirror.com/run-parallel@1.2.0:
     resolution: {integrity: sha512-5l4VyZR86LZ/lDxZTR6jqL8AFE2S0IFLMP26AbjsLVADxHdhB/c0GUsH+y39UfCi3dzz8OlQuPmnaJOMoDHQBA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/run-parallel/-/run-parallel-1.2.0.tgz}
     name: run-parallel
@@ -8427,7 +8448,6 @@ packages:
     name: universalify
     version: 2.0.0
     engines: {node: '>= 10.0.0'}
-    dev: true
 
   registry.npmmirror.com/untyped@0.5.0:
     resolution: {integrity: sha512-2Sre5A1a7G61bjaAKZnSFaVgbJMwwbbYQpJFH69hAYcDfN7kIaktlSphS02XJilz4+/jR1tsJ5MHo1oMoCezxg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/untyped/-/untyped-0.5.0.tgz}
