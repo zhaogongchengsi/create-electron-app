@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "cea dev",
-    "build": "cea build"
+    "build": "cea build",
+    "package": "electron-builder build -w --projectDir ./dist"
   },
   "dependencies": {
     "@unocss/reset": "^0.55.4",
