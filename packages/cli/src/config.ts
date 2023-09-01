@@ -9,7 +9,7 @@ export interface CeaConfig {
   html?: string
   output?: string
   root?: string
-  mode: Mode
+  mode?: Mode
 }
 
 export type UltimatelyCeaConfig = Required<CeaConfig>
@@ -27,7 +27,7 @@ export async function loadConfig() {
       preload: undefined,
       html: undefined,
       output: '.app',
-      mode: 'production',
+      mode: process.env.NODE_ENV || 'production',
     },
   })
 }
