@@ -4,6 +4,12 @@ import type { BannerConditions } from '@rspack/core'
 
 type Mode = 'production' | 'development' | 'none'
 
+export interface AppConfig {
+  output?: string
+  name?: string
+  appId?: string
+}
+
 export interface CeaConfig {
   main?: string
   preload?: string
@@ -21,6 +27,9 @@ const CONFIG_NAME = 'cea'
 
 export async function loadConfig() {
   const cwd = process.cwd()
+
+  const isProduction = process.env.NODE_ENV === 'production'
+
   return await lc<CeaConfig>({
     cwd,
     name: CONFIG_NAME,
@@ -28,8 +37,8 @@ export async function loadConfig() {
       root: cwd,
       main: undefined,
       preload: undefined,
-      html: undefined,
-      output: '.app',
+      html: 'index.html',
+      output: isProduction ? './dist/app' : '.app',
       mode: process.env.NODE_ENV || 'production',
       appData: undefined,
       banner: '',

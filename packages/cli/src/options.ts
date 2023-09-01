@@ -25,7 +25,7 @@ function createCommonOption(config: UltimatelyCeaConfig, injectOptions: InjectOp
     context: root,
     builtins: {
       emotion: {
-        sourceMap: true,
+        sourceMap: mode === 'development',
       },
       define: {
         'import.meta.env': JSON.stringify({

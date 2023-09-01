@@ -38,7 +38,9 @@ export async function runDev() {
   const address = httpServer!.address()! as AddressInfo
   const loadUrl = `http://localhost:${address.port}`
 
-  const opt = createMultiCompilerOptions(_config, { app: { loadUrl, preloadUrl: preloadFile, mainUrl: mainFile } })
+  const injectOptions = { app: { loadUrl, preloadUrl: preloadFile } }
+
+  const opt = createMultiCompilerOptions(_config, injectOptions)
   const compilers = createMultiCompiler(opt)
 
   consola.start(`App run in : ${loadUrl}`)
@@ -47,8 +49,6 @@ export async function runDev() {
   const watchHandler = debounce((err: Error | null, _: MultiStats | undefined) => {
     if (err)
       consola.error(err)
-
-    consola.log(count)
 
     if (count === 0)
       run([mainFile])

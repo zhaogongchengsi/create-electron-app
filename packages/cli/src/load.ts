@@ -1,5 +1,5 @@
 import { createRequire } from 'node:module'
-import type { build, createServer } from 'vite'
+import type { build, createServer, resolveConfig } from 'vite'
 import type { UltimatelyCeaConfig } from './config'
 
 const VITE_VERSION = '4.4.9'
@@ -7,6 +7,7 @@ const VITE_VERSION = '4.4.9'
 export interface ViteModule {
   createServer: typeof createServer
   build: typeof build
+  resolveConfig: typeof resolveConfig
 }
 
 export function loadVite(config: UltimatelyCeaConfig): ViteModule {
