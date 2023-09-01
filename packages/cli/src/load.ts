@@ -9,8 +9,14 @@ export interface ViteModule {
   build: typeof build
 }
 
-export async function loadVite(config: UltimatelyCeaConfig): Promise<ViteModule> {
+export function loadVite(config: UltimatelyCeaConfig): ViteModule {
   const require = createRequire(config.root)
   const vite = require('vite')
   return vite
+}
+
+export function loadElectron(config: UltimatelyCeaConfig) {
+  const require = createRequire(config.root)
+  const electron = require('electron')
+  return electron as string
 }

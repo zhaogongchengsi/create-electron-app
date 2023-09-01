@@ -8,7 +8,8 @@ import { parse, resolve } from 'pathe'
 import { loadConfig } from '../config'
 import type { CeaConfig } from '../config'
 import { createMultiCompilerOptions } from '../options'
-import { loadVite } from '../vite'
+import { loadVite } from '../load'
+import { createAppRuning } from '../electron'
 
 const DEV_MODE = 'development'
 
@@ -19,7 +20,9 @@ export async function runDev() {
 
   const { root, output, main, preload } = _config
 
-  const { createServer } = await loadVite(_config)
+  const { createServer } = loadVite(_config)
+
+  const { run, restart } = createAppRuning(_config)
 
   const server = await createServer({
     root: _config.root,
@@ -40,13 +43,19 @@ export async function runDev() {
 
   consola.start(`App run in : ${loadUrl}`)
 
+  let count = 0
   const watchHandler = debounce((err: Error | null, _: MultiStats | undefined) => {
     if (err)
       consola.error(err)
 
-    consola.log('Start App ...')
-    //
-    // console.log(mainFile)
+    consola.log(count)
+
+    if (count === 0)
+      run([mainFile])
+    else
+      restart([mainFile])
+
+    count += 1
   }, 300, { leading: true })
 
   compilers.watch({ ignored: /node_modules/ }, watchHandler)

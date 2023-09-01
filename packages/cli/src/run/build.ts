@@ -1,7 +1,7 @@
 import process from 'node:process'
 import type { UltimatelyCeaConfig } from '../config'
 import { loadConfig } from '../config'
-import { loadVite } from '../vite'
+import { loadVite } from '../load'
 
 const BUILD_MODE = 'production'
 export async function runBuild() {
