@@ -9,8 +9,13 @@ export async function runBuild() {
   const { config } = await loadConfig()
   const _config = config as UltimatelyCeaConfig
 
-  const vite = await loadVite(_config)
+  const { build } = await loadVite(_config)
 
+  const res = await build({
+    root: _config.root,
+  })
+
+  console.log(res)
   // const opt = createMultiCompilerOptions(_config)
   // const compilers = createMultiCompiler(opt)
   //
