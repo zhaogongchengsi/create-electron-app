@@ -1,5 +1,6 @@
 import process from 'node:process'
 import { loadConfig as lc } from 'c12'
+import type { BannerConditions } from '@rspack/core'
 
 type Mode = 'production' | 'development' | 'none'
 
@@ -10,6 +11,8 @@ export interface CeaConfig {
   output?: string
   root?: string
   mode?: Mode
+  appData?: Record<string, any>
+  banner?: BannerConditions
 }
 
 export type UltimatelyCeaConfig = Required<CeaConfig>
@@ -28,6 +31,8 @@ export async function loadConfig() {
       html: undefined,
       output: '.app',
       mode: process.env.NODE_ENV || 'production',
+      appData: undefined,
+      banner: '',
     },
   })
 }

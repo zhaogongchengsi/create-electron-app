@@ -1,16 +1,24 @@
-import { parse } from 'node:path'
-import type { RspackOptions } from '@rspack/core'
-import type { CeaConfig } from './config'
-import { plugins } from './plugins'
+import { normalize, parse } from 'node:path'
+import type { Plugins, RspackOptions } from '@rspack/core'
+import type { UltimatelyCeaConfig } from './config'
+import { plugins as commonPlugins } from './plugins'
 
 export enum Target {
   main = 'electron-main',
   preload = 'electron-preload',
 }
 
-function createCommonOption(config: Required<CeaConfig>): RspackOptions {
-  const { mode, root } = config
+export interface InjectOptions {
+  app?: Record<string, any>
+  plugins?: Plugins
+}
+
+function createCommonOption(config: UltimatelyCeaConfig, injectOptions: InjectOptions = {}): RspackOptions {
+  const { mode, root, appData } = config
   const devtool = 'source-map'
+  const { app, plugins: jp } = injectOptions
+
+  const plugins = [...commonPlugins, ...(jp || [])]
 
   return {
     mode,
@@ -20,8 +28,16 @@ function createCommonOption(config: Required<CeaConfig>): RspackOptions {
         sourceMap: true,
       },
       define: {
-        'import.meta.env': JSON.stringify({ a: 1, b: 2 }),
-        'abc': JSON.stringify('const log = () => console.log(\'abc\')'),
+        'import.meta.env': JSON.stringify({
+          MODE: mode,
+          PROD: mode === 'production',
+          DEV: mode === 'development',
+          root: normalize(root),
+        }),
+        'import.meta.app': JSON.stringify({
+          ...app,
+          data: appData,
+        }),
       },
     },
     plugins,
@@ -29,7 +45,7 @@ function createCommonOption(config: Required<CeaConfig>): RspackOptions {
   }
 }
 
-function createInputAndOutput(config: Required<CeaConfig>, t: Target): RspackOptions {
+function createInputAndOutput(config: UltimatelyCeaConfig, t: Target): RspackOptions {
   const { output: path, main, preload, mode } = config
   const watch = mode === 'development'
   // const watch = true
@@ -54,11 +70,11 @@ function createInputAndOutput(config: Required<CeaConfig>, t: Target): RspackOpt
   }
 }
 
-export function createMultiCompilerOptions(config: Required<CeaConfig>): RspackOptions[] {
+export function createMultiCompilerOptions(config: UltimatelyCeaConfig, injectOptions: InjectOptions = {}): RspackOptions[] {
   if (!config.main)
     throw new Error('Electron main thread file is required')
 
-  const commonOptions = createCommonOption(config)
+  const commonOptions = createCommonOption(config, injectOptions)
   const mainOptions = createInputAndOutput(config, Target.main)
 
   const multiOptions: RspackOptions[] = [

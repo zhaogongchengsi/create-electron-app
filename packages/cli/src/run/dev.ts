@@ -1,4 +1,5 @@
 import process from 'node:process'
+import type { AddressInfo } from 'node:net'
 import type { MultiStats } from '@rspack/core'
 import { createMultiCompiler } from '@rspack/core'
 import { debounce } from 'perfect-debounce'
@@ -16,7 +17,7 @@ export async function runDev() {
   const { config } = await loadConfig()
   const _config = config as Required<CeaConfig>
 
-  const { root, output, main } = _config
+  const { root, output, main, preload } = _config
 
   const { createServer } = await loadVite(_config)
 
@@ -27,13 +28,17 @@ export async function runDev() {
     },
   })
 
-  await server.listen()
+  const { httpServer } = await server.listen()
 
-  const opt = createMultiCompilerOptions(_config)
-  const compilers = createMultiCompiler(opt)
   const mainFile = resolve(root, output, `${parse(main).name}.js`)
+  const preloadFile = resolve(root, output, `${parse(preload).name}.js`)
+  const address = httpServer!.address()! as AddressInfo
+  const loadUrl = `http://localhost:${address.port}`
 
-  server.printUrls()
+  const opt = createMultiCompilerOptions(_config, { app: { loadUrl, preloadUrl: preloadFile, mainUrl: mainFile } })
+  const compilers = createMultiCompiler(opt)
+
+  consola.start(`App run in : ${loadUrl}`)
 
   const watchHandler = debounce((err: Error | null, _: MultiStats | undefined) => {
     if (err)

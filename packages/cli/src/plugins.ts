@@ -1,8 +1,8 @@
-import { RspackVirtualModulePlugin } from 'rspack-plugin-virtual-module'
+import type { Plugins } from '@rspack/core'
 
 // todo: 添加虚拟模块plugins
-export const plugins = [
-  new RspackVirtualModulePlugin({
-    contents: 'export default "Hello World";',
-  }),
+export const plugins: Plugins = [
+  // new RspackVirtualModulePlugin({
+  //   contents: 'export default "Hello World";',
+  // }),
 ]
