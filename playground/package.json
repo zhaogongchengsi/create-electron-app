@@ -7,9 +7,12 @@
     "build": "cea build"
   },
   "dependencies": {
-    "electron": "^26.1.0"
+    "electron": "^26.1.0",
+    "vue": "^3.3.4"
   },
   "devDependencies": {
-    "@zzhaon/create-electron-app": "workspace:^"
+    "@vitejs/plugin-vue": "^4.3.4",
+    "@zzhaon/create-electron-app": "workspace:^",
+    "vite": "^4.4.9"
   }
 }

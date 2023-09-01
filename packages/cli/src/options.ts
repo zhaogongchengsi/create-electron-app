@@ -2,6 +2,7 @@ import { parse } from 'node:path'
 import type { RspackOptions } from '@rspack/core'
 import type { CeaConfig } from './config'
 import { plugins } from './plugins'
+
 export enum Target {
   main = 'electron-main',
   preload = 'electron-preload',
@@ -19,11 +20,11 @@ function createCommonOption(config: Required<CeaConfig>): RspackOptions {
         sourceMap: true,
       },
       define: {
-        "import.meta.env": JSON.stringify({a: 1, b: 2}),
-          "abc": JSON.stringify(`const log = () => console.log('abc')`)
-      }
+        'import.meta.env': JSON.stringify({ a: 1, b: 2 }),
+        'abc': JSON.stringify('const log = () => console.log(\'abc\')'),
+      },
     },
-    plugins: plugins,
+    plugins,
     devtool,
   }
 }

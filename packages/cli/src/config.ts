@@ -12,6 +12,8 @@ export interface CeaConfig {
   mode: Mode
 }
 
+export type UltimatelyCeaConfig = Required<CeaConfig>
+
 const CONFIG_NAME = 'cea'
 
 export async function loadConfig() {
