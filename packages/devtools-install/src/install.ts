@@ -1,6 +1,6 @@
 import { createRequire } from 'node:module'
-import type { devtool } from '../types'
 import { getExtensionDirPath, searchExtension } from './extensionsPath'
+import type { devtool } from  './type'
 
 const _require = createRequire(__dirname)
 

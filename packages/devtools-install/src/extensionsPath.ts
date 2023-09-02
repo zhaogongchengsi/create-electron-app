@@ -1,7 +1,7 @@
 import os from 'node:os'
 import { join } from 'node:path'
 import { readdir } from 'node:fs/promises'
-import type { devtoolType } from '../types'
+import type { devtoolType } from './type'
 
 const systemPath = os.homedir()
 
