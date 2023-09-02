@@ -54,8 +54,8 @@ import { resolve } from 'node:path'
 import { BrowserWindow, app } from 'electron'
 
 let win: BrowserWindow | undefined
-
-const { loadUrl, mode, preload } = import.meta.env // Get data from environment variables
+const { PROD } = import.meta.env
+const { loadUrl, preloadUrl } = import.meta.app // Get data from environment variables
 
 function getPath(path: string) {
   return resolve(__dirname, path)
@@ -72,10 +72,7 @@ function createWindow() {
     },
   })
 
-  if (mode === 'production')
-    win.loadFile(loadUrl) // index.html
-  else
-    win.loadURL(loadUrl) // http:localhost:3000  vite server url
+  PROD ? win.loadFile(loadUrl) : win.loadURL(loadUrl) // http:localhost:3000  vite server url
 
 }
 
@@ -85,7 +82,7 @@ app
     createWindow()
 
     // current environment
-    mode === 'development' && win?.webContents.openDevTools()
+    !PROD && win?.webContents.openDevTools()
   })
   .catch(console.error)
 ```
@@ -101,7 +98,7 @@ app
   "version": "0.0.0",
   "main": "./index.ts",
   "script": {
-    "dev": "cea",
+    "dev": "cea dev",
     "build": "cea build"
   }
 }
@@ -133,65 +130,17 @@ Operate as directed
 
 # Configuration
 
-- ### `main`
-  `string | {input:string, preload:string}` required
-  - `input` Main process entry file
-  - `preload` preload entry file
-- ### `vite`
-
-  `string | {input:string, preload:string}` required
-
-  Vite's configuration file path
-
-- ### `watch`
-
-  `boolean` default: true
-
-  Whether to restart the application when the main process file changes
-
-- ### `tempDirName`
-
-  `string` default: '.app'
-
-  Generate the name of the temporary run directory, based on the project root directory
-
-- ### `outDir`
-
-  `string` default: dist
-
-  The directory where the built js file is output
-
-- ### `appOutDir`
-
-  `string` default: 'releases'
-
-  The output directory of the application
-
-- ### `staticResource`
-
-  `string` default: ''
-
-  static resource folder, For example, the image icon script
-
-- ### debug
-
-  `{port: number} | boolean` default: `true`
-
-  Debug the configuration of the main thread
-
-- ### alias
-
-  `{string: string}` default: `{}`
-
-  Folder Alias, For example, #/index requires the full suffix #/index If js is #/src/index, it is unnecessary
-
-- ### electron
-  - #### warning
-    `boolean` defalut: `true`
-    Ignore the warning message of electron
-  - #### flags
-    `string[]` default: []
-    Customize some parameters of the [electric cli](https://www.electronjs.org/zh/docs/latest/api/command-line-switches)
+```ts
+export interface CeaConfig {
+  main: string
+  preload?: string
+  html?: string
+  output?: string
+  root?: string
+  mode?: Mode
+  appData?: Record<string, any>
+}
+```
 
 ## Environment variables and patterns
 
@@ -203,7 +152,7 @@ Environment variables are mounted on a `import.meta.env` object
 - `import.meta.env.mode` 应用运行的模式
   - `development` 开发模式
   - `production` 生产模式 (应用以打包)
-- `import.meta.preload` [Electron BrowserWindow.webPreferences.preload](https://www.electronjs.org/zh/docs/latest/api/context-bridge#exposing-node-global-symbols)
+- `import.meta.app.preload` [Electron BrowserWindow.webPreferences.preload](https://www.electronjs.org/zh/docs/latest/api/context-bridge#exposing-node-global-symbols)
 - `import.meta.env.DEV`: `{boolean}` Is it running in development mode?
 - `import.meta.env.PROD`: `{boolean}` Is it running in production mode?
 

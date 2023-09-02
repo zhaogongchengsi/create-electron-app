@@ -15,7 +15,7 @@
 
 Create electron app which provides modern build setup with no configuration required.
 
-- ⚡ esbuild + vite to speed up
+- ⚡ rspack + vite to speed up
 - ✨ Hot update
 - 💎 Minimal configuration
 
