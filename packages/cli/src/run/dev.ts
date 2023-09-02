@@ -9,7 +9,7 @@ import { loadConfig } from '../config'
 import type { CeaConfig } from '../config'
 import { createMultiCompilerOptions } from '../options'
 import { loadVite } from '../load'
-import { createAppRuning } from '../electron'
+import { createAppRunning } from '../electron'
 
 const DEV_MODE = 'development'
 
@@ -22,7 +22,7 @@ export async function runDev() {
 
   const { createServer } = loadVite(_config)
 
-  const { run, restart } = createAppRuning(_config)
+  const { run, restart } = createAppRunning(_config)
 
   const server = await createServer({
     root: _config.root,

@@ -1,11 +1,12 @@
 import process from 'node:process'
 import consola from 'consola'
 import { join, parse, relative } from 'pathe'
+import type { MultiRspackOptions, MultiStats } from '@rspack/core'
 import { createMultiCompiler } from '@rspack/core'
 import type { UltimatelyCeaConfig } from '../config'
 import { loadConfig } from '../config'
-import { loadVite } from '../load'
 import { createMultiCompilerOptions } from '../options'
+import { loadVite } from '../load'
 
 const BUILD_MODE = 'production'
 export async function runBuild() {
@@ -17,35 +18,37 @@ export async function runBuild() {
 
   consola.start('Start compilation')
 
-  // 如果 使用多页面模式将更改 build.rollupOptions.input
-  // see https://cn.vitejs.dev/guide/build.html#multi-page-app
-  // const viteConfig = await resolveConfig({ root: _config.root }, 'build', BUILD_MODE)
-
   const { root, output, main, preload } = _config
 
-  const viteOutdir = join(root, 'dist')
-  const appOutdir = join(root, output)
-  const htmlFile = join(viteOutdir, 'index.html')
-  const mainFile = join(appOutdir, `${parse(main).name}.js`)
-  const preloadFile = join(appOutdir, `${parse(preload).name}.js`)
+  const viteOutDir = join(root, 'dist')
+  const appOutDir = join(root, output)
+  const htmlFile = join(viteOutDir, 'index.html')
+  const mainFile = join(appOutDir, `${parse(main).name}.js`)
+  const preloadFile = join(appOutDir, `${parse(preload).name}.js`)
 
   const loadUrl = relative(mainFile, htmlFile).substring(3)
   const preloadUrl = relative(mainFile, preloadFile).substring(3)
 
   const injectOptions = { app: { loadUrl, preloadUrl } }
 
-  await build({
-    root,
-  })
-
   const opt = createMultiCompilerOptions(_config, injectOptions)
-  const compilers = createMultiCompiler(opt)
 
-  compilers.run((err, stats) => {
-    if (err) {
-      consola.error(err)
-      return
-    }
-    consola.success('Compiled successfully')
+  // vite build
+  await build({ root })
+  // build app main
+  await compiler(opt)
+
+  consola.success('Compiled successfully')
+}
+
+function compiler(opt: MultiRspackOptions): Promise< MultiStats | undefined> {
+  const compilers = createMultiCompiler(opt)
+  return new Promise((resolve, reject) => {
+    compilers.run(async (err, stats) => {
+      if (err)
+        reject(err)
+      else
+        resolve(stats)
+    })
   })
 }

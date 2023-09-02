@@ -3,7 +3,7 @@ import { spawn } from 'node:child_process'
 import type { UltimatelyCeaConfig } from './config'
 import { loadElectron } from './load'
 
-export function createAppRuning(config: UltimatelyCeaConfig) {
+export function createAppRunning(config: UltimatelyCeaConfig) {
   const electron = loadElectron(config)
   if (!electron) {
     throw new Error(

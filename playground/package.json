@@ -5,14 +5,33 @@
   "scripts": {
     "dev": "cea dev",
     "build": "cea build",
-    "package": "electron-builder build -w --projectDir ./dist"
+    "package": "cea package"
+  },
+  "main": "./dist/app/main.js",
+  "build": {
+    "appId": "cea.example.app",
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ]
+    },
+    "files": [
+      "./dist/*",
+      "!./dist/**/*.{map}.{js,ts,md}"
+    ]
   },
   "dependencies": {
     "@unocss/reset": "^0.55.4",
-    "electron": "^26.1.0",
     "vue": "^3.3.4"
   },
   "devDependencies": {
+    "electron": "^26.1.0",
     "@vitejs/plugin-vue": "^4.3.4",
     "@zzhaon/create-electron-app": "workspace:^",
     "electron-builder": "^24.6.3",

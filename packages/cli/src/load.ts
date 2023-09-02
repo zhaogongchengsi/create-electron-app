@@ -1,23 +1,26 @@
 import { createRequire } from 'node:module'
-import type { build, createServer, resolveConfig } from 'vite'
+import type vite from 'vite'
+import type electronBuilder from 'electron-builder'
 import type { UltimatelyCeaConfig } from './config'
 
-const VITE_VERSION = '4.4.9'
+export type ViteModule = typeof vite
+export type ElectronBuilderModule = typeof electronBuilder
 
-export interface ViteModule {
-  createServer: typeof createServer
-  build: typeof build
-  resolveConfig: typeof resolveConfig
-}
-
+const VITE_NAME = 'vite'
 export function loadVite(config: UltimatelyCeaConfig): ViteModule {
   const require = createRequire(config.root)
-  const vite = require('vite')
-  return vite
+  return require(VITE_NAME)
 }
 
+const ELECTRON_NAME = 'electron'
 export function loadElectron(config: UltimatelyCeaConfig) {
   const require = createRequire(config.root)
-  const electron = require('electron')
+  const electron = require(ELECTRON_NAME)
   return electron as string
+}
+
+const ELECTRON_BUILDER_NAME = 'electron-builder'
+export function loadElectronBuilder(config: UltimatelyCeaConfig): ElectronBuilderModule {
+  const require = createRequire(config.root)
+  return require(ELECTRON_BUILDER_NAME)
 }

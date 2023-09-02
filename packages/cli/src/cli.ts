@@ -3,6 +3,7 @@
 import { defineCommand, runMain } from 'citty'
 import dev from './commands/dev'
 import build from './commands/build'
+import packageCli from './commands/package'
 
 const main = defineCommand({
   meta: {
@@ -13,6 +14,7 @@ const main = defineCommand({
   subCommands: {
     dev,
     build,
+    package: packageCli,
   },
 })
 
