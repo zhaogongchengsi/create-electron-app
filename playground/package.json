@@ -22,8 +22,8 @@
       ]
     },
     "files": [
-      "./dist/*",
-      "!./dist/**/*.{map}.{js,ts,md}"
+      "dist/**/*",
+      "!./dist/**/*.map.{js,ts,md}"
     ]
   },
   "dependencies": {
