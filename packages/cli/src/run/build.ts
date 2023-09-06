@@ -20,6 +20,7 @@ export async function runBuild() {
 
   const { root, output, main, preload } = _config
 
+  // todo: 获取页面
   const viteOutDir = join(root, 'dist')
   const appOutDir = join(root, output)
   const htmlFile = join(viteOutDir, 'index.html')

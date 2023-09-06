@@ -8,8 +8,10 @@ export enum Target {
   preload = 'electron-preload',
 }
 
+// todo: pages
+export type Pages = Record<string, string>
 export interface InjectOptions {
-  app?: Record<string, any>
+  app?: Record<string, any> & Pages
   plugins?: Plugins
 }
 
