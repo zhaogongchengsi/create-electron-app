@@ -1,7 +1,8 @@
 import process from 'node:process'
 import type { UltimatelyCeaConfig } from '../config'
 import { loadConfig } from '../config'
-import { builder } from '../builder'
+import { loadVite } from '../load'
+import { getPageOutDir } from '../vite'
 
 const BUILD_MODE = 'production'
 export async function runPackage() {
@@ -9,5 +10,9 @@ export async function runPackage() {
   const { config } = await loadConfig()
   const _config = config as UltimatelyCeaConfig
 
-  await builder(_config)
+  const { resolveConfig } = loadVite(_config)
+
+  const viteConfig = await resolveConfig({ root: _config.root }, 'build', 'build')
+  const res = getPageOutDir(viteConfig)
+  console.log(res)
 }

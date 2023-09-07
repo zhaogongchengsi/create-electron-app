@@ -1,22 +1,30 @@
 import type { ResolvedConfig } from 'vite'
-import { resolve as _resolve } from 'pathe'
+import { resolve as _resolve, normalize } from 'pathe'
 
 // This code comes from the vite source code
-export function getInputOutDir(config: ResolvedConfig) {
+export function getPageOutDir(config: ResolvedConfig) {
   const options = config.build
-  const libOptions = options.lib
+  const root = normalize(config.root)
 
-  const resolve = (p: string) => _resolve(config.root, p)
-
-  const input = libOptions
-    ? options.rollupOptions?.input || (typeof libOptions.entry === 'string'
-      ? resolve(libOptions.entry)
-      : Array.isArray(libOptions.entry)
-        ? libOptions.entry.map(resolve)
-        : Object.fromEntries(Object.entries(libOptions.entry).map(([alias, file]) => [alias, resolve(file)])))
-    : typeof options.ssr === 'string'
-      ? resolve(options.ssr)
-      : options.rollupOptions?.input || resolve('index.html')
+  const resolve = (p: string) => normalize(_resolve(root, p))
 
   const outDir = resolve(options.outDir)
+  let pages: string | Record<string, string> = 'index.html'
+  const input = options.rollupOptions.input
+
+  if (typeof input === 'object') {
+    pages = {}
+    Object.entries(input).forEach(([name, path]) => {
+      if (path.endsWith('.html'))
+        Reflect.set(pages as Record<string, string>, name, resolve(path).replace(root, ''))
+    })
+  }
+
+  if (typeof input === 'string' && input.endsWith('.html'))
+    pages = resolve(input).replace(root, '')
+
+  return {
+    outDir,
+    pages,
+  }
 }
