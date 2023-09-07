@@ -1,18 +1,18 @@
 import { BrowserWindow, app } from 'electron'
 
 const { PROD } = import.meta.env
-const { loadUrl, preloadUrl } = import.meta.app
+const { baseUrl, pages } = import.meta.app
 
 function createWindow() {
   const win = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
-      preload: preloadUrl
+      // preload: preloadUrl
     },
   })
 
-  PROD ? win.loadFile(loadUrl) : win.loadURL(loadUrl)
+  PROD ? win.loadFile(baseUrl + pages) : win.loadURL(baseUrl + pages)
 }
 
 app.whenReady().then(() => {
