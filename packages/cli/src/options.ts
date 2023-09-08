@@ -1,4 +1,4 @@
-import { normalize, parse } from 'node:path'
+import { parse } from 'node:path'
 import type { Plugins, RspackOptions } from '@rspack/core'
 import type { UltimatelyCeaConfig } from './config'
 import { plugins as commonPlugins } from './plugins'
@@ -9,9 +9,15 @@ export enum Target {
 }
 
 // todo: pages
-export type Pages = Record<string, string>
+export type Page = Record<string, string> | string
+
+export interface App {
+  page: Page
+  baseUrl?: string
+  preloadUrl?: string
+}
 export interface InjectOptions {
-  app?: Record<string, any> & Pages
+  app?: App
   plugins?: Plugins
 }
 
@@ -22,19 +28,21 @@ function createCommonOption(config: UltimatelyCeaConfig, injectOptions: InjectOp
 
   const plugins = [...commonPlugins, ...(jp || [])]
 
+  const isDev = mode === 'development'
+  const isProd = mode === 'production'
+
   return {
     mode,
     context: root,
     builtins: {
       emotion: {
-        sourceMap: mode === 'development',
+        sourceMap: isDev,
       },
       define: {
         'import.meta.env': JSON.stringify({
           MODE: mode,
-          PROD: mode === 'production',
-          DEV: mode === 'development',
-          root: normalize(root),
+          PROD: isDev,
+          DEV: isProd,
         }),
         'import.meta.app': JSON.stringify({
           ...app,

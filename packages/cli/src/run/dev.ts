@@ -27,7 +27,7 @@ export async function runDev() {
   const { run, restart } = createAppRunning(_config)
   const { resolveConfig } = loadVite(_config)
 
-  const viteConfig = await resolveConfig({ root: _config.root }, 'build', 'build')
+  const viteConfig = await resolveConfig({ root: _config.root }, 'serve', DEV_MODE)
   const { page } = getPageOutDir(viteConfig)
 
   const server = await createServer({

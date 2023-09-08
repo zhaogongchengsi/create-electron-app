@@ -41,7 +41,7 @@ export async function loadConfig() {
       main: undefined,
       preload: undefined,
       html: 'index.html',
-      output: isProduction ? './dist/app' : '.app',
+      output: isProduction ? 'app' : '.app',
       mode: process.env.NODE_ENV || 'production',
       appData: undefined,
       banner: `${name}`,
