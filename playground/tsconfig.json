@@ -3,9 +3,7 @@
     "module": "es2022",
     "target": "ESNext",
     "sourceMap": true,
+    "moduleResolution": "nodenext",
     "types": ["./types"]
-  },
-  "exclude": [
-    "node_modules"
-  ]
+  }
 }

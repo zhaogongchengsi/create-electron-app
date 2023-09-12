@@ -6,7 +6,6 @@ import { debounce } from 'perfect-debounce'
 import consola from 'consola'
 import { parse, resolve } from 'pathe'
 import { loadConfig } from '../config'
-import type { CeaConfig } from '../config'
 import type { App } from '../options'
 import { createMultiCompilerOptions } from '../options'
 import { loadVite } from '../load'
@@ -17,21 +16,20 @@ const DEV_MODE = 'development'
 
 export async function runDev() {
   process.env.NODE_ENV = DEV_MODE
-  const { config } = await loadConfig()
-  const _config = config as Required<CeaConfig>
+  const config = await loadConfig()
 
-  const { root, output, main, preload } = _config
+  const { root, output, main, preload } = config
 
-  const { createServer } = loadVite(_config)
+  const { createServer } = loadVite(config)
 
-  const { run, restart } = createAppRunning(_config)
-  const { resolveConfig } = loadVite(_config)
+  const { run, restart } = createAppRunning(config)
+  const { resolveConfig } = loadVite(config)
 
-  const viteConfig = await resolveConfig({ root: _config.root }, 'serve', DEV_MODE)
+  const viteConfig = await resolveConfig({ root }, 'serve', DEV_MODE)
   const { page } = getPageOutDir(viteConfig)
 
   const server = await createServer({
-    root: _config.root,
+    root,
     server: {
       port: 5678,
     },
@@ -44,10 +42,12 @@ export async function runDev() {
   const address = httpServer!.address()! as AddressInfo
   url.port = `${address.port}`
 
-  const app: App = { baseUrl: url.toString(), preloadUrl: preloadFile, page }
 
-  const opt = createMultiCompilerOptions(_config, { app })
-  const compilers = createMultiCompiler(opt)
+  const createPages = (baseUrl: string, ) => {}
+
+  const app: App = { preload: preloadFile, page }
+
+  const compilers = createMultiCompiler(createMultiCompilerOptions(config, {}))
 
   consola.start(`App run in : ${url.toString()}`)
 

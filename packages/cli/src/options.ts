@@ -1,106 +1,82 @@
-import { parse } from 'node:path'
-import type { Plugins, RspackOptions } from '@rspack/core'
-import type { UltimatelyCeaConfig } from './config'
-import { plugins as commonPlugins } from './plugins'
+import type { MultiRspackOptions, RspackOptions } from '@rspack/core'
+import type { ResolveConfig } from './config'
+import { resolveFileName } from './utils'
 
-export enum Target {
-  main = 'electron-main',
-  preload = 'electron-preload',
-}
+export const ELECTRON_MAIN = 'electron-main'
+export const ELECTRON_PRELOAD = 'electron-preload'
 
-// todo: pages
 export type Page = Record<string, string> | string
 
-export interface App {
+export interface Options {
   page: Page
-  baseUrl?: string
-  preloadUrl?: string
-}
-export interface InjectOptions {
-  app?: App
-  plugins?: Plugins
+  preload?: string
 }
 
-function createCommonOption(config: UltimatelyCeaConfig, injectOptions: InjectOptions = {}): RspackOptions {
-  const { mode, root, appData } = config
+export function createMultiCompilerOptions(config: ResolveConfig, app: Options): MultiRspackOptions {
+  const { root, output: path, main, preload, mode } = config
+
+  if (!main)
+    throw new Error('Electron main thread file is required')
+
   const devtool = 'source-map'
-  const { app, plugins: jp } = injectOptions
-
-  const plugins = [...commonPlugins, ...(jp || [])]
-
   const isDev = mode === 'development'
   const isProd = mode === 'production'
+  const watch = mode === 'development'
 
-  return {
+  const env = JSON.stringify({
+    MODE: mode,
+    PROD: isDev,
+    DEV: isProd,
+  })
+
+  const multiOptions: RspackOptions = {
     mode,
     context: root,
+    devtool,
+    entry: main,
+    output: {
+      filename: resolveFileName(main),
+      path,
+    },
     builtins: {
       emotion: {
         sourceMap: isDev,
       },
       define: {
-        'import.meta.env': JSON.stringify({
-          MODE: mode,
-          PROD: isDev,
-          DEV: isProd,
-        }),
+        'import.meta.env': env,
         'import.meta.app': JSON.stringify({
-          ...app,
-          data: appData,
+          pages: app.page,
+          preload: app.preload,
         }),
       },
     },
-    plugins,
-    devtool,
+    watch,
+    target: ELECTRON_MAIN,
   }
-}
 
-function createInputAndOutput(config: UltimatelyCeaConfig, t: Target): RspackOptions {
-  const { output: path, main, preload, mode } = config
-  const watch = mode === 'development'
-  // const watch = true
+  if (!config.preload)
+    return [multiOptions]
 
-  let entry = main
-
-  if (t === Target.main)
-    entry = main
-  else
-    entry = preload
-
-  const { name } = parse(entry)
-
-  return {
-    entry,
+  const preloadOptions: RspackOptions = {
+    mode,
+    context: root,
+    entry: preload!,
+    devtool,
     output: {
-      filename: `${name}.js`,
+      filename: resolveFileName(preload!),
       path,
     },
-    watch,
-    target: t,
-  }
-}
-
-export function createMultiCompilerOptions(config: UltimatelyCeaConfig, injectOptions: InjectOptions = {}): RspackOptions[] {
-  if (!config.main)
-    throw new Error('Electron main thread file is required')
-
-  const commonOptions = createCommonOption(config, injectOptions)
-  const mainOptions = createInputAndOutput(config, Target.main)
-
-  const multiOptions: RspackOptions[] = [
-    {
-      ...commonOptions,
-      ...mainOptions,
+    builtins: {
+      emotion: {
+        sourceMap: isDev,
+      },
+      define: {
+        'import.meta.env': env,
+      },
     },
-  ]
-
-  if (config.preload) {
-    const preloadOptions = createInputAndOutput(config, Target.preload)
-    multiOptions.push({
-      ...commonOptions,
-      ...preloadOptions,
-    })
+    watch,
+    target: ELECTRON_PRELOAD,
   }
 
-  return multiOptions
+  return [multiOptions, preloadOptions]
 }

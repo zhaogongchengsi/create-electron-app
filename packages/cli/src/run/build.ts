@@ -3,7 +3,7 @@ import consola from 'consola'
 import { join, parse, relative, resolve } from 'pathe'
 import type { MultiRspackOptions, MultiStats } from '@rspack/core'
 import { createMultiCompiler } from '@rspack/core'
-import type { UltimatelyCeaConfig } from '../config'
+import type { ResolveConfig } from '../config'
 import { loadConfig } from '../config'
 import type { App } from '../options'
 import { createMultiCompilerOptions } from '../options'
@@ -15,17 +15,17 @@ const BUILD_MODE = 'production'
 
 export async function runBuild() {
   process.env.NODE_ENV = BUILD_MODE
-  const { config } = await loadConfig()
-  const _config = config as UltimatelyCeaConfig
+  const config = await loadConfig()
+  // const _config = config as ResolveConfig
 
-  const { build, resolveConfig } = loadVite(_config)
+  const { build, resolveConfig } = loadVite(config)
 
-  const viteConfig = await resolveConfig({ root: _config.root }, 'build', BUILD_MODE)
+  const viteConfig = await resolveConfig({ root: config.root }, 'build', BUILD_MODE)
   const { outDir, page } = getPageOutDir(viteConfig)
 
   consola.start('Start compilation')
 
-  const { root, main, preload, output } = _config
+  const { root, main, preload, output } = config
 
   // todo: 获取页面
   const mainFile = join(outDir, output, `${parse(main).name}.js`)
@@ -38,9 +38,9 @@ export async function runBuild() {
       return [name, relative(mainFile, resolve(outDir, path))]
     }))
 
-  const app: App = { page: pages, preloadUrl, baseUrl: undefined }
+  const app: App = { page: pages }
 
-  const opt = createMultiCompilerOptions({ ..._config, output: join(outDir, _config.output) }, { app })
+  const opt = createMultiCompilerOptions({ ...config, output: join(outDir, config.output) }, {})
 
   // vite build
   await build({ root })
