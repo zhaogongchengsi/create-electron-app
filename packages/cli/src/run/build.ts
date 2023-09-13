@@ -1,38 +1,36 @@
 import process from 'node:process'
 import consola from 'consola'
-import { join, parse, relative, resolve } from 'pathe'
+import { join, relative } from 'pathe'
 import type { MultiRspackOptions, MultiStats } from '@rspack/core'
 import { createMultiCompiler } from '@rspack/core'
 import { loadConfig } from '../config'
 import { createMultiCompilerOptions } from '../options'
 import { loadVite } from '../load'
 import { getPageOutDir } from '../vite'
-import { isString } from '../utils'
+import { isString, resolveFileName } from '../utils'
 
 const BUILD_MODE = 'production'
 
 export async function runBuild() {
   process.env.NODE_ENV = BUILD_MODE
   const config = await loadConfig()
+  const { root, main, output } = config
   const { build, resolveConfig } = loadVite(config)
-
-  const viteConfig = await resolveConfig({ root: config.root }, 'build', BUILD_MODE)
+  const viteConfig = await resolveConfig({ root }, 'build', BUILD_MODE)
   const { outDir, page } = getPageOutDir(viteConfig)
 
   consola.start('Start compilation')
 
-  const { root, main, output } = config
-
   // todo: 获取页面
-  const mainFile = join(outDir, output, `${parse(main).name}.js`)
+  const mainFile = join(outDir, output, resolveFileName(main))
 
   const pages = isString(page)
-    ? relative(mainFile, resolve(outDir, page as string)).substring(3)
+    ? relative(mainFile, join(outDir, page as string)).substring(3)
     : Object.fromEntries(Object.entries(page).map(([name, path]) => {
-      return [name, relative(mainFile, resolve(outDir, path))]
+      return [name, relative(mainFile, join(outDir, path)).substring(3)]
     }))
 
-  const opt = createMultiCompilerOptions({ ...config, output: join(outDir, config.output) }, { page: pages })
+  const opt = createMultiCompilerOptions({ ...config, output: join(outDir, output) }, { page: pages })
 
   // vite build
   await build({ root })

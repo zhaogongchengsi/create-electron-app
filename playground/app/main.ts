@@ -1,3 +1,4 @@
+import { resolve } from 'node:path';
 import { BrowserWindow, app, ipcMain } from 'electron'
 import { createSubWindow } from './subpage'
 
@@ -12,7 +13,7 @@ function createWindow() {
     width: 1200,
     height: 800,
     webPreferences: {
-      preload
+      preload: resolve(__dirname,preload)
     },
   })
 

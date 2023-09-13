@@ -22,7 +22,8 @@ export function createMultiCompilerOptions(config: ResolveConfig, { page }: Opti
   const isDev = mode === 'development'
   const isProd = mode === 'production'
 
-  const preloadFile = preload ? resolve(root, output, resolveFileName(preload)) : undefined
+  const mainFile = resolve(root, output, resolveFileName(main))
+  const preloadFile = preload ? relative(mainFile, resolve(root, output, resolveFileName(preload))).substring(3) : undefined
 
   const env = JSON.stringify({
     MODE: mode,
