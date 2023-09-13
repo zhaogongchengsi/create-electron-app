@@ -34,12 +34,11 @@ export async function runDev() {
   })
 
   const { httpServer } = await server.listen()
-  const url = new URL('/', 'http://localhost')
   const address = httpServer!.address()! as AddressInfo
-  url.port = `${address.port}`
+  const url = `http://localhost:${address.port}`
 
   const pages = isString(page)
-    ? `${url.toString()}${page}`
+    ? `${url}/${page}`
     : Object.fromEntries(Object.entries(page).map(([name, path]) => {
       return [name, `${url.toString()}${path}`]
     }))

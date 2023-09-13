@@ -2,7 +2,6 @@ import type { ResolvedConfig } from 'vite'
 import { resolve as _resolve, normalize } from 'pathe'
 import { isEmpty, isString } from './utils'
 
-// This code comes from the vite source code
 export function getPageOutDir(config: ResolvedConfig) {
   const options = config.build
   const root = normalize(config.root)
@@ -11,6 +10,7 @@ export function getPageOutDir(config: ResolvedConfig) {
 
   const outDir = resolve(options.outDir)
   const input = options.rollupOptions.input
+
   const isHtml = (t: string) => t.endsWith('.html')
   const page: string | Record<string, string> = isEmpty(input)
     ? 'index.html'

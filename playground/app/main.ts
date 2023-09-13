@@ -1,9 +1,11 @@
-import { BrowserWindow, app } from 'electron'
+import { BrowserWindow, app, ipcMain } from 'electron'
+import { createSubWindow } from './subpage'
 
-const { PROD } = import.meta.env
+const { PROD, DEV } = import.meta.env
 const { page, preload } = import.meta.app
 
 let window: BrowserWindow
+let subwindow : BrowserWindow
 
 function createWindow() {
   window = new BrowserWindow({
@@ -14,7 +16,10 @@ function createWindow() {
     },
   })
 
-  PROD ? window.loadFile(page as string) : window.loadURL(page as string)
+  const { main } = page as MultiplePage
+  
+  PROD ? window.loadFile(main) : window.loadURL(main)
+  DEV && window.webContents.openDevTools()
 }
 
 app.whenReady().then(() => {
@@ -29,4 +34,13 @@ app.whenReady().then(() => {
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin')
     app.quit()
+})
+
+ipcMain.on('say', ({ reply }, message) => {
+  reply('say-reply', `${message} reply`)
+})
+
+ipcMain.on('open-window', ({ reply }, name) => {
+  reply('open-window-state' ,name)
+  subwindow = createSubWindow()
 })
