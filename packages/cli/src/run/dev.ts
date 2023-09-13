@@ -21,7 +21,6 @@ export async function runDev() {
   const { root, output, main } = config
 
   const { createServer, resolveConfig } = loadVite(config)
-  const { run, restart } = createAppRunning(config)
 
   const viteConfig = await resolveConfig({ root }, 'serve', DEV_MODE)
   const { page } = getPageOutDir(viteConfig)
@@ -45,7 +44,7 @@ export async function runDev() {
 
   const mainFile = resolve(root, output, resolveFileName(main))
   const compilers = createMultiCompiler(createMultiCompilerOptions(config, { page: pages }))
-
+  const { run, restart } = createAppRunning(config, mainFile)
   consola.start(`App run in : ${url.toString()}`)
 
   const watchHandler = debounce((err: Error | null, _: MultiStats | undefined) => {
@@ -53,9 +52,9 @@ export async function runDev() {
       consola.error(err)
 
     if (count === 0)
-      run([mainFile])
+      run()
     else
-      restart([mainFile])
+      restart()
 
     count += 1
   }, 300, { leading: true })

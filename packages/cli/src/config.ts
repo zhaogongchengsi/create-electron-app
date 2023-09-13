@@ -8,12 +8,6 @@ const CONFIG_NAME = 'cea'
 
 export type Mode = 'production' | 'development' | 'none'
 
-export interface AppConfig {
-  output?: string
-  name?: string
-  appId?: string
-}
-
 export interface CeaConfig {
   main?: string
   preload?: string

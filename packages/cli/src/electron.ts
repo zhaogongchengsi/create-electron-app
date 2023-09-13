@@ -1,9 +1,9 @@
-import type { ChildProcess } from 'node:child_process'
-import { spawn } from 'node:child_process'
-import type { UltimatelyCeaConfig } from './config'
+import { type ChildProcess, spawn } from 'node:child_process'
+import { exit } from 'node:process'
+import type { ResolveConfig } from './config'
 import { loadElectron } from './load'
 
-export function createAppRunning(config: UltimatelyCeaConfig) {
+export function createAppRunning(config: ResolveConfig, ...args: string[]) {
   const electron = loadElectron(config)
   if (!electron) {
     throw new Error(
@@ -14,29 +14,34 @@ export function createAppRunning(config: UltimatelyCeaConfig) {
   const { mode, root } = config
   let electronProcess: ChildProcess | null = null
 
-  function run(_args: string[]) {
-    electronProcess = spawn(electron, _args, {
+  function run() {
+    electronProcess = spawn(electron, args, {
       cwd: root,
       env: {
         NODE_ENV: mode,
       },
       stdio: 'inherit',
     })
-    electronProcess.on('close', (code) => {
-      // 处理子进程关闭
+
+    electronProcess.on('exit', (code) => {
+      if (code != null && code === 0)
+        exit()
+
       electronProcess = null
     })
   }
 
-  function restart(_args: string[]) {
+  function restart() {
     if (electronProcess) {
       electronProcess.kill('SIGTERM')
       electronProcess.on('close', () => {
-        run(_args)
+        electronProcess = null
+
+        run()
       })
     }
     else {
-      run(_args)
+      run()
     }
   }
 

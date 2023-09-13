@@ -4,6 +4,7 @@
     "target": "ESNext",
     "sourceMap": true,
     "moduleResolution": "nodenext",
-    "types": ["./types"]
+    "types": ["./types"],
+    "esModuleInterop": true
   }
 }
