@@ -1,7 +1,7 @@
 import { loadElectronBuilder } from './load'
-import type { UltimatelyCeaConfig } from './config'
+import type { ResolveConfig } from './config'
 
-export async function builder(config: UltimatelyCeaConfig) {
+export async function builder(config: ResolveConfig) {
   const { root } = config
   const { build, Platform } = loadElectronBuilder(config)
 
@@ -10,6 +10,4 @@ export async function builder(config: UltimatelyCeaConfig) {
     projectDir: root,
     config: config.build,
   })
-
-  console.log(res)
 }
