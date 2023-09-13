@@ -1,7 +1,8 @@
 
-declare module 'import-meta' {
-    interface ImportMeta {
-        app: Record<string, any>;
-        env: Record<string, string>
-    }
+declare interface ImportMeta {
+    app: {
+        page: Record<string, any> | string
+        preload: string
+    };
+    env: Record<string, string>
 }

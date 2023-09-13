@@ -3,9 +3,7 @@ import consola from 'consola'
 import { join, parse, relative, resolve } from 'pathe'
 import type { MultiRspackOptions, MultiStats } from '@rspack/core'
 import { createMultiCompiler } from '@rspack/core'
-import type { ResolveConfig } from '../config'
 import { loadConfig } from '../config'
-import type { App } from '../options'
 import { createMultiCompilerOptions } from '../options'
 import { loadVite } from '../load'
 import { getPageOutDir } from '../vite'
@@ -16,8 +14,6 @@ const BUILD_MODE = 'production'
 export async function runBuild() {
   process.env.NODE_ENV = BUILD_MODE
   const config = await loadConfig()
-  // const _config = config as ResolveConfig
-
   const { build, resolveConfig } = loadVite(config)
 
   const viteConfig = await resolveConfig({ root: config.root }, 'build', BUILD_MODE)
@@ -25,12 +21,10 @@ export async function runBuild() {
 
   consola.start('Start compilation')
 
-  const { root, main, preload, output } = config
+  const { root, main, output } = config
 
   // todo: 获取页面
   const mainFile = join(outDir, output, `${parse(main).name}.js`)
-  const preloadFile = join(outDir, output, `${parse(preload).name}.js`)
-  const preloadUrl = relative(mainFile, preloadFile).substring(3)
 
   const pages = isString(page)
     ? relative(mainFile, resolve(outDir, page as string)).substring(3)
@@ -38,9 +32,7 @@ export async function runBuild() {
       return [name, relative(mainFile, resolve(outDir, path))]
     }))
 
-  const app: App = { page: pages }
-
-  const opt = createMultiCompilerOptions({ ...config, output: join(outDir, config.output) }, {})
+  const opt = createMultiCompilerOptions({ ...config, output: join(outDir, config.output) }, { page: pages })
 
   // vite build
   await build({ root })
@@ -53,7 +45,7 @@ export async function runBuild() {
 function compiler(opt: MultiRspackOptions): Promise<MultiStats | undefined> {
   const compilers = createMultiCompiler(opt)
   return new Promise((resolve, reject) => {
-    compilers.run(async (err, stats) => {
+    compilers.run((err, stats) => {
       if (err)
         reject(err)
       else

@@ -1,4 +1,5 @@
 import type { MultiRspackOptions, RspackOptions } from '@rspack/core'
+import { relative, resolve } from 'pathe'
 import type { ResolveConfig } from './config'
 import { resolveFileName } from './utils'
 
@@ -9,11 +10,10 @@ export type Page = Record<string, string> | string
 
 export interface Options {
   page: Page
-  preload?: string
 }
 
-export function createMultiCompilerOptions(config: ResolveConfig, app: Options): MultiRspackOptions {
-  const { root, output: path, main, preload, mode } = config
+export function createMultiCompilerOptions(config: ResolveConfig, { page }: Options): MultiRspackOptions {
+  const { root, output, main, preload, mode } = config
 
   if (!main)
     throw new Error('Electron main thread file is required')
@@ -21,12 +21,13 @@ export function createMultiCompilerOptions(config: ResolveConfig, app: Options):
   const devtool = 'source-map'
   const isDev = mode === 'development'
   const isProd = mode === 'production'
-  const watch = mode === 'development'
+
+  const preloadFile = preload ? resolve(root, output, resolveFileName(preload)) : undefined
 
   const env = JSON.stringify({
     MODE: mode,
-    PROD: isDev,
-    DEV: isProd,
+    PROD: isProd,
+    DEV: isDev,
   })
 
   const multiOptions: RspackOptions = {
@@ -36,7 +37,7 @@ export function createMultiCompilerOptions(config: ResolveConfig, app: Options):
     entry: main,
     output: {
       filename: resolveFileName(main),
-      path,
+      path: output,
     },
     builtins: {
       emotion: {
@@ -45,12 +46,12 @@ export function createMultiCompilerOptions(config: ResolveConfig, app: Options):
       define: {
         'import.meta.env': env,
         'import.meta.app': JSON.stringify({
-          pages: app.page,
-          preload: app.preload,
+          page,
+          preload: preloadFile,
         }),
       },
     },
-    watch,
+    watch: isDev,
     target: ELECTRON_MAIN,
   }
 
@@ -64,7 +65,7 @@ export function createMultiCompilerOptions(config: ResolveConfig, app: Options):
     devtool,
     output: {
       filename: resolveFileName(preload!),
-      path,
+      path: output,
     },
     builtins: {
       emotion: {
@@ -74,7 +75,7 @@ export function createMultiCompilerOptions(config: ResolveConfig, app: Options):
         'import.meta.env': env,
       },
     },
-    watch,
+    watch: isDev,
     target: ELECTRON_PRELOAD,
   }
 

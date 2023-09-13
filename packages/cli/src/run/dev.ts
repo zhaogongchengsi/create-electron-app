@@ -4,26 +4,24 @@ import type { MultiStats } from '@rspack/core'
 import { createMultiCompiler } from '@rspack/core'
 import { debounce } from 'perfect-debounce'
 import consola from 'consola'
-import { parse, resolve } from 'pathe'
+import { resolve } from 'pathe'
 import { loadConfig } from '../config'
-import type { App } from '../options'
 import { createMultiCompilerOptions } from '../options'
 import { loadVite } from '../load'
 import { createAppRunning } from '../electron'
 import { getPageOutDir } from '../vite'
+import { isString, resolveFileName } from '../utils'
 
 const DEV_MODE = 'development'
+let count = 0
 
 export async function runDev() {
   process.env.NODE_ENV = DEV_MODE
   const config = await loadConfig()
+  const { root, output, main } = config
 
-  const { root, output, main, preload } = config
-
-  const { createServer } = loadVite(config)
-
+  const { createServer, resolveConfig } = loadVite(config)
   const { run, restart } = createAppRunning(config)
-  const { resolveConfig } = loadVite(config)
 
   const viteConfig = await resolveConfig({ root }, 'serve', DEV_MODE)
   const { page } = getPageOutDir(viteConfig)
@@ -37,21 +35,20 @@ export async function runDev() {
 
   const { httpServer } = await server.listen()
   const url = new URL('/', 'http://localhost')
-  const mainFile = resolve(root, output, `${parse(main).name}.js`)
-  const preloadFile = resolve(root, output, `${parse(preload).name}.js`)
   const address = httpServer!.address()! as AddressInfo
   url.port = `${address.port}`
 
+  const pages = isString(page)
+    ? `${url.toString()}${page}`
+    : Object.fromEntries(Object.entries(page).map(([name, path]) => {
+      return [name, `${url.toString()}${path}`]
+    }))
 
-  const createPages = (baseUrl: string, ) => {}
-
-  const app: App = { preload: preloadFile, page }
-
-  const compilers = createMultiCompiler(createMultiCompilerOptions(config, {}))
+  const mainFile = resolve(root, output, resolveFileName(main))
+  const compilers = createMultiCompiler(createMultiCompilerOptions(config, { page: pages }))
 
   consola.start(`App run in : ${url.toString()}`)
 
-  let count = 0
   const watchHandler = debounce((err: Error | null, _: MultiStats | undefined) => {
     if (err)
       consola.error(err)
