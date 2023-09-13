@@ -4,18 +4,21 @@ import type { ResolveConfig } from './config'
 import { loadElectron } from './load'
 
 export function createAppRunning(config: ResolveConfig, ...args: string[]) {
-  const electron = loadElectron(config)
-  if (!electron) {
-    throw new Error(
-      'electron may not be installed, try running npm install electron --save-dev and try again',
-    )
+  if (!config.electronExecFile) {
+    const electron = loadElectron(config)
+    if (!electron) {
+      throw new Error(
+        'electron may not be installed, try running npm install electron --save-dev and try again',
+      )
+    }
+    config.electronExecFile = electron
   }
 
-  const { mode, root } = config
+  const { mode, root, electronExecFile } = config
   let electronProcess: ChildProcess | null = null
 
   function run() {
-    electronProcess = spawn(electron, args, {
+    electronProcess = spawn(electronExecFile!, args, {
       cwd: root,
       env: {
         NODE_ENV: mode,

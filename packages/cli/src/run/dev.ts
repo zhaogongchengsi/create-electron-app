@@ -4,6 +4,7 @@ import type { MultiStats } from '@rspack/core'
 import { createMultiCompiler } from '@rspack/core'
 import { debounce } from 'perfect-debounce'
 import consola from 'consola'
+import { colors } from 'consola/utils'
 import { resolve } from 'pathe'
 import { loadConfig } from '../config'
 import { createMultiCompilerOptions } from '../options'
@@ -45,7 +46,7 @@ export async function runDev() {
   const mainFile = resolve(root, output, resolveFileName(main))
   const compilers = createMultiCompiler(createMultiCompilerOptions(config, { page: pages }))
   const { run, restart } = createAppRunning(config, mainFile)
-  consola.start(`App run in : ${url.toString()}`)
+  consola.box(`App run in : ${colors.greenBright(url.toString())}`)
 
   const watchHandler = debounce((err: Error | null, _: MultiStats | undefined) => {
     if (err)

@@ -11,15 +11,15 @@ export type Mode = 'production' | 'development' | 'none'
 export interface CeaConfig {
   main?: string
   preload?: string
-  html?: string
   output?: string
   root?: string
   mode?: Mode
   banner?: BannerConditions
   build?: Configuration
+  electronExecFile?: string
 }
 
-export type ResolveConfig = Required<Omit<CeaConfig, 'preload'>> & { preload?: string }
+export type ResolveConfig = Required<Omit<CeaConfig, 'preload' | 'electronExecFile'>> & { preload?: string; electronExecFile?: string }
 
 export async function loadConfig() {
   const cwd = process.cwd()
@@ -33,7 +33,7 @@ export async function loadConfig() {
       root: cwd,
       main: undefined,
       preload: undefined,
-      html: 'index.html',
+      electronExecFile: undefined,
       output: isProduction ? 'app' : '.app',
       mode: process.env.NODE_ENV || 'production',
       banner: `${name}`,
