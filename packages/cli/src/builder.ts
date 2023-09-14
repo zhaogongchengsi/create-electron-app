@@ -5,8 +5,8 @@ export async function builder(config: ResolveConfig) {
   const { root } = config
   const { build, Platform } = loadElectronBuilder(config)
 
-  const res = await build({
-    targets: Platform.WINDOWS.createTarget(),
+  return await build({
+    targets: Platform.current().createTarget(),
     projectDir: root,
     config: config.build,
   })
