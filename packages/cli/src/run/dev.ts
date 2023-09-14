@@ -14,12 +14,11 @@ import { getPageOutDir } from '../vite'
 import { isString, resolveFileName } from '../utils'
 
 const DEV_MODE = 'development'
-let count = 0
 
 export async function runDev({ args }: any) {
   process.env.NODE_ENV = DEV_MODE
   const config = await loadConfig()
-  const { root, output, main } = config
+  const { root, output, main, electron } = config
 
   const { createServer, resolveConfig } = loadVite(config)
 
@@ -45,19 +44,14 @@ export async function runDev({ args }: any) {
 
   const mainFile = resolve(root, output, resolveFileName(main))
   const compilers = createMultiCompiler(createMultiCompilerOptions(config, { page: pages }))
-  const { run, restart } = createAppRunning(config, mainFile)
+  const run = createAppRunning(config, mainFile, ...electron.parameter!)
   consola.box(`App run in : ${colors.greenBright(url.toString())}`)
 
   const watchHandler = debounce((err: Error | null, _: MultiStats | undefined) => {
     if (err)
       consola.error(err)
 
-    if (count === 0)
-      run()
-    else
-      restart()
-
-    count += 1
+    run()
   }, 300, { leading: true })
 
   compilers.watch({ ignored: /node_modules/ }, watchHandler)
