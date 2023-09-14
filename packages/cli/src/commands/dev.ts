@@ -5,5 +5,17 @@ export default defineCommand({
   meta: {
     name: 'dev',
   },
+  args: {
+    port: {
+      type: 'string',
+      description: 'Set vite port',
+      alias: 'p',
+    },
+    debug: {
+      type: 'string',
+      description: 'Enable debug mode',
+      alias: 'd',
+    },
+  },
   run: runDev,
 })

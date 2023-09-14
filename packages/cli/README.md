@@ -13,9 +13,7 @@ Using esbuild and vite
 
 ## Example
 
-[Basic use example](https://github.com/zhaogongchengsi/create-electron-app/tree/master/packages/example)
-
-[Development application example](https://github.com/zhaogongchengsi/picture-preview)
+[Basic use example](https://github.com/zhaogongchengsi/create-electron-app/playground)
 
 ## Install
 
@@ -55,7 +53,7 @@ import { BrowserWindow, app } from 'electron'
 
 let win: BrowserWindow | undefined
 const { PROD } = import.meta.env
-const { loadUrl, preloadUrl } = import.meta.app // Get data from environment variables
+const { page, preload } = import.meta.app // Get data from environment variables
 
 function getPath(path: string) {
   return resolve(__dirname, path)
@@ -65,14 +63,13 @@ function createWindow() {
   win = new BrowserWindow({
     width: 1200,
     height: 800,
-    icon: getPath('public/icon.png'), // public The static resource folder you set up
     webPreferences: {
       nodeIntegration: true,
-      preload: preload && getPath(preload),
+      preload: preload && resolve(preload),
     },
   })
 
-  PROD ? win.loadFile(loadUrl) : win.loadURL(loadUrl) // http:localhost:3000  vite server url
+  PROD ? win.loadFile(page) : win.loadURL(page) // http:localhost:3000  vite server url
 
 }
 
@@ -96,7 +93,7 @@ app
   "name": "your app name",
   "private": true,
   "version": "0.0.0",
-  "main": "./index.ts",
+  "main": "./dist/index.ts",
   "script": {
     "dev": "cea dev",
     "build": "cea build"
@@ -128,31 +125,15 @@ Operate as directed
 
 ---
 
-# Configuration
-
-```ts
-export interface CeaConfig {
-  main: string
-  preload?: string
-  html?: string
-  output?: string
-  root?: string
-  mode?: Mode
-  appData?: Record<string, any>
-}
-```
-
 ## Environment variables and patterns
 
-Environment variables are mounted on a `import.meta.env` object
-
-- `import.meta.env.loadUrl` 应用运行的渲染线程的路径
+- `import.meta.env.page` 应用运行的渲染线程的路径
   - production `index.html` 文件的路径
   - development [vite.server](https://vitejs.cn/vite3-cn/config/server-options.html#server-port) 的 url 路径
+- `import.meta.app.preload` [Electron BrowserWindow.webPreferences.preload](https://www.electronjs.org/zh/docs/latest/api/context-bridge#exposing-node-global-symbols)
 - `import.meta.env.mode` 应用运行的模式
   - `development` 开发模式
   - `production` 生产模式 (应用以打包)
-- `import.meta.app.preload` [Electron BrowserWindow.webPreferences.preload](https://www.electronjs.org/zh/docs/latest/api/context-bridge#exposing-node-global-symbols)
 - `import.meta.env.DEV`: `{boolean}` Is it running in development mode?
 - `import.meta.env.PROD`: `{boolean}` Is it running in production mode?
 

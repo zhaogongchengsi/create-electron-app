@@ -8,7 +8,7 @@
   "keywords": [],
   "main": "index.js",
   "scripts": {
-    "docs": "vitepress dev docs",
+    "docs-dev": "vitepress dev docs",
     "docs-build": "vitepress build docs",
     "docs-serve": "vitepress serve docs",
     "build": "unbuild",
@@ -20,13 +20,13 @@
     "appId": "123123"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^0.41.0",
+    "@antfu/eslint-config": "^0.41.3",
     "@rollup/plugin-commonjs": "^22.0.2",
     "@rollup/plugin-node-resolve": "^13.3.0",
     "app-builder-lib": "23.6.0",
-    "eslint": "^8.48.0",
+    "eslint": "^8.49.0",
     "unbuild": "^0.8.11",
-    "vitepress": "^1.0.0-alpha.19",
-    "vue": "^3.2.40"
+    "vitepress": "1.0.0-rc.13",
+    "vue": "^3.3.4"
   }
 }

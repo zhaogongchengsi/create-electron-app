@@ -16,7 +16,7 @@ import { isString, resolveFileName } from '../utils'
 const DEV_MODE = 'development'
 let count = 0
 
-export async function runDev() {
+export async function runDev({ args }: any) {
   process.env.NODE_ENV = DEV_MODE
   const config = await loadConfig()
   const { root, output, main } = config
@@ -29,7 +29,7 @@ export async function runDev() {
   const server = await createServer({
     root,
     server: {
-      port: 5678,
+      port: args.port || 5678,
     },
   })
 
