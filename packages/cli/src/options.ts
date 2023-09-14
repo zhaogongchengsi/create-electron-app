@@ -1,5 +1,5 @@
 import type { MultiRspackOptions, RspackOptions } from '@rspack/core'
-import { relative, resolve } from 'pathe'
+import { resolve as _resolve, relative } from 'pathe'
 import type { ResolveConfig } from './config'
 import { resolveFileName } from './utils'
 
@@ -13,7 +13,7 @@ export interface Options {
 }
 
 export function createMultiCompilerOptions(config: ResolveConfig, { page }: Options): MultiRspackOptions {
-  const { root, output, main, preload, mode } = config
+  const { root, output, main, preload, mode, assets, baseUri, alias } = config
 
   if (!main)
     throw new Error('Electron main thread file is required')
@@ -22,8 +22,8 @@ export function createMultiCompilerOptions(config: ResolveConfig, { page }: Opti
   const isDev = mode === 'development'
   const isProd = mode === 'production'
 
-  const mainFile = resolve(root, output, resolveFileName(main))
-  const preloadFile = preload ? relative(mainFile, resolve(root, output, resolveFileName(preload))).substring(3) : undefined
+  const mainFile = _resolve(root, output, resolveFileName(main))
+  const preloadFile = preload ? relative(mainFile, _resolve(root, output, resolveFileName(preload))).substring(3) : undefined
 
   const env = JSON.stringify({
     MODE: mode,
@@ -31,11 +31,32 @@ export function createMultiCompilerOptions(config: ResolveConfig, { page }: Opti
     DEV: isDev,
   })
 
-  const multiOptions: RspackOptions = {
+  const node = {
+    global: false,
+    __dirname: false,
+  }
+
+  const resolve = {
+    alias,
+  }
+
+  const commonOptions: RspackOptions = {
     mode,
     context: root,
     devtool,
-    entry: main,
+    node,
+    resolve,
+    watch: isDev,
+  }
+
+  const multiOptions: RspackOptions = {
+    ...commonOptions,
+    target: ELECTRON_MAIN,
+    entry: {
+      main,
+      publicPath: assets,
+      baseUri,
+    },
     output: {
       filename: resolveFileName(main),
       path: output,
@@ -52,18 +73,19 @@ export function createMultiCompilerOptions(config: ResolveConfig, { page }: Opti
         }),
       },
     },
-    watch: isDev,
-    target: ELECTRON_MAIN,
   }
 
   if (!config.preload)
     return [multiOptions]
 
   const preloadOptions: RspackOptions = {
-    mode,
-    context: root,
-    entry: preload!,
-    devtool,
+    ...commonOptions,
+    target: ELECTRON_PRELOAD,
+    entry: {
+      preload: preload!,
+      publicPath: assets,
+      baseUri,
+    },
     output: {
       filename: resolveFileName(preload!),
       path: output,
@@ -76,8 +98,6 @@ export function createMultiCompilerOptions(config: ResolveConfig, { page }: Opti
         'import.meta.env': env,
       },
     },
-    watch: isDev,
-    target: ELECTRON_PRELOAD,
   }
 
   return [multiOptions, preloadOptions]

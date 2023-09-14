@@ -13,7 +13,12 @@ export interface ElectronConfig {
   parameter?: string[]
 }
 
+export type Alias = Record<string, false | string | (string | false)[]>
+
 export interface CeaConfig {
+  assets?: string
+  baseUri?: string
+  alias?: Alias
   main?: string
   preload?: string
   output?: string
@@ -24,7 +29,7 @@ export interface CeaConfig {
   electron?: ElectronConfig
 }
 
-export type ResolveConfig = Required<Omit<CeaConfig, 'preload' | 'electronExecFile'>> & { preload?: string }
+export type ResolveConfig = Required<Omit<CeaConfig, 'preload'>> & { preload?: string }
 
 export async function loadConfig() {
   const cwd = process.cwd()
@@ -35,7 +40,10 @@ export async function loadConfig() {
     cwd,
     name: CONFIG_NAME,
     defaults: {
+      assets: 'public',
+      baseUri: undefined,
       root: cwd,
+      alias: {},
       main: undefined,
       preload: undefined,
       electron: {
