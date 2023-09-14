@@ -1,6 +1,6 @@
 import { resolve } from 'node:path';
 import { BrowserWindow, app, ipcMain } from 'electron'
-import { createSubWindow } from './subpage'
+import { createSubWindow } from '~/subpage'
 
 const { PROD, DEV } = import.meta.env
 const { page, preload } = import.meta.app

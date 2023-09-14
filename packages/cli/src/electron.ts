@@ -34,7 +34,7 @@ export function createAppRunning(config: ResolveConfig, ...args: string[]) {
     })
   }
 
-  function run() {
+  return () => {
     if (electronProcess) {
       electronProcess.kill('SIGTERM')
       electronProcess.on('close', () => {
@@ -47,6 +47,4 @@ export function createAppRunning(config: ResolveConfig, ...args: string[]) {
       createElectronProcess()
     }
   }
-
-  return run
 }

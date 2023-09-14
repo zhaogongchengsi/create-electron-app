@@ -1,3 +1,4 @@
+import { existsSync } from 'node:fs'
 import type { MultiRspackOptions, RspackOptions } from '@rspack/core'
 import { resolve as _resolve, relative } from 'pathe'
 import type { ResolveConfig } from './config'
@@ -13,14 +14,14 @@ export interface Options {
 }
 
 export function createMultiCompilerOptions(config: ResolveConfig, { page }: Options): MultiRspackOptions {
-  const { root, output, main, preload, mode, assets, baseUri, alias } = config
+  const { root, output, main, preload, mode, alias } = config
 
   if (!main)
     throw new Error('Electron main thread file is required')
 
-  const devtool = 'source-map'
   const isDev = mode === 'development'
   const isProd = mode === 'production'
+  const devtool = 'source-map'
 
   const mainFile = _resolve(root, output, resolveFileName(main))
   const preloadFile = preload ? relative(mainFile, _resolve(root, output, resolveFileName(preload))).substring(3) : undefined
@@ -49,13 +50,13 @@ export function createMultiCompilerOptions(config: ResolveConfig, { page }: Opti
     watch: isDev,
   }
 
+  // const publicPath = existsSync(_resolve(root, assets)) ? assets : 'auto'
+
   const multiOptions: RspackOptions = {
     ...commonOptions,
     target: ELECTRON_MAIN,
     entry: {
       main,
-      publicPath: assets,
-      baseUri,
     },
     output: {
       filename: resolveFileName(main),
@@ -83,8 +84,6 @@ export function createMultiCompilerOptions(config: ResolveConfig, { page }: Opti
     target: ELECTRON_PRELOAD,
     entry: {
       preload: preload!,
-      publicPath: assets,
-      baseUri,
     },
     output: {
       filename: resolveFileName(preload!),

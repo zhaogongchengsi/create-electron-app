@@ -5,6 +5,9 @@
     "sourceMap": true,
     "moduleResolution": "nodenext",
     "types": ["./types"],
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "paths": {
+      "~/*": ["./app/*"]
+    }
   }
 }
