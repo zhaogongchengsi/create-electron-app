@@ -1,7 +1,7 @@
 import { resolve } from 'node:path';
 import { BrowserWindow, app, ipcMain } from 'electron'
 import { createSubWindow } from '~/subpage'
-import logo from '../public/logo.png'
+// import logo from '../public/logo.png'
 
 const { PROD, DEV } = import.meta.env
 const { page, preload } = import.meta.app
@@ -13,7 +13,7 @@ function createWindow() {
   window = new BrowserWindow({
     width: 1200,
     height: 800,
-    icon: resolve(__dirname, logo),
+    // icon: resolve(__dirname, logo),
     webPreferences: {
       preload: resolve(__dirname,preload)
     },

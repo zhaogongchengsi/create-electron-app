@@ -1,4 +1,3 @@
-import { existsSync } from 'node:fs'
 import type { MultiRspackOptions, RspackOptions } from '@rspack/core'
 import { resolve as _resolve, relative } from 'pathe'
 import type { ResolveConfig } from './config'
