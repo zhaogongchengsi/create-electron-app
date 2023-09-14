@@ -12,5 +12,4 @@ export async function runPackage() {
 
   const viteConfig = await resolveConfig({ root: config.root }, 'build', 'build')
   const res = getPageOutDir(viteConfig)
-  console.log(res)
 }

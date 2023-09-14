@@ -1,6 +1,6 @@
 import process from 'node:process'
 import { loadConfig as lc } from 'c12'
-import type { BannerConditions } from '@rspack/core'
+import type { BannerConditions, ModuleOptions } from '@rspack/core'
 import type { Configuration } from 'electron-builder'
 import { readPackageJSON } from 'pkg-types'
 
@@ -27,6 +27,7 @@ export interface CeaConfig {
   banner?: BannerConditions
   build?: Configuration
   electron?: ElectronConfig
+  modules?: ModuleOptions
 }
 
 export type ResolveConfig = Required<Omit<CeaConfig, 'preload'>> & { preload?: string }

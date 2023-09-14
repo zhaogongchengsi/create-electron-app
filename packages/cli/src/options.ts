@@ -48,9 +48,19 @@ export function createMultiCompilerOptions(config: ResolveConfig, { page }: Opti
     node,
     resolve,
     watch: isDev,
+    module: {
+      rules: [
+        {
+          test: /\.(png|jpe?g|gif)$/i,
+          use: [
+            {
+              loader: 'file-loader',
+            },
+          ],
+        },
+      ],
+    },
   }
-
-  // const publicPath = existsSync(_resolve(root, assets)) ? assets : 'auto'
 
   const multiOptions: RspackOptions = {
     ...commonOptions,

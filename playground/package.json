@@ -32,10 +32,11 @@
     "vue": "^3.3.4"
   },
   "devDependencies": {
-    "electron": "^26.1.0",
     "@vitejs/plugin-vue": "^4.3.4",
     "@zzhaon/create-electron-app": "workspace:^",
+    "electron": "^26.1.0",
     "electron-builder": "^24.6.3",
+    "file-loader": "^6.2.0",
     "unocss": "^0.55.4",
     "vite": "^4.4.9"
   }
