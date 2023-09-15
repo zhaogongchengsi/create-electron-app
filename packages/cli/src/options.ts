@@ -1,5 +1,6 @@
 import type { MultiRspackOptions, RspackOptions } from '@rspack/core'
 import { resolve as _resolve, relative } from 'pathe'
+import WebpackBar from 'webpackbar'
 import type { ResolveConfig } from './config'
 import { resolveFileName } from './utils'
 
@@ -20,7 +21,7 @@ export function createMultiCompilerOptions(config: ResolveConfig, { page }: Opti
 
   const isDev = mode === 'development'
   const isProd = mode === 'production'
-  const devtool = 'source-map'
+  const devtool = isDev ? 'source-map' : false
 
   const mainFile = _resolve(root, output, resolveFileName(main))
   const preloadFile = preload ? relative(mainFile, _resolve(root, output, resolveFileName(preload))).substring(3) : undefined
@@ -47,18 +48,11 @@ export function createMultiCompilerOptions(config: ResolveConfig, { page }: Opti
     node,
     resolve,
     watch: isDev,
-    module: {
-      rules: [
-        {
-          test: /\.(png|jpe?g|gif)$/i,
-          use: [
-            {
-              loader: 'file-loader',
-            },
-          ],
-        },
-      ],
-    },
+    plugins: [
+      new WebpackBar({
+        name: 'cea',
+      }),
+    ],
   }
 
   const multiOptions: RspackOptions = {

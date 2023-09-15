@@ -59,7 +59,8 @@
     "pathe": "^1.1.1",
     "perfect-debounce": "^1.0.0",
     "pkg-types": "^1.0.3",
-    "vite": "^4.4.9"
+    "vite": "^4.4.9",
+    "webpackbar": "^5.0.2"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^22.0.2",
