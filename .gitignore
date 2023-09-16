@@ -26,3 +26,4 @@ packages/cli/dist/**/*
 playground/.app
 cos
 docs/.nuxt
+docs/.output
