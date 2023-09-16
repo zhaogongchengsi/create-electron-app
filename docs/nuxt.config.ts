@@ -6,6 +6,10 @@ export default defineNuxtConfig({
 	app: {
 		head: {
 			link: [{ rel: 'icon', type: 'image/png', href: '/logo.png' }],
+			meta: [
+				{ name: 'description', content: 'Auxiliary development of electron app' },
+				{ name: 'keywords', content: 'vite, electron, rspack, webpack, cli' }
+			],
 		},
 	},
 	css: [

@@ -1,5 +1,5 @@
 ---
-title: My Docus project
+title: Create Electron App
 navigation: false
 layout: page
 ---
@@ -11,32 +11,29 @@ cta:
   - /guide
 secondary:
   - Open on GitHub →
-  - https://github.com/nuxtlabs/docus
+  - https://github.com/zhaogongchengsi/create-electron-app
 snippet: npm install @zzhaon/create-electron-app
 ---
 
 #title
-My Docus project
+Create Electron App
 
 #description
-Write pages in markdown, use Vue components and enjoy the power of Nuxt with a blazing fast developer experience.
+Auxiliary development of electron app.
 
 #extra
   ::list
-  - **+50 Components** ready to build rich pages
-  - **Docs** and **Page** layouts
-  - Start from a `README`, scale to a framework documentation
-  - Navigation and Table of Contents generation
-  - Fully configurable design system
-  - Leverages [**Typography**](https://typography.nuxt.space/) and [**Elements**](https://elements.nuxt.dev)
-  - Used on [Content Documentation](https://content.nuxtjs.org)
+  - Right out of the box
+  - Fast and convenient
+  - There is no version requirement for [vite](https://vitejs.dev/) and [electron](www.electronjs.org)
+  - Support for typescript
   ::
 
 ::
 
 ::card-grid
 #title
-What's included
+What features are included?
 
 #root
 :ellipsis
@@ -44,20 +41,26 @@ What's included
 #default
   ::card
   #title
-  Nuxt Architecture.
+  Hot renewal
   #description
-  Harness the full power of Nuxt and the Nuxt ecosystem.
+  Restart app after listening for changes in the main thread.
   ::
   ::card
   #title
-  Vue Components.
+  Compatible with vite
   #description
-  Use built-in components (or your own!) inside your content.
+  Perfectly compatible with vite ecology.
   ::
   ::card
   #title
-  Write Markdown.
+  Optimized Build
   #description
-  Enjoy the ease and simplicity of Markdown and discover MDC syntax.
+  Pre-configured Vite build with multi-page support.
+  ::
+  ::card
+  #title
+   Universal Plugins
+  #description
+   Plug-ins for vite Ecology can be used directly.
   ::
 ::
