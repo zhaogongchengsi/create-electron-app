@@ -2,8 +2,9 @@
   "name": "create-cea-app",
   "version": "0.2.0",
   "description": "Create a basic electron app",
-  "author": "zhaozunhong",
-  "license": "ISC",
+  "author": "zhaozunhong <zzh1586169624@163.com>",
+  "license": "MIT",
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/zhaogongchengsi/create-electron-app.git",
@@ -13,30 +14,27 @@
     "electron",
     "create-electron-app"
   ],
-  "main": "index.js",
-  "typs": "module",
+  "main": "./dist/index.js",
   "bin": {
-    "ca": "index.js",
-    "cea-app": "index.js"
+    "ca": "./dist/index.mjs",
+    "cea-app": "./dist/index.mjs"
   },
   "files": [
     "index.js",
-    "templates/*",
-    "util.js"
+    "templates/*"
   ],
   "scripts": {
+    "build": "unbuild",
+    "dev": "unbuild --stub",
     "update": "npm publish"
   },
   "dependencies": {
-    "cross-env": "^7.0.3",
+    "consola": "^3.2.3",
+    "fs-extra": "^11.1.1",
     "prompts": "^2.4.2"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^22.0.2",
-    "@rollup/plugin-node-resolve": "^13.3.0",
     "@types/prompts": "^2.0.14",
-    "rollup": "^2.78.1",
-    "rollup-plugin-typescript2": "^0.34.1",
     "unbuild": "^0.8.11"
   }
 }

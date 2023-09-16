@@ -8,7 +8,7 @@ layout: page
 ---
 cta:
   - Get Started
-  - /guide
+  - /guide/quick-start
 secondary:
   - Open on GitHub →
   - https://github.com/zhaogongchengsi/create-electron-app
