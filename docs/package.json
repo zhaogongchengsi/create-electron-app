@@ -1,0 +1,36 @@
+{
+  "name": "@zzhaon/docs",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nuxi dev",
+    "build": "nuxi build",
+    "generate": "nuxi generate",
+    "preview": "nuxi preview",
+    "lint": "eslint ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@nuxt-themes/docus": "^1.14.6",
+    "@nuxt/kit": "^3.7.3",
+    "debug": "^4.3.4",
+    "extend": "^3.0.2",
+    "flat": "^6.0.0",
+    "hast-util-raw": "^9.0.1",
+    "is-buffer": "^2.0.5",
+    "node-emoji": "^2.1.0",
+    "nuxt": "^3.7.3",
+    "pinceau": "^0.20.1",
+    "slugify": "^1.6.6",
+    "vue": "^3.3.4",
+    "vue-router": "^4.2.4"
+  },
+  "devDependencies": {
+    "@unocss/nuxt": "^0.55.7",
+    "@unocss/reset": "^0.55.4",
+    "unocss": "^0.55.4"
+  }
+}

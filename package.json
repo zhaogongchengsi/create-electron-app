@@ -1,32 +1,28 @@
 {
-  "name": "create-electron-app",
+  "name": "@zzhaon/monorepo",
   "type": "module",
-  "version": "1.0.0",
-  "description": "",
-  "author": "",
-  "license": "ISC",
-  "keywords": [],
-  "main": "index.js",
+  "version": "0.0.0",
+  "description": "Auxiliary development of electron app",
+  "author": "zhaozunhong <zzh1586169624@163.com>",
+  "license": "MIT",
+  "keywords": [
+    "electron",
+    "create-electron-app",
+    "cli",
+    "vite",
+    "rspack"
+  ],
   "scripts": {
-    "docs-dev": "vitepress dev docs",
-    "docs-build": "vitepress build docs",
-    "docs-serve": "vitepress serve docs",
-    "build": "unbuild",
-    "dev": "unbuild --stub",
+    "docs-dev": "pnpm --filter \"@zzhaon/docs\" dev",
+    "docs-build": "pnpm --filter \"@zzhaon/docs\" build",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
-  "build": {
-    "appId": "123123"
-  },
   "devDependencies": {
     "@antfu/eslint-config": "^0.41.3",
-    "@rollup/plugin-commonjs": "^22.0.2",
-    "@rollup/plugin-node-resolve": "^13.3.0",
     "app-builder-lib": "23.6.0",
     "eslint": "^8.49.0",
     "unbuild": "^0.8.11",
-    "vitepress": "1.0.0-rc.13",
     "vue": "^3.3.4"
   }
 }

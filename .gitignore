@@ -25,4 +25,4 @@ packages/cli/dist/**/*
 **/releases/**/*
 playground/.app
 cos
-docs/.vitepress/cache
+docs/.nuxt

@@ -1,0 +1,4 @@
+:root {
+  /* DocSearch */
+  --docsearch-primary-color: $dt('color.primary.500') !important;
+}

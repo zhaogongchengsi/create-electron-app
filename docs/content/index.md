@@ -1,0 +1,63 @@
+---
+title: My Docus project
+navigation: false
+layout: page
+---
+
+::block-hero
+---
+cta:
+  - Get Started
+  - /guide
+secondary:
+  - Open on GitHub →
+  - https://github.com/nuxtlabs/docus
+snippet: npm install @zzhaon/create-electron-app
+---
+
+#title
+My Docus project
+
+#description
+Write pages in markdown, use Vue components and enjoy the power of Nuxt with a blazing fast developer experience.
+
+#extra
+  ::list
+  - **+50 Components** ready to build rich pages
+  - **Docs** and **Page** layouts
+  - Start from a `README`, scale to a framework documentation
+  - Navigation and Table of Contents generation
+  - Fully configurable design system
+  - Leverages [**Typography**](https://typography.nuxt.space/) and [**Elements**](https://elements.nuxt.dev)
+  - Used on [Content Documentation](https://content.nuxtjs.org)
+  ::
+
+::
+
+::card-grid
+#title
+What's included
+
+#root
+:ellipsis
+
+#default
+  ::card
+  #title
+  Nuxt Architecture.
+  #description
+  Harness the full power of Nuxt and the Nuxt ecosystem.
+  ::
+  ::card
+  #title
+  Vue Components.
+  #description
+  Use built-in components (or your own!) inside your content.
+  ::
+  ::card
+  #title
+  Write Markdown.
+  #description
+  Enjoy the ease and simplicity of Markdown and discover MDC syntax.
+  ::
+::
