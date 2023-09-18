@@ -2,6 +2,7 @@
 title: Create Electron App
 navigation: false
 layout: page
+fluid: false
 ---
 
 ::block-hero

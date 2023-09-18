@@ -8,14 +8,19 @@ export default defineAppConfig({
 		},
 		aside: {
 			level: 0,
-			exclude: []
+			exclude: [],
+			fluid: false,
 		},
 		header: {
 			title: 'Cea Docs',
+			fluid: false,
 			logo: {
 				light: '/logo.png',
 				dark: '/logo.png'
 			}
+		},
+		main: {
+			fluid: false
 		},
 		footer: {
 			iconLinks: [
