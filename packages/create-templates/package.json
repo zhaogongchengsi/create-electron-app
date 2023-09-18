@@ -1,6 +1,6 @@
 {
   "name": "create-cea-app",
-  "version": "0.2.0",
+  "version": "0.5.0",
   "description": "Create a basic electron app",
   "author": "zhaozunhong <zzh1586169624@163.com>",
   "license": "MIT",
@@ -26,14 +26,18 @@
   "scripts": {
     "build": "unbuild",
     "dev": "unbuild --stub",
-    "update": "npm publish"
+    "prepublish": "pnpm run build",
+    "release": "npm publish"
   },
   "dependencies": {
     "consola": "^3.2.3",
     "fs-extra": "^11.1.1",
+    "nypm": "^0.3.3",
+    "pkg-types": "^1.0.3",
     "prompts": "^2.4.2"
   },
   "devDependencies": {
+    "@types/fs-extra": "^11.0.2",
     "@types/prompts": "^2.0.14",
     "unbuild": "^0.8.11"
   }

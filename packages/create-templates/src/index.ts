@@ -4,10 +4,13 @@ import prompts from "prompts";
 import consola from 'consola';
 import { colors } from 'consola/utils';
 import { join, resolve } from "node:path";
-import { outputFile } from 'fs-extra/esm'
+import { outputFile } from 'fs-extra'
 import { readFile } from 'fs/promises'
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+import { writePackageJSON } from 'pkg-types';
 
-const tempPath = resolve(__dirname, "../templates")
+const tempPath = resolve(dirname(fileURLToPath(import.meta.url)), "../templates")
 const commonPath = join(tempPath, "../templates/common")
 const envFile = join(commonPath, 'env.d.ts')
 const tsconfigFile = join(commonPath, 'tsconfig.json')
@@ -102,7 +105,7 @@ const readFileToString = async (path: string) => {
 		}
 	].filter(Boolean)
 
-	const webProject:any = {
+	const webProject: any = {
 		vue: [
 			{
 				path: join(srcDir, `App.vue`),
@@ -129,6 +132,38 @@ const readFileToString = async (path: string) => {
 		await outputFile(path, await readFileToString(content))
 	}
 
-	consola.success('end')
+	await writePackageJSON(join(projectDir, 'package.json'), {
+		name: projectName,
+		scripts: {
+			"dev": "cea dev",
+			"build": "cea build",
+		},
+		main: "./dist/app/main.js",
+		build: {
+			appId: projectName,
+			win: {
+				target: [
+					{
+						target: "nsis",
+						arch: [
+							"x64",
+							"ia32"
+						]
+					}
+				]
+			},
+			files: [
+				"dist/**/*",
+				"!./dist/**/*.map.{js,ts,md}"
+			]
+		}
+	})
+
+	const deps: string[] = ['electron', 'vite', 'unocss', '@zzhaon/create-electron-app', 'electron-builder', frame === 'vanilla' ? '' : `@vitejs/plugin-${frame}`].filter(Boolean)
+	const cmd = ` npm install ${deps.join(' ')} -D `
+
+	consola.success(colors.blackBright(`please run ${colors.bold(colors.cyan(cmd))} to download the latest version of the dependency`))
 
 })()
+
+
