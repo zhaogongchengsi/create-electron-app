@@ -14,14 +14,14 @@
     "electron",
     "create-electron-app"
   ],
-  "main": "./dist/index.js",
+  "main": "./dist/index.mjs",
   "bin": {
     "ca": "./dist/index.mjs",
     "cea-app": "./dist/index.mjs"
   },
   "files": [
-    "index.js",
-    "templates/*"
+    "dist",
+    "templates"
   ],
   "scripts": {
     "build": "unbuild",

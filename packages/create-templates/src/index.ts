@@ -22,7 +22,7 @@ const readFileToString = async (path: string) => {
 	return buf.toString()
 };
 
-;(async () => {
+; (async () => {
 	const root = process.cwd()
 	const { projectName, language, frame } = await prompts([
 		{
@@ -52,8 +52,6 @@ const readFileToString = async (path: string) => {
 	]);
 
 	const ext = language ? 'ts' : 'js';
-	const extx = language ? 'tsx' : 'jsx'
-
 	const caeConfigFile = join(commonPath, `cea.config.${ext}`);
 	const appIndexFile = join(commonPath, `index.${ext}`)
 	const appPreloadFile = join(commonPath, `preload.${ext}`)
@@ -65,49 +63,70 @@ const readFileToString = async (path: string) => {
 	const srcDir = join(projectDir, 'src')
 
 	const webDir = join(tempPath, frame)
-	const webIndexFile = join(webDir, `index.${ext}`)
-	const webAppFile = join(webDir, `App.${extx}`)
 
+	const webIndexFile = join(webDir, `index.${ext}`)
+	const viteFile = join(webDir, `vite.config.ts`)
 
 	const projectFolderList: Folder[] = [
 		{
 			path: join(appDir, `index.${ext}`),
-			content: await readFileToString(appIndexFile)
+			content: appIndexFile
 		},
 		{
 			path: join(appDir, `preload.${ext}`),
-			content: await readFileToString(appPreloadFile)
+			content: appPreloadFile
 		},
 		{
-			path: join(appDir, `cea.config.${ext}`),
-			content: await readFileToString(caeConfigFile)
+			path: join(srcDir, `index.${ext}`),
+			content: webIndexFile
 		},
 		{
-			path: join(srcDir, `index${ext}`),
-			content: await readFileToString(webIndexFile)
-		},
-		{
-			path: join(srcDir, `App${extx}`),
-			content: await readFileToString(webAppFile)
+			path: join(projectDir, `cea.config.${ext}`),
+			content: caeConfigFile
 		},
 		{
 			path: join(projectDir, `index.html`),
-			content: await readFileToString(indexHtmlFile)
+			content: indexHtmlFile
+		},
+		{
+			path: join(projectDir, `vite.config.${ext}`),
+			content: viteFile
 		},
 		language && {
 			path: join(projectDir, `env.d.${ext}`),
-			content: await readFileToString(envFile)
+			content: envFile
 		},
 		language && {
 			path: join(projectDir, "tsconfig.json"),
-			content: await readFileToString(tsconfigFile)
+			content: tsconfigFile
 		}
 	].filter(Boolean)
 
+	const webProject:any = {
+		vue: [
+			{
+				path: join(srcDir, `App.vue`),
+				content: join(webDir, `App.vue`)
+			},
+		],
+		react: [
+			{
+				path: join(srcDir, `App.${ext}x`),
+				content: join(webDir, `App.${ext}x`)
+			},
+		],
+		vanilla: [
+			{
+				path: join(srcDir, `App.${ext}`),
+				content: join(webDir, `App.${ext}`)
+			},
+		]
+	}
+
 	consola.start('create ...')
 
-	for (const { path, content } of projectFolderList) {
-		await outputFile(path, content)
+	for (const { path, content } of projectFolderList.concat(webProject[frame])) {
+		await outputFile(path, await readFileToString(content))
 	}
 
 	consola.success('end')
