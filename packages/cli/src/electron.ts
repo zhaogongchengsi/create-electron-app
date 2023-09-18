@@ -5,7 +5,7 @@ import { loadElectron } from './load'
 
 export function createAppRunning(config: ResolveConfig, ...args: string[]) {
   if (!config.electron.program) {
-    const electron = loadElectron(config)
+    const electron = loadElectron()
     if (!electron) {
       throw new Error(
         'electron may not be installed, try running npm install electron --save-dev and try again',

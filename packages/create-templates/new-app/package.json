@@ -1,0 +1,27 @@
+{
+  "name": "new-app",
+  "scripts": {
+    "dev": "cea dev",
+    "build": "cea build"
+  },
+  "main": "./dist/app/index.js",
+  "build": {
+    "appId": "new-app",
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ]
+    },
+    "files": [
+      "dist/**/*",
+      "!./dist/**/*.map.{js,ts}",
+      "!.md"
+    ]
+  }
+}

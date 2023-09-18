@@ -20,7 +20,7 @@ export async function runDev({ args }: any) {
   const config = await loadConfig()
   const { root, output, main, electron } = config
 
-  const { createServer, resolveConfig } = loadVite(config)
+  const { createServer, resolveConfig } = loadVite()
 
   const viteConfig = await resolveConfig({ root }, 'serve', DEV_MODE)
   const { page } = getPageOutDir(viteConfig)

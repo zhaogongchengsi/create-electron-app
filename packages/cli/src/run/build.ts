@@ -15,7 +15,7 @@ export async function runBuild() {
   process.env.NODE_ENV = BUILD_MODE
   const config = await loadConfig()
   const { root, main, output } = config
-  const { build, resolveConfig } = loadVite(config)
+  const { build, resolveConfig } = loadVite()
   const viteConfig = await resolveConfig({ root }, 'build', BUILD_MODE)
   const { outDir, page } = getPageOutDir(viteConfig)
 

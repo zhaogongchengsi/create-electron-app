@@ -15,9 +15,7 @@ function createWindow() {
     },
   })
 
-  const { main } = page
-
-  PROD ? window.loadFile(main) : window.loadURL(main)
+  PROD ? window.loadFile(page) : window.loadURL(page);
   DEV && window.webContents.openDevTools()
 }
 
