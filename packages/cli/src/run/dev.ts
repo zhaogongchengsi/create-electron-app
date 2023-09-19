@@ -23,14 +23,16 @@ export async function runDev({ args }: any) {
   const { createServer, resolveConfig } = loadVite()
 
   const viteConfig = await resolveConfig({ root }, 'serve', DEV_MODE)
-  const { page } = getPageOutDir(viteConfig)
 
   const server = await createServer({
     root,
     server: {
       port: args.port || 5678,
     },
+    plugins: [],
   })
+
+  const { page } = getPageOutDir(viteConfig)
 
   const { httpServer } = await server.listen()
   const address = httpServer!.address()! as AddressInfo
@@ -44,7 +46,7 @@ export async function runDev({ args }: any) {
 
   const mainFile = resolve(root, output, resolveFileName(main))
   const compilers = createMultiCompiler(createMultiCompilerOptions(config, { page: pages }))
-  const run = createAppRunning(config, mainFile, ...electron.parameter!)
+  const run = createAppRunning(config, mainFile, ...(electron.parameter || [])!)
   consola.box(`App run in : ${colors.greenBright(url.toString())}`)
 
   const watchHandler = debounce((err: Error | null, _: MultiStats | undefined) => {

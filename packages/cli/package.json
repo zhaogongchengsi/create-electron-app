@@ -25,6 +25,11 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
       "require": "./dist/index.cjs"
+    },
+    "./picture-loader": {
+      "types": "./dist/file-loader.d.ts",
+      "import": "./dist/file-loader.mjs",
+      "require": "./dist/file-loader.cjs"
     }
   },
   "main": "./dist/index.cjs",

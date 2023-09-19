@@ -33,7 +33,7 @@ export async function runBuild() {
   const opt = createMultiCompilerOptions({ ...config, output: join(outDir, output) }, { page: pages })
 
   // vite build
-  await build({ root })
+  // await build({ root })
   // build app main
   await compiler(opt)
 

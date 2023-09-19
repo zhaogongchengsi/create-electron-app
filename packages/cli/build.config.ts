@@ -4,6 +4,7 @@ export default defineBuildConfig({
   entries: [
     'src/index',
     'src/cli',
+    'src/loaders/file-loader',
   ],
   declaration: true,
   clean: true,

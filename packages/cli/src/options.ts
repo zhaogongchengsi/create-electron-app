@@ -1,6 +1,5 @@
 import type { MultiRspackOptions, RspackOptions } from '@rspack/core'
 import { resolve as _resolve, relative } from 'pathe'
-import WebpackBar from 'webpackbar'
 import type { ResolveConfig } from './config'
 import { resolveFileName } from './utils'
 
@@ -48,11 +47,14 @@ export function createMultiCompilerOptions(config: ResolveConfig, { page }: Opti
     node,
     resolve,
     watch: isDev,
-    plugins: [
-      new WebpackBar({
-        name: 'cea',
-      }),
-    ],
+    module: {
+      rules: [
+        {
+          test: /\.(jpg|jpeg|png|gif|bmp)$/i,
+          use: ['@zzhaon/create-electron-app/picture-loader'],
+        },
+      ],
+    },
   }
 
   const multiOptions: RspackOptions = {
