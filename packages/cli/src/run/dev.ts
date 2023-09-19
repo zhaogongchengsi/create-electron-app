@@ -6,12 +6,14 @@ import { debounce } from 'perfect-debounce'
 import consola from 'consola'
 import { colors } from 'consola/utils'
 import { resolve } from 'pathe'
+import type { ResolvedConfig } from 'vite'
 import { loadConfig } from '../config'
 import { createMultiCompilerOptions } from '../options'
 import { loadVite } from '../load'
 import { createAppRunning } from '../electron'
 import { getPageOutDir } from '../vite'
 import { isString, resolveFileName } from '../utils'
+import { VitePluginGetConfig } from '../plugins/vite-getconfig'
 
 const DEV_MODE = 'development'
 
@@ -20,19 +22,18 @@ export async function runDev({ args }: any) {
   const config = await loadConfig()
   const { root, output, main, electron } = config
 
-  const { createServer, resolveConfig } = loadVite()
+  const { createServer } = loadVite()
 
-  const viteConfig = await resolveConfig({ root }, 'serve', DEV_MODE)
-
+  let viteConfig: ResolvedConfig
   const server = await createServer({
     root,
     server: {
       port: args.port || 5678,
     },
-    plugins: [],
+    plugins: [VitePluginGetConfig(config => (viteConfig = config))],
   })
 
-  const { page } = getPageOutDir(viteConfig)
+  const { page } = getPageOutDir(viteConfig!)
 
   const { httpServer } = await server.listen()
   const address = httpServer!.address()! as AddressInfo
@@ -45,7 +46,7 @@ export async function runDev({ args }: any) {
     }))
 
   const mainFile = resolve(root, output, resolveFileName(main))
-  const compilers = createMultiCompiler(createMultiCompilerOptions(config, { page: pages }))
+  const compilers = createMultiCompiler(createMultiCompilerOptions(config, { page: pages, vite: viteConfig! }))
   const run = createAppRunning(config, mainFile, ...(electron.parameter || [])!)
   consola.box(`App run in : ${colors.greenBright(url.toString())}`)
 

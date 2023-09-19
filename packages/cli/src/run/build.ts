@@ -3,11 +3,13 @@ import consola from 'consola'
 import { join, relative } from 'pathe'
 import type { MultiRspackOptions, MultiStats } from '@rspack/core'
 import { createMultiCompiler } from '@rspack/core'
+import type { ResolvedConfig } from 'vite'
 import { loadConfig } from '../config'
 import { createMultiCompilerOptions } from '../options'
 import { loadVite } from '../load'
 import { getPageOutDir } from '../vite'
 import { isString, resolveFileName } from '../utils'
+import { VitePluginGetConfig } from '../plugins/vite-getconfig'
 
 const BUILD_MODE = 'production'
 
@@ -15,13 +17,15 @@ export async function runBuild() {
   process.env.NODE_ENV = BUILD_MODE
   const config = await loadConfig()
   const { root, main, output } = config
-  const { build, resolveConfig } = loadVite()
-  const viteConfig = await resolveConfig({ root }, 'build', BUILD_MODE)
-  const { outDir, page } = getPageOutDir(viteConfig)
+  const { build } = loadVite()
 
   consola.start('Start compilation')
+  // vite build
+  let viteConfig: ResolvedConfig
+  await build({ root, plugins: [VitePluginGetConfig(config => (viteConfig = config))] })
 
-  // todo: 获取页面
+  const { outDir, page } = getPageOutDir(viteConfig!)
+
   const mainFile = join(outDir, output, resolveFileName(main))
 
   const pages = isString(page)
@@ -30,10 +34,8 @@ export async function runBuild() {
       return [name, relative(mainFile, join(outDir, path)).substring(3)]
     }))
 
-  const opt = createMultiCompilerOptions({ ...config, output: join(outDir, output) }, { page: pages })
+  const opt = createMultiCompilerOptions({ ...config, output: join(outDir, output) }, { page: pages, vite: viteConfig! })
 
-  // vite build
-  // await build({ root })
   // build app main
   await compiler(opt)
 

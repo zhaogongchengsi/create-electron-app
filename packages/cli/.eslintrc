@@ -1,7 +1,9 @@
 {
   "ignorePatterns": [
-    "dist/",
-    "hooks/",
+    "dist"
   ],
-  "extends": "@antfu"
+  "extends": "@antfu",
+  "rules": {
+    "no-invalid-this": "off"
+  }
 }

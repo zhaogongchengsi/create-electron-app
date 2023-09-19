@@ -1,5 +1,6 @@
 import type { MultiRspackOptions, RspackOptions } from '@rspack/core'
 import { resolve as _resolve, relative } from 'pathe'
+import type { ResolvedConfig as ViteResolvedConfig } from 'vite'
 import type { ResolveConfig } from './config'
 import { resolveFileName } from './utils'
 
@@ -10,9 +11,10 @@ export type Page = Record<string, string> | string
 
 export interface Options {
   page: Page
+  vite: ViteResolvedConfig
 }
 
-export function createMultiCompilerOptions(config: ResolveConfig, { page }: Options): MultiRspackOptions {
+export function createMultiCompilerOptions(config: ResolveConfig, { page, vite }: Options): MultiRspackOptions {
   const { root, output, main, preload, mode, alias } = config
 
   if (!main)
@@ -40,6 +42,23 @@ export function createMultiCompilerOptions(config: ResolveConfig, { page }: Opti
     alias,
   }
 
+  const loaderOptions = {
+    vite,
+    ceaConfig: config,
+  }
+
+  const rules = [
+    {
+      test: /\.(jpg|jpeg|png|gif|bmp)$/i,
+      use: [
+        {
+          loader: '@zzhaon/create-electron-app/picture-loader',
+          options: loaderOptions,
+        },
+      ],
+    },
+  ]
+
   const commonOptions: RspackOptions = {
     mode,
     context: root,
@@ -48,12 +67,7 @@ export function createMultiCompilerOptions(config: ResolveConfig, { page }: Opti
     resolve,
     watch: isDev,
     module: {
-      rules: [
-        {
-          test: /\.(jpg|jpeg|png|gif|bmp)$/i,
-          use: ['@zzhaon/create-electron-app/picture-loader'],
-        },
-      ],
+      rules,
     },
   }
 
