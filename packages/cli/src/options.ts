@@ -41,7 +41,7 @@ export function createEsBuildOptions(config: ResolveConfig, { page }: Options): 
     format: 'iife',
     bundle: true,
     platform: 'node',
-    outdir: join(root, output),
+    outdir: output,
     loader: {
       '.png': 'file',
       '.svg': 'text',
@@ -51,6 +51,7 @@ export function createEsBuildOptions(config: ResolveConfig, { page }: Options): 
       '.jsx': 'jsx',
       '.json': 'json',
     },
+    write: isDev,
     external: ['electron'],
     absWorkingDir: root,
     define: {

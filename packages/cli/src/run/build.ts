@@ -1,11 +1,11 @@
 import process from 'node:process'
 import consola from 'consola'
 import { join, relative } from 'pathe'
-import type { MultiRspackOptions, MultiStats } from '@rspack/core'
-import { createMultiCompiler } from '@rspack/core'
+import { build as esbuild } from 'esbuild'
 import type { ResolvedConfig } from 'vite'
+import { outputFile } from 'fs-extra'
 import { loadConfig } from '../config'
-import { createMultiCompilerOptions } from '../options'
+import { createEsBuildOptions } from '../options'
 import { loadVite } from '../load'
 import { getPageOutDir } from '../vite'
 import { isString, resolveFileName } from '../utils'
@@ -34,22 +34,14 @@ export async function runBuild() {
       return [name, relative(mainFile, join(outDir, path)).substring(3)]
     }))
 
-  const opt = createMultiCompilerOptions({ ...config, output: join(outDir, output) }, { page: pages, vite: viteConfig! })
-
   // build app main
-  await compiler(opt)
+  const { errors, warnings, outputFiles } = await esbuild(createEsBuildOptions({ ...config, output: join(outDir, output) }, { page: pages }))
+
+  errors.forEach(consola.error)
+  warnings.forEach(consola.warn)
+
+  for (const { path, text } of (outputFiles || []))
+    await outputFile(path, text)
 
   consola.success('Compiled successfully')
-}
-
-function compiler(opt: MultiRspackOptions): Promise<MultiStats | undefined> {
-  const compilers = createMultiCompiler(opt)
-  return new Promise((resolve, reject) => {
-    compilers.run((err, stats) => {
-      if (err)
-        reject(err)
-      else
-        resolve(stats)
-    })
-  })
 }

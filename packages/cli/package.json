@@ -61,6 +61,7 @@
     "consola": "^3.2.3",
     "electron-builder": "^24.6.3",
     "esbuild": "^0.19.3",
+    "fs-extra": "^11.1.1",
     "node-fetch": "^3.2.10",
     "pathe": "^1.1.1",
     "perfect-debounce": "^1.0.0",
@@ -69,6 +70,7 @@
     "webpackbar": "^5.0.2"
   },
   "devDependencies": {
+    "@types/fs-extra": "^11.0.2",
     "@types/node": "^18.7.13",
     "unbuild": "^0.8.11"
   }
