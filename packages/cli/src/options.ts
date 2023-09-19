@@ -1,30 +1,25 @@
-import type { MultiRspackOptions, RspackOptions } from '@rspack/core'
+import { join } from 'node:path'
 import { resolve as _resolve, relative } from 'pathe'
-import type { ResolvedConfig as ViteResolvedConfig } from 'vite'
+import type { BuildOptions } from 'esbuild'
 import type { ResolveConfig } from './config'
 import { resolveFileName } from './utils'
-
-export const ELECTRON_MAIN = 'electron-main'
-export const ELECTRON_PRELOAD = 'electron-preload'
 
 export type Page = Record<string, string> | string
 
 export interface Options {
   page: Page
-  vite: ViteResolvedConfig
 }
 
-export function createMultiCompilerOptions(config: ResolveConfig, { page, vite }: Options): MultiRspackOptions {
-  const { root, output, main, preload, mode, alias } = config
+export function createEsBuildOptions(config: ResolveConfig, { page }: Options): BuildOptions {
+  const { root, output, main, preload, mode } = config
 
   if (!main)
     throw new Error('Electron main thread file is required')
 
   const isDev = mode === 'development'
   const isProd = mode === 'production'
-  const devtool = isDev ? 'source-map' : false
 
-  const mainFile = _resolve(root, output, resolveFileName(main))
+  const mainFile = _resolve(root, output, `${resolveFileName(main)}.js`)
   const preloadFile = preload ? relative(mainFile, _resolve(root, output, resolveFileName(preload))).substring(3) : undefined
 
   const env = JSON.stringify({
@@ -33,90 +28,37 @@ export function createMultiCompilerOptions(config: ResolveConfig, { page, vite }
     DEV: isDev,
   })
 
-  const node = {
-    global: false,
-    __dirname: false,
+  const mainPoints = {
+    in: join(root, main),
+    out: resolveFileName(main),
   }
 
-  const resolve = {
-    alias,
-  }
+  const entryPoints = preload ? [mainPoints, { in: join(root, preload), out: resolveFileName(preload) }] : [mainPoints]
 
-  const loaderOptions = {
-    vite,
-    ceaConfig: config,
-  }
-
-  const rules = [
-    {
-      test: /\.(jpg|jpeg|png|gif|bmp)$/i,
-      use: [
-        {
-          loader: '@zzhaon/create-electron-app/picture-loader',
-          options: loaderOptions,
-        },
-      ],
+  return {
+    entryPoints,
+    sourcemap: isDev,
+    format: 'iife',
+    bundle: true,
+    platform: 'node',
+    outdir: join(root, output),
+    loader: {
+      '.png': 'file',
+      '.svg': 'text',
+      '.ts': 'ts',
+      '.js': 'js',
+      '.tsx': 'tsx',
+      '.jsx': 'jsx',
+      '.json': 'json',
     },
-  ]
-
-  const commonOptions: RspackOptions = {
-    mode,
-    context: root,
-    devtool,
-    node,
-    resolve,
-    watch: isDev,
-    module: {
-      rules,
+    external: ['electron'],
+    absWorkingDir: root,
+    define: {
+      'import.meta.env': env,
+      'import.meta.app': JSON.stringify({
+        page,
+        preload: `${preloadFile}.js`,
+      }),
     },
   }
-
-  const multiOptions: RspackOptions = {
-    ...commonOptions,
-    target: ELECTRON_MAIN,
-    entry: {
-      main,
-    },
-    output: {
-      filename: resolveFileName(main),
-      path: output,
-    },
-    builtins: {
-      emotion: {
-        sourceMap: isDev,
-      },
-      define: {
-        'import.meta.env': env,
-        'import.meta.app': JSON.stringify({
-          page,
-          preload: preloadFile,
-        }),
-      },
-    },
-  }
-
-  if (!config.preload)
-    return [multiOptions]
-
-  const preloadOptions: RspackOptions = {
-    ...commonOptions,
-    target: ELECTRON_PRELOAD,
-    entry: {
-      preload: preload!,
-    },
-    output: {
-      filename: resolveFileName(preload!),
-      path: output,
-    },
-    builtins: {
-      emotion: {
-        sourceMap: isDev,
-      },
-      define: {
-        'import.meta.env': env,
-      },
-    },
-  }
-
-  return [multiOptions, preloadOptions]
 }

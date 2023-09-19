@@ -1,14 +1,15 @@
 import process from 'node:process'
 import type { AddressInfo } from 'node:net'
-import type { MultiStats } from '@rspack/core'
-import { createMultiCompiler } from '@rspack/core'
+import { join } from 'node:path'
 import { debounce } from 'perfect-debounce'
 import consola from 'consola'
 import { colors } from 'consola/utils'
-import { resolve } from 'pathe'
+import { dirname, resolve } from 'pathe'
 import type { ResolvedConfig } from 'vite'
+import { context } from 'esbuild'
+import chokidar from 'chokidar'
 import { loadConfig } from '../config'
-import { createMultiCompilerOptions } from '../options'
+import { createEsBuildOptions } from '../options'
 import { loadVite } from '../load'
 import { createAppRunning } from '../electron'
 import { getPageOutDir } from '../vite'
@@ -45,17 +46,22 @@ export async function runDev({ args }: any) {
       return [name, `${url.toString()}${path}`]
     }))
 
+  const watchOption = `${dirname(join(root, main))}/**/*.{js,ts}`
+
+  const watch = chokidar.watch(watchOption)
+
   const mainFile = resolve(root, output, resolveFileName(main))
-  const compilers = createMultiCompiler(createMultiCompilerOptions(config, { page: pages, vite: viteConfig! }))
-  const run = createAppRunning(config, mainFile, ...(electron.parameter || [])!)
+  const runApp = createAppRunning(config, mainFile, ...(electron.parameter || [])!)
   consola.box(`App run in : ${colors.greenBright(url.toString())}`)
+  const ctx = await context(createEsBuildOptions(config, { page: pages }))
 
-  const watchHandler = debounce((err: Error | null, _: MultiStats | undefined) => {
-    if (err)
-      consola.error(err)
+  const run = async () => {
+    await ctx.rebuild()
+    runApp()
+  }
 
-    run()
-  }, 300, { leading: true })
+  await run()
+  const watchHandler = debounce(run, 300, { leading: true })
 
-  compilers.watch({ ignored: /node_modules/ }, watchHandler)
+  watch.on('change', watchHandler)
 }
