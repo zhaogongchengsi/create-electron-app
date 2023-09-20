@@ -53,7 +53,7 @@ export async function runDev({ args }: any) {
   const mainFile = resolve(root, output, resolveFileName(main))
   const runApp = createAppRunning(config, mainFile, ...(electron.parameter || [])!)
   consola.box(`App run in : ${colors.greenBright(url.toString())}`)
-  const ctx = await context(createEsBuildOptions(config, { page: pages }))
+  const ctx = await context(createEsBuildOptions(config, viteConfig!, { page: pages }))
 
   const run = async () => {
     await ctx.rebuild()

@@ -35,7 +35,7 @@ export async function runBuild() {
     }))
 
   // build app main
-  const { errors, warnings, outputFiles } = await esbuild(createEsBuildOptions({ ...config, output: join(outDir, output) }, { page: pages }))
+  const { errors, warnings, outputFiles } = await esbuild(createEsBuildOptions(config, viteConfig!, { page: pages }))
 
   errors.forEach(consola.error)
   warnings.forEach(consola.warn)

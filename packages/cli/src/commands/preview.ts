@@ -1,9 +1,9 @@
 import { defineCommand } from 'citty'
-import { runPackage } from '../run/package'
+import { runPreview } from '../run/preview'
 
 export default defineCommand({
   meta: {
-    name: 'package',
+    name: 'preview',
   },
-  run: runPackage,
+  run: runPreview,
 })

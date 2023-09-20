@@ -5,7 +5,7 @@ import { getPageOutDir } from '../vite'
 import { builder } from '../builder'
 
 const BUILD_MODE = 'production'
-export async function runPackage() {
+export async function runPreview() {
   process.env.NODE_ENV = BUILD_MODE
   const config = await loadConfig()
 
